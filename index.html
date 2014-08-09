@@ -9,8 +9,9 @@
   <meta name="author" content="_at_ bigt23">
 
   
-  <meta name="description" content="
-">
+  <meta name="description" content="This is the very initial steps to use websocket-rails.
+Basically, I follow the lessons from here.
+I also add some suplemental steps for smooth start &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,7 +96,332 @@
   </header>
 
 
-  <div class="entry-content">
+  <div class="entry-content"><p>This is the very initial steps to use websocket-rails.
+Basically, I follow the lessons from <a href="http://www.school.ctc-g.co.jp/columns/masuidrive/masuidrive14.html">here</a>.
+I also add some suplemental steps for smooth start and hopefully next steps to utilize this library.</p>
+
+<h3>1. prepare</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ruby -v
+</span><span class='line'>ruby 2.1.0p0 (2013-12-25 revision 44422) [x86_64-darwin11.0]
+</span><span class='line'>
+</span><span class='line'>$ rails -v                                                                                                                                                   [~/Dropbox/rails]
+</span><span class='line'>Rails 4.1.4
+</span><span class='line'>
+</span><span class='line'>$ gem -v
+</span><span class='line'>2.2.2
+</span><span class='line'>
+</span><span class='line'>$ rails new websocket_rails_example && cd websocket_rails_example
+</span><span class='line'>...
+</span><span class='line'>...
+</span><span class='line'>
+</span><span class='line'>$ gem install websocket-rails
+</span><span class='line'>Welcome to WebsocketRails v0.7.0!
+</span><span class='line'>Successfully installed websocket-rails-0.7.0
+</span><span class='line'>Parsing documentation for websocket-rails-0.7.0
+</span><span class='line'>Installing ri documentation for websocket-rails-0.7.0
+</span><span class='line'>Done installing documentation for websocket-rails after 1 seconds
+</span><span class='line'>1 gem installed
+</span><span class='line'>
+</span><span class='line'>$ emacs Gemfile
+</span><span class='line'># add below
+</span><span class='line'>gem 'websocket-rails'
+</span><span class='line'>
+</span><span class='line'>$ rails g websocket_rails:install
+</span><span class='line'>      create  config/events.rb
+</span><span class='line'>      create  config/initializers/websocket_rails.rb
+</span><span class='line'>      append  app/assets/javascripts/application.js
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. modify controller</h3>
+
+<p>add controller inheriting WebsocketRails::BaseController.
+here, define websocket method &ldquo;message_receive&rdquo; which accepts message from client event and broadcast it to client connected with &ldquo;websocket_chat&rdquo;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ emacs app/controllers/websocket_chat_controller.rb
+</span><span class='line'># -*- coding: utf-8 -*-                                                                                                                                                                         
+</span><span class='line'>class WebsocketChatController &lt; WebsocketRails::BaseController
+</span><span class='line'>  def message_receive
+</span><span class='line'>    receive_message = message()
+</span><span class='line'>    broadcast_message(:websocket_chat, receive_message)
+</span><span class='line'>  end
+</span><span class='line'>end
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3. routes</h3>
+
+<p>modify config/events.rb and map event &ldquo;websocket_chat&rdquo; to websocket method &ldquo;message_receive&rdquo;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>add websocket_chat for events
+</span><span class='line'>$ emacs config/events.rb
+</span><span class='line'>WebsocketRails::EventMap.describe do
+</span><span class='line'>  subscribe :websocket_chat, to: WebsocketChatController, with_method: :message_receive
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>4. generate chat app</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails g controller chat index
+</span><span class='line'>      create  app/controllers/chat_controller.rb
+</span><span class='line'>       route  get 'chat/index'
+</span><span class='line'>      invoke  erb
+</span><span class='line'>      create    app/views/chat
+</span><span class='line'>      create    app/views/chat/index.html.erb
+</span><span class='line'>      invoke  test_unit
+</span><span class='line'>      create    test/controllers/chat_controller_test.rb
+</span><span class='line'>      invoke  helper
+</span><span class='line'>      create    app/helpers/chat_helper.rb
+</span><span class='line'>      invoke    test_unit
+</span><span class='line'>      create      test/helpers/chat_helper_test.rb
+</span><span class='line'>      invoke  assets
+</span><span class='line'>      invoke    coffee
+</span><span class='line'>      create      app/assets/javascripts/chat.js.coffee
+</span><span class='line'>      invoke    scss
+</span><span class='line'>      create      app/assets/stylesheets/chat.css.scss</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>5. define view</h3>
+
+<p>&ldquo;trigger&rdquo; sends data to event. &ldquo;bind&rdquo; subscribes message of the event specified on the first arg.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ emacs app/view/chat/index.erb
+</span><span class='line'>&lt;ul id="chat_area"&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;/ul&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;input id="comment" type="text"&gt;
+</span><span class='line'>&lt;input id="send" type="button" value="send"&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;script&gt;
+</span><span class='line'>
+</span><span class='line'>  var ws_rails = new WebSocketRails("localhost:3001/websocket");
+</span><span class='line'>
+</span><span class='line'>  ws_rails.bind("websocket_chat", function(message){
+</span><span class='line'>    var message_li = document.createElement("li");
+</span><span class='line'>    message_li.textContent = message;
+</span><span class='line'>    document.getElementById("chat_area").appendChild(message_li);
+</span><span class='line'>  })
+</span><span class='line'>  document.getElementById("send").onclick =  function(){
+</span><span class='line'>　　var comment = document.getElementById("comment").value;
+</span><span class='line'>　　ws_rails.trigger("websocket_chat", comment);
+</span><span class='line'>　}
+</span><span class='line'>
+</span><span class='line'>&lt;/script&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>6. disable rack</h3>
+
+<p>if you use Websocket-Rails in development mode, you have to disable Rack::Lock.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ emacs config/environments/development.rb
+</span><span class='line'>Rails.application.configure do
+</span><span class='line'>...
+</span><span class='line'>...
+</span><span class='line'>  # add below
+</span><span class='line'>  config.middleware.delete Rack::Lock
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>7. boot local websocket</h3>
+
+<p>boot websocket server locally and set rails to allow local websocket. here, we use redis for its backend.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ emacs config/initializers/websocket_rails.rb
+</span><span class='line'>...
+</span><span class='line'>...
+</span><span class='line'>  # set standalone mode
+</span><span class='line'>  config.standalone = true
+</span><span class='line'>  config.redis_options = {:host =&gt; 'localhost', :port =&gt; '6379'}
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>install and boot redis
+</span><span class='line'>$ brew install redis
+</span><span class='line'>
+</span><span class='line'>$ redis-server /usr/local/etc/redis.conf &
+</span><span class='line'>[28495] 07 Aug 00:09:05.582 * Max number of open files set to 10032
+</span><span class='line'>                _._                                                  
+</span><span class='line'>           _.-``__ ''-._                                             
+</span><span class='line'>      _.-``    `.  `_.  ''-._           Redis 2.8.7 (00000000/0) 64 bit
+</span><span class='line'>  .-`` .-```.  ```\/    _.,_ ''-._                                   
+</span><span class='line'> (    '      ,       .-`  | `,    )     Running in stand alone mode
+</span><span class='line'> |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+</span><span class='line'> |    `-._   `._    /     _.-'    |     PID: 28495
+</span><span class='line'>  `-._    `-._  `-./  _.-'    _.-'                                   
+</span><span class='line'> |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+</span><span class='line'> |    `-._`-._        _.-'_.-'    |           http://redis.io        
+</span><span class='line'>  `-._    `-._`-.__.-'_.-'    _.-'                                   
+</span><span class='line'> |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+</span><span class='line'> |    `-._`-._        _.-'_.-'    |                                  
+</span><span class='line'>  `-._    `-._`-.__.-'_.-'    _.-'                                   
+</span><span class='line'>      `-._    `-.__.-'    _.-'                                       
+</span><span class='line'>          `-._        _.-'                                           
+</span><span class='line'>              `-.__.-'                                               
+</span><span class='line'>
+</span><span class='line'>[28495] 07 Aug 00:09:05.587 # Server started, Redis version 2.8.7
+</span><span class='line'>[28495] 07 Aug 00:09:05.588 * DB loaded from disk: 0.001 seconds
+</span><span class='line'>[28495] 07 Aug 00:09:05.588 * The server is now ready to accept connections on port 6379
+</span><span class='line'>
+</span><span class='line'>boot websocket server
+</span><span class='line'>$ bundle exec rake websocket_rails:start_server
+</span><span class='line'>Websocket Rails Standalone Server listening on port 3001
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>8. boot rails</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails s
+</span><span class='line'>=&gt; Booting Thin
+</span><span class='line'>=&gt; Rails 4.1.4 application starting in development on http://0.0.0.0:3000
+</span><span class='line'>=&gt; Run `rails server -h` for more startup options
+</span><span class='line'>=&gt; Notice: server is listening on all interfaces (0.0.0.0). Consider using 127.0.0.1 (--binding option)
+</span><span class='line'>=&gt; Ctrl-C to shutdown server
+</span><span class='line'>Thin web server (v1.6.2 codename Doc Brown)
+</span><span class='line'>Maximum connections set to 1024
+</span><span class='line'>Listening on 0.0.0.0:3000, CTRL+C to stop</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>9. access!</h3>
+
+<p><a href="http://localhost:3000/chat/index">enjoy!</a></p>
 </div>
   
   
