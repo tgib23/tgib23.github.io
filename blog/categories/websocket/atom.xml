@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Websocket | some tech talks]]></title>
   <link href="http://tgib23.github.io/blog/categories/websocket/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2014-08-10T18:48:38+09:00</updated>
+  <updated>2014-08-10T20:00:09+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -212,7 +212,7 @@ Listening on 0.0.0.0:3000, CTRL+C to stop
 
 <h3>10. source</h3>
 
-<p>if you use my sample <a href="https://github.com/tgib23/websocket_rails_example">here</a>.</p>
+<p>here is the repository of my sample <a href="https://github.com/tgib23/websocket_rails_example">here</a></p>
 ]]></content>
   </entry>
   
