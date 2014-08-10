@@ -4,7 +4,7 @@
   <title><![CDATA[some tech talks]]></title>
   <link href="http://tgib23.github.io/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2014-08-10T20:00:09+09:00</updated>
+  <updated>2014-08-10T20:02:11+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -347,7 +347,7 @@ here, define websocket method &ldquo;message_receive&rdquo; which accepts messag
 
 <h3>10. source</h3>
 
-<p>here is the repository of my sample <a href="https://github.com/tgib23/websocket_rails_example">here</a></p>
+<p><a href="https://github.com/tgib23/websocket_rails_example">here</a> is the repository of my sample.</p>
 ]]></content>
   </entry>
   
