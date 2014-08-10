@@ -188,4 +188,4 @@ Listening on 0.0.0.0:3000, CTRL+C to stop
 [enjoy!](http://localhost:3000/chat/index)
 
 ### 10. source
-here is the repository of my sample [here](https://github.com/tgib23/websocket_rails_example)
+[here](https://github.com/tgib23/websocket_rails_example) is the repository of my sample.
