@@ -3,22 +3,28 @@
   
   
   <url>
+    <loc>http://tgib23.github.io/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/</loc>
+    <lastmod>2014-10-30T00:14:33-05:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://tgib23.github.io/blog/2014/08/03/first-post/</loc>
-    <lastmod>2014-08-03T21:39:04+09:00</lastmod>
+    <lastmod>2014-08-03T07:39:04-05:00</lastmod>
     <priority>0.8</priority>
   </url>
   
   
   <url>
     <loc>http://tgib23.github.io/blog/archives/</loc>
-    <lastmod>2014-08-10T20:02:11+09:00</lastmod>
+    <lastmod>2014-10-30T00:47:35-05:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://tgib23.github.io/</loc>
-    <lastmod>2014-08-10T20:02:11+09:00</lastmod>
+    <lastmod>2014-10-30T00:47:35-05:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>

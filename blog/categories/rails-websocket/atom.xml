@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Rails-websocket | some tech talks]]></title>
+  <link href="http://tgib23.github.io/blog/categories/rails-websocket/atom.xml" rel="self"/>
+  <link href="http://tgib23.github.io/"/>
+  <updated>2014-10-30T00:47:35-05:00</updated>
+  <id>http://tgib23.github.io/</id>
+  <author>
+    <name><![CDATA[_at_ bigt23]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Deploy Rails Websocket App Into Heroku]]></title>
+    <link href="http://tgib23.github.io/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/"/>
+    <updated>2014-10-30T00:14:33-05:00</updated>
+    <id>http://tgib23.github.io/blog/2014/10/30/deploy-rails-websocket-app-into-heroku</id>
+    <content type="html"><![CDATA[<p>This post is to explain the configuration example to use heroku to deploy app with websocket-rails. The app is implemented in the <a href="http://tgib23.github.io/blog/2014/08/03/first-post/">previous post</a> using local dev environment.</p>
+
+<h3>1. create heroku</h3>
+
+<p>Sign up for heroku and install heroku tool. Follow the <a href="https://www.railstutorial.org/book/beginning#sec-heroku_setup">heroku setup instruction</a> in the rails tutorial.
+<code>
+$ heroku create
+Creating gentle-tor-1752... done, stack is cedar
+https://gentle-tor-1752.herokuapp.com/ | git@heroku.com:gentle-tor-1752.git
+</code></p>
+
+<p>Now got gentle-tor-1752 for this entry.</p>
+
+<h3>2. redis setup</h3>
+
+<p>Because redis is used for the backend of websocket, we have to enable redis in heroku.
+<code>
+$ heroku addons:add redistogo                                                                                                            
+Adding redistogo on gentle-tor-1752... done, v3 (free)
+Use `heroku addons:docs redistogo` to view documentation.
+</code></p>
+
+<p>Then, check the redis setting information from heroku web UI (app -> redistogo). You will find info on redis db, such as below.
+<code>
+redis://redistogo:xxxxxxxxxxxxxxxx@greeneye.redistogo.com:12345/
+</code></p>
+
+<p>Next, apply these info on the redis setting.
+<code>
+$ vim config/initializers/websocket_rails.rb
+...
+-  config.redis_options = {:host =&gt; 'localhost', :port =&gt; '6379'}
++  config.redis_options = {:host =&gt; 'greeneye.redistogo.com', :port =&gt; '12345', :user =&gt; 'redistogo', :password =&gt; 'xxxxxxxxxxxxxxxx'}
+...
+</code>
+If you don&rsquo;t like write password into code, maybe you can use environment variables.</p>
+
+<h3>3. change websocket url</h3>
+
+<p>Change the websocket url specified in the code. Again, there could be better way to do this, but I put it into code simply.
+&#8220;`
+$ vim app/views/chat/index.html.erb
+&hellip;
+-  var ws_rails = new WebSocketRails(&ldquo;localhost:3001/websocket&rdquo;);
++  var ws_rails = new WebSocketRails(&ldquo;aqueous-springs-2658.herokuapp.com/websocket&rdquo;);</p>
+
+<ul>
+<li>change the hostname accoring to your setting.
+&hellip;
+&#8220;`</li>
+</ul>
+
+
+<h3>4. small changes for heroku</h3>
+
+<p>put sqlite dev only and add pg and rails_12fator for prod env.
+<code>
++group :development do
++  # Use sqlite3 as the database for Active Record
++  gem 'sqlite3'
++end
++
++group :production do
++  gem 'pg', '0.17.1'
++  gem 'rails_12factor', '0.0.2'
++end
+</code></p>
+
+<p>commit Gemfile.lock
+<code>
+$ bundle install
+$ git add Gemfile.lock
+$ git commit -am 'add Gemfile.lock'
+</code></p>
+
+<p>set root path
+<code>
+$ vim config/routes.rb
+...
+root to: "chat#index"
+...
+</code></p>
+
+<h3>5. deploy and check</h3>
+
+<pre><code>$ git push heroku master
+$ heroku open
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

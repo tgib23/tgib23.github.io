@@ -9,9 +9,7 @@
   <meta name="author" content="_at_ bigt23">
 
   
-  <meta name="description" content="This is the very initial steps to use websocket-rails.
-Basically, I follow the lessons from here.
-I also add some suplemental steps for smooth start &hellip;">
+  <meta name="description" content="This post is to explain the configuration example to use heroku to deploy app with websocket-rails. The app is implemented in the previous post using &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +71,164 @@ I also add some suplemental steps for smooth start &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/">Deploy Rails Websocket App Into Heroku</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-10-30T00:14:33-05:00" pubdate data-updated="true">Oct 30<sup>th</sup>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This post is to explain the configuration example to use heroku to deploy app with websocket-rails. The app is implemented in the <a href="http://tgib23.github.io/blog/2014/08/03/first-post/">previous post</a> using local dev environment.</p>
+
+<h3>1. create heroku</h3>
+
+<p>Sign up for heroku and install heroku tool. Follow the <a href="https://www.railstutorial.org/book/beginning#sec-heroku_setup">heroku setup instruction</a> in the rails tutorial.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ heroku create
+</span><span class='line'>Creating gentle-tor-1752... done, stack is cedar
+</span><span class='line'>https://gentle-tor-1752.herokuapp.com/ | git@heroku.com:gentle-tor-1752.git</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now got gentle-tor-1752 for this entry.</p>
+
+<h3>2. redis setup</h3>
+
+<p>Because redis is used for the backend of websocket, we have to enable redis in heroku.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ heroku addons:add redistogo                                                                                                            
+</span><span class='line'>Adding redistogo on gentle-tor-1752... done, v3 (free)
+</span><span class='line'>Use `heroku addons:docs redistogo` to view documentation.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then, check the redis setting information from heroku web UI (app -> redistogo). You will find info on redis db, such as below.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>redis://redistogo:xxxxxxxxxxxxxxxx@greeneye.redistogo.com:12345/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next, apply these info on the redis setting.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim config/initializers/websocket_rails.rb
+</span><span class='line'>...
+</span><span class='line'>-  config.redis_options = {:host =&gt; 'localhost', :port =&gt; '6379'}
+</span><span class='line'>+  config.redis_options = {:host =&gt; 'greeneye.redistogo.com', :port =&gt; '12345', :user =&gt; 'redistogo', :password =&gt; 'xxxxxxxxxxxxxxxx'}
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you don&rsquo;t like write password into code, maybe you can use environment variables.</p>
+
+<h3>3. change websocket url</h3>
+
+<p>Change the websocket url specified in the code. Again, there could be better way to do this, but I put it into code simply.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim app/views/chat/index.html.erb
+</span><span class='line'>...
+</span><span class='line'>-  var ws_rails = new WebSocketRails("localhost:3001/websocket");
+</span><span class='line'>+  var ws_rails = new WebSocketRails("aqueous-springs-2658.herokuapp.com/websocket");
+</span><span class='line'>
+</span><span class='line'>* change the hostname accoring to your setting.
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>4. small changes for heroku</h3>
+
+<p>put sqlite dev only and add pg and rails_12fator for prod env.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>+group :development do
+</span><span class='line'>+  # Use sqlite3 as the database for Active Record
+</span><span class='line'>+  gem 'sqlite3'
+</span><span class='line'>+end
+</span><span class='line'>+
+</span><span class='line'>+group :production do
+</span><span class='line'>+  gem 'pg', '0.17.1'
+</span><span class='line'>+  gem 'rails_12factor', '0.0.2'
+</span><span class='line'>+end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>commit Gemfile.lock</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ bundle install
+</span><span class='line'>$ git add Gemfile.lock
+</span><span class='line'>$ git commit -am 'add Gemfile.lock'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>set root path</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vim config/routes.rb
+</span><span class='line'>...
+</span><span class='line'>root to: "chat#index"
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>5. deploy and check</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git push heroku master
+</span><span class='line'>$ heroku open</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2014/08/03/first-post/">Initial Steps to Use Websocket-rails</a></h1>
     
     
@@ -89,7 +245,7 @@ I also add some suplemental steps for smooth start &hellip;">
   
 
 
-<time datetime="2014-08-03T21:39:04+09:00" pubdate data-updated="true">Aug 3<sup>rd</sup>, 2014</time>
+<time datetime="2014-08-03T07:39:04-05:00" pubdate data-updated="true">Aug 3<sup>rd</sup>, 2014</time>
         
       </p>
     
@@ -444,6 +600,10 @@ here, define websocket method &ldquo;message_receive&rdquo; which accepts messag
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/">Deploy Rails Websocket App Into Heroku</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/08/03/first-post/">Initial Steps to Use Websocket-rails</a>
