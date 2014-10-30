@@ -6,7 +6,7 @@ comments: true
 categories: [rails, websocket, rails-websocket, heroku]
 ---
 
-This post is to explain the configuration example to use heroku to deploy app with websocket-rails. The app is implemented in the [previous post](http://tgib23.github.io/blog/2014/08/03/first-post/) using local dev environment.
+This post is to explain the configuration example to use heroku to deploy app with websocket-rails. The app is implemented in the [previous post](http://tgib23.github.io/blog/2014/08/03/first-post/) using standalone mode websocket server on local dev environment.
 
 ### 1. create heroku
 Sign up for heroku and install heroku tool. Follow the [heroku setup instruction](https://www.railstutorial.org/book/beginning#sec-heroku_setup) in the rails tutorial.
