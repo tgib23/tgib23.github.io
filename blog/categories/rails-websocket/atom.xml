@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rails-websocket | some tech talks]]></title>
   <link href="http://tgib23.github.io/blog/categories/rails-websocket/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2014-10-30T00:47:35-05:00</updated>
+  <updated>2014-10-30T00:51:17-05:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -18,7 +18,7 @@
     <link href="http://tgib23.github.io/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/"/>
     <updated>2014-10-30T00:14:33-05:00</updated>
     <id>http://tgib23.github.io/blog/2014/10/30/deploy-rails-websocket-app-into-heroku</id>
-    <content type="html"><![CDATA[<p>This post is to explain the configuration example to use heroku to deploy app with websocket-rails. The app is implemented in the <a href="http://tgib23.github.io/blog/2014/08/03/first-post/">previous post</a> using local dev environment.</p>
+    <content type="html"><![CDATA[<p>This post is to explain the configuration example to use heroku to deploy app with websocket-rails. The app is implemented in the <a href="http://tgib23.github.io/blog/2014/08/03/first-post/">previous post</a> using standalone mode websocket server on local dev environment.</p>
 
 <h3>1. create heroku</h3>
 
