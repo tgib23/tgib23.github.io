@@ -6,7 +6,7 @@ comments: true
 categories: [ansible, packer]
 ---
 
-ansible's ["--extra-vars"](http://docs.ansible.com/ansible/playbooks_variables.html#passing-variables-on-the-command-line) is the option to pass variables from command line. In using packer with ansible, you can still specify "--extra-vars" throught packer's ["extra_arguments"](https://www.packer.io/docs/provisioners/ansible-local.html#extra_arguments). Here'some example.
+ansible's ["--extra-vars"](http://docs.ansible.com/ansible/playbooks_variables.html#passing-variables-on-the-command-line) is the option to pass variables from command line. In using packer with ansible, you can still specify "--extra-vars" through packer's ["extra_arguments"](https://www.packer.io/docs/provisioners/ansible-local.html#extra_arguments). Here'some example.
 
 * ansible
 
