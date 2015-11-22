@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Packer | some tech talks]]></title>
   <link href="http://tgib23.github.io/blog/categories/packer/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2015-11-22T20:35:24+09:00</updated>
+  <updated>2015-11-22T20:49:46+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -18,7 +18,7 @@
     <link href="http://tgib23.github.io/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/"/>
     <updated>2015-11-15T00:47:21+09:00</updated>
     <id>http://tgib23.github.io/blog/2015/11/15/use-extra-vars-of-ansible-from-packer</id>
-    <content type="html"><![CDATA[<p>ansible&rsquo;s <a href="http://docs.ansible.com/ansible/playbooks_variables.html#passing-variables-on-the-command-line">&ldquo;&ndash;extra-vars&rdquo;</a> is the option to pass variables from command line. In using packer with ansible, you can still specify &ldquo;&ndash;extra-vars&rdquo; throught packer&rsquo;s <a href="https://www.packer.io/docs/provisioners/ansible-local.html#extra_arguments">&ldquo;extra_arguments&rdquo;</a>. Here&#8217;some example.</p>
+    <content type="html"><![CDATA[<p>ansible&rsquo;s <a href="http://docs.ansible.com/ansible/playbooks_variables.html#passing-variables-on-the-command-line">&ldquo;&ndash;extra-vars&rdquo;</a> is the option to pass variables from command line. In using packer with ansible, you can still specify &ldquo;&ndash;extra-vars&rdquo; through packer&rsquo;s <a href="https://www.packer.io/docs/provisioners/ansible-local.html#extra_arguments">&ldquo;extra_arguments&rdquo;</a>. Here&#8217;some example.</p>
 
 <ul>
 <li>ansible</li>
