@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Ansible | some tech talks]]></title>
+  <link href="http://tgib23.github.io/blog/categories/ansible/atom.xml" rel="self"/>
+  <link href="http://tgib23.github.io/"/>
+  <updated>2015-11-22T20:35:24+09:00</updated>
+  <id>http://tgib23.github.io/</id>
+  <author>
+    <name><![CDATA[_at_ bigt23]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Use Extra-vars of Ansible From Packer]]></title>
+    <link href="http://tgib23.github.io/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/"/>
+    <updated>2015-11-15T00:47:21+09:00</updated>
+    <id>http://tgib23.github.io/blog/2015/11/15/use-extra-vars-of-ansible-from-packer</id>
+    <content type="html"><![CDATA[<p>ansible&rsquo;s <a href="http://docs.ansible.com/ansible/playbooks_variables.html#passing-variables-on-the-command-line">&ldquo;&ndash;extra-vars&rdquo;</a> is the option to pass variables from command line. In using packer with ansible, you can still specify &ldquo;&ndash;extra-vars&rdquo; throught packer&rsquo;s <a href="https://www.packer.io/docs/provisioners/ansible-local.html#extra_arguments">&ldquo;extra_arguments&rdquo;</a>. Here&#8217;some example.</p>
+
+<ul>
+<li>ansible</li>
+</ul>
+
+
+<p>We consider the case that we specify parameter &ldquo;base_ami&rdquo;, &ldquo;parameter_1&rdquo;, and &ldquo;parameter_2&rdquo; for ansible.
+
+<code>yml
+$ cat sample.yml
+- hosts: sample
+  roles: sample_dir
+  vars:
+    base_ami: '{{ base_ami }}'
+    parameter_1: '{{ parameter_1 }}'
+    parameter_2: '{{ parameter_2 }}'
+</code>
+</p>
+
+<ul>
+<li>packer</li>
+</ul>
+
+
+<p>Then, we use those parameters above in packer&rsquo;s json.
+
+<code>``json
+$ cat sample.json
+{
+  "variables": {
+    "base_ami": "",
+    "parameter_1": "",
+    "parameter_2": ""
+  },
+  "builders"
+  ...
+  ...
+  "provisioners": [{
+    ...
+    ...
+  }, {
+    "type": "ansible-local",
+    "playbook_file": "sample.yml",
+    "staging_directory": "/tmp/ansible-local"
+    "role_paths": [
+      "roles/sample_dir"
+    ],
+    "extra_arguments": "--extra-vars 'base_ami={{user</code>base_ami<code>}} parameter_1={{user</code>parameter_1<code>}} parameter_2={{user</code>parameter_2`}}&lsquo;&ldquo;,</p>
+
+<p>  }]
+}
+&#8220;`
+</p>
+
+<p>Now you can pass your ansible parameter from packer like this
+<code>bash
+$ sudo /usr/local/packer/packer build  -var 'base_ami=xxxxxxxx' -var 'parameter_1=yyyyyyyy' -var 'parameter_2=zzzzzzzzzz' ./sample.json
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

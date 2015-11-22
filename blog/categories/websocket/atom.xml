@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Websocket | some tech talks]]></title>
   <link href="http://tgib23.github.io/blog/categories/websocket/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2014-10-30T00:51:17-05:00</updated>
+  <updated>2015-11-22T20:35:24+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Deploy Rails Websocket App Into Heroku]]></title>
     <link href="http://tgib23.github.io/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/"/>
-    <updated>2014-10-30T00:14:33-05:00</updated>
+    <updated>2014-10-30T14:14:33+09:00</updated>
     <id>http://tgib23.github.io/blog/2014/10/30/deploy-rails-websocket-app-into-heroku</id>
     <content type="html"><![CDATA[<p>This post is to explain the configuration example to use heroku to deploy app with websocket-rails. The app is implemented in the <a href="http://tgib23.github.io/blog/2014/08/03/first-post/">previous post</a> using standalone mode websocket server on local dev environment.</p>
 
@@ -112,7 +112,7 @@ $ heroku open
   <entry>
     <title type="html"><![CDATA[Initial Steps to Use Websocket-rails]]></title>
     <link href="http://tgib23.github.io/blog/2014/08/03/first-post/"/>
-    <updated>2014-08-03T07:39:04-05:00</updated>
+    <updated>2014-08-03T21:39:04+09:00</updated>
     <id>http://tgib23.github.io/blog/2014/08/03/first-post</id>
     <content type="html"><![CDATA[<p>This is the very initial steps to use websocket-rails.
 Basically, I follow the lessons from <a href="http://www.school.ctc-g.co.jp/columns/masuidrive/masuidrive14.html">here</a>.

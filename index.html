@@ -9,7 +9,7 @@
   <meta name="author" content="_at_ bigt23">
 
   
-  <meta name="description" content="This post is to explain the configuration example to use heroku to deploy app with websocket-rails. The app is implemented in the previous post using &hellip;">
+  <meta name="description" content="ansible&rsquo;s &ldquo;&ndash;extra-vars&rdquo; is the option to pass variables from command line. In using packer with ansible, you can still &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +71,131 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/">Use Extra-vars of Ansible From Packer</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-15T00:47:21+09:00" pubdate data-updated="true">Nov 15<sup>th</sup>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ansible&rsquo;s <a href="http://docs.ansible.com/ansible/playbooks_variables.html#passing-variables-on-the-command-line">&ldquo;&ndash;extra-vars&rdquo;</a> is the option to pass variables from command line. In using packer with ansible, you can still specify &ldquo;&ndash;extra-vars&rdquo; throught packer&rsquo;s <a href="https://www.packer.io/docs/provisioners/ansible-local.html#extra_arguments">&ldquo;extra_arguments&rdquo;</a>. Here&#8217;some example.</p>
+
+<ul>
+<li>ansible</li>
+</ul>
+
+
+<p>We consider the case that we specify parameter &ldquo;base_ami&rdquo;, &ldquo;parameter_1&rdquo;, and &ldquo;parameter_2&rdquo; for ansible.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">$ cat sample.yml</span>
+</span><span class='line'><span class="l-Scalar-Plain">- hosts</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">sample</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">roles</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">sample_dir</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">vars</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">base_ami</span><span class="p-Indicator">:</span> <span class="s">&#39;{{</span><span class="nv"> </span><span class="s">base_ami</span><span class="nv"> </span><span class="s">}}&#39;</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">parameter_1</span><span class="p-Indicator">:</span> <span class="s">&#39;{{</span><span class="nv"> </span><span class="s">parameter_1</span><span class="nv"> </span><span class="s">}}&#39;</span>
+</span><span class='line'>    <span class="l-Scalar-Plain">parameter_2</span><span class="p-Indicator">:</span> <span class="s">&#39;{{</span><span class="nv"> </span><span class="s">parameter_2</span><span class="nv"> </span><span class="s">}}&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>packer</li>
+</ul>
+
+
+<p>Then, we use those parameters above in packer&rsquo;s json.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="err">$</span> <span class="err">cat</span> <span class="err">sample.json</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="nt">&quot;variables&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;base_ami&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;parameter_1&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;parameter_2&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+</span><span class='line'>  <span class="p">},</span>
+</span><span class='line'>  <span class="nt">&quot;builders&quot;</span>
+</span><span class='line'>  <span class="err">...</span>
+</span><span class='line'>  <span class="err">...</span>
+</span><span class='line'>  <span class="s2">&quot;provisioners&quot;</span><span class="p">:</span> <span class="p">[{</span>
+</span><span class='line'>    <span class="err">...</span>
+</span><span class='line'>    <span class="err">...</span>
+</span><span class='line'>  <span class="p">},</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ansible-local&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;playbook_file&quot;</span><span class="p">:</span> <span class="s2">&quot;sample.yml&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;staging_directory&quot;</span><span class="p">:</span> <span class="s2">&quot;/tmp/ansible-local&quot;</span>
+</span><span class='line'>    <span class="s2">&quot;role_paths&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span class='line'>      <span class="s2">&quot;roles/sample_dir&quot;</span>
+</span><span class='line'>    <span class="p">],</span>
+</span><span class='line'>    <span class="nt">&quot;extra_arguments&quot;</span><span class="p">:</span> <span class="s2">&quot;--extra-vars &#39;base_ami={{user `base_ami`}} parameter_1={{user `parameter_1`}} parameter_2={{user `parameter_2`}}&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}]</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now you can pass your ansible parameter from packer like this</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo /usr/local/packer/packer build  -var <span class="s1">&#39;base_ami=xxxxxxxx&#39;</span> -var <span class="s1">&#39;parameter_1=yyyyyyyy&#39;</span> -var <span class="s1">&#39;parameter_2=zzzzzzzzzz&#39;</span> ./sample.json
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/">Deploy Rails Websocket App Into Heroku</a></h1>
     
     
@@ -87,7 +212,7 @@
   
 
 
-<time datetime="2014-10-30T00:14:33-05:00" pubdate data-updated="true">Oct 30<sup>th</sup>, 2014</time>
+<time datetime="2014-10-30T14:14:33+09:00" pubdate data-updated="true">Oct 30<sup>th</sup>, 2014</time>
         
       </p>
     
@@ -245,7 +370,7 @@
   
 
 
-<time datetime="2014-08-03T07:39:04-05:00" pubdate data-updated="true">Aug 3<sup>rd</sup>, 2014</time>
+<time datetime="2014-08-03T21:39:04+09:00" pubdate data-updated="true">Aug 3<sup>rd</sup>, 2014</time>
         
       </p>
     
@@ -602,6 +727,10 @@ here, define websocket method &ldquo;message_receive&rdquo; which accepts messag
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/">Use Extra-vars of Ansible From Packer</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/">Deploy Rails Websocket App Into Heroku</a>
       </li>
     
@@ -622,7 +751,7 @@ here, define websocket method &ldquo;message_receive&rdquo; which accepts messag
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - _at_ bigt23 -
+  Copyright &copy; 2015 - _at_ bigt23 -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
