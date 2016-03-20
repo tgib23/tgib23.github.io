@@ -9,7 +9,8 @@
   <meta name="author" content="_at_ bigt23">
 
   
-  <meta name="description" content="ansible&rsquo;s &ldquo;&ndash;extra-vars&rdquo; is the option to pass variables from command line. In using packer with ansible, you can still &hellip;">
+  <meta name="description" content="In case you want to install npm package file, created by &ldquo;npm pack&rdquo; command, just specify the path to the file to &ldquo;name&rdquo;. 1
+2 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +66,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible/">Install Npm Package From Npm Pack-ed File Using Ansible</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-03-20T22:28:10+09:00" pubdate data-updated="true">Mar 20<sup>th</sup>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In case you want to install npm package file, created by &ldquo;npm pack&rdquo; command, just specify the path to the file to &ldquo;name&rdquo;.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>description: Install "sample" node.js package, created by "npm pack", located at /tmp/sample.tar.gz
+</span><span class='line'>- npm: name=/tmp/sample.tar.gz path=/app/location</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&rsquo;s it.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -727,6 +772,10 @@ here, define websocket method &ldquo;message_receive&rdquo; which accepts messag
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible/">Install Npm Package From Npm Pack-ed File Using Ansible</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/">Use Extra-vars of Ansible From Packer</a>
       </li>
     
@@ -751,7 +800,7 @@ here, define websocket method &ldquo;message_receive&rdquo; which accepts messag
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - _at_ bigt23 -
+  Copyright &copy; 2016 - _at_ bigt23 -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

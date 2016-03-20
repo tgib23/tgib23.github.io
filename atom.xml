@@ -4,7 +4,7 @@
   <title><![CDATA[some tech talks]]></title>
   <link href="http://tgib23.github.io/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2015-11-22T20:49:46+09:00</updated>
+  <updated>2016-03-20T22:41:15+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Install Npm Package From Npm Pack-ed File Using Ansible]]></title>
+    <link href="http://tgib23.github.io/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible/"/>
+    <updated>2016-03-20T22:28:10+09:00</updated>
+    <id>http://tgib23.github.io/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible</id>
+    <content type="html"><![CDATA[<p>In case you want to install npm package file, created by &ldquo;npm pack&rdquo; command, just specify the path to the file to &ldquo;name&rdquo;.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>description: Install "sample" node.js package, created by "npm pack", located at /tmp/sample.tar.gz
+</span><span class='line'>- npm: name=/tmp/sample.tar.gz path=/app/location</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&rsquo;s it.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Use Extra-vars of Ansible From Packer]]></title>
