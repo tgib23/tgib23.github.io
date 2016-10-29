@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Behavior of Hbase Read/Write Requests Counter - some tech talks</title>
+  <meta name="author" content="_at_ bigt23">
+
+  
+  <meta name="description" content="HBase has Read/Write Requests System Counter feature and we can monitor it from HBase Web UI or API.
+Against my instincts, the numbers of those &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tgib23.github.io/blog/2016/10/29/behavior-of-hbase-read-slash-write-requests-counter">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="some tech talks" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">some tech talks</a></h1>
+  
+    <h2>ruby, rails, book reviews</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:tgib23.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Behavior of Hbase Read/Write Requests Counter</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-10-29T23:10:50+09:00" pubdate data-updated="true">Oct 29<sup>th</sup>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>HBase has Read/Write Requests System Counter feature and we can monitor it from HBase Web UI or API.
+Against my instincts, the numbers of those counters could DECREASE while running.
+This article covers how we could see the decrease of those counters.</p>
+
+<p>We can see read/write request counters of HBase from<br/>
+<a href="http://master-server-node:60010/master-status#requestStats">http://master-server-node:60010/master-status#requestStats</a> <br/>
+or<br/>
+<a href="http://region-server-nodes:60010/jmx">http://region-server-nodes:60010/jmx</a></p>
+
+<p>These numbers are calculated by summing each region’s counts.
+Check the iteration part of the code.
+<a href="https://github.com/apache/hbase/blob/947ea85b0c086a022d7b50868b8499a0560331ad/hbase-server/src/main/java/org/apache/hadoop/hbase/regionserver/MetricsRegionServerWrapperImpl.java#L495">https://github.com/apache/hbase/blob/947ea85b0c086a022d7b50868b8499a0560331ad/hbase-server/src/main/java/org/apache/hadoop/hbase/regionserver/MetricsRegionServerWrapperImpl.java#L495</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>    for (Region r : regionServer.getOnlineRegionsLocalContext()) {
+</span><span class='line'>      tempNumMutationsWithoutWAL += r.getNumMutationsWithoutWAL();
+</span><span class='line'>      tempDataInMemoryWithoutWAL += r.getDataInMemoryWithoutWAL();
+</span><span class='line'>      tempReadRequestsCount += r.getReadRequestsCount();
+</span><span class='line'>      tempWriteRequestsCount += r.getWriteRequestsCount();
+</span><span class='line'>      tempCheckAndMutateChecksFailed += r.getCheckAndMutateChecksFailed();
+</span><span class='line'>      tempCheckAndMutateChecksPassed += r.getCheckAndMutateChecksPassed();
+</span><span class='line'>      tempBlockedRequestsCount += r.getBlockedRequestsCount();</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So, every time regions get moved or deleted, the number of counters decreases.</p>
+
+<p>Here is a sample check the behaviour.</p>
+
+<ol>
+<li>check <a href="http://master-server-node:60010/master-status#requestStats">http://master-server-node:60010/master-status#requestStats</a></li>
+<li>create table and put some record
+
+<ul>
+<li><pre><code>$ hbase shell   
+hbase&gt; create 'weblog2', 'stats'
+hbase&gt; put 'weblog2', 'row1', 'stats:weekly', 'test-weekly-value'
+hbase&gt; put 'weblog2', 'row1', 'stats:weekly', 'test-weekly-value'
+hbase&gt; put 'weblog2', 'row2', 'stats:daily', 'test-weekly-value'
+hbase&gt; put 'weblog2', 'row3', 'stats:monthly', 'test-weekly-value'
+</code></pre></li>
+</ul>
+</li>
+<li>reload the above web page and identify which node increases the write counter. That node has the region.</li>
+<li>now, delete the table and compare how the value changed
+
+<ul>
+<li>check the counter</li>
+</ul>
+</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl 'http://syamada-v4-dist0:60030/jmx' -s | grep RequestCount
+</span><span class='line'>   "totalRequestCount" : 12,
+</span><span class='line'>   "readRequestCount" : 8,
+</span><span class='line'>   "writeRequestCount" : 5,</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>disable and drop the table</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ hbase shell
+</span><span class='line'>hbase&gt; disable 'weblog2'
+</span><span class='line'>hbase&gt; drop 'weblog2'</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>check the counter again</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl 'http://syamada-v4-dist0:60030/jmx' -s | grep RequestCount
+</span><span class='line'>   "totalRequestCount" : 13,
+</span><span class='line'>   "readRequestCount" : 0,
+</span><span class='line'>   "writeRequestCount" : 0,
+</span><span class='line'>   "blockedRequestCount" : 0,</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This happens when you move the Region, too.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>hbase&gt; move ‘ENCODED_REGIONNAME’, ‘SERVER_NAME’</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The counter values are not migrated when region moved. All counters for the region reset to 0.</p>
+
+<p>Notice in the example above, “totalRequestCount” is not reset to 0.
+“totalRequestCount” is maintained by an instance variable managed by RegionServer, not Region.
+Every time RegionServer accepts RPC call from clients, RegionServer increments the count.
+Here&rsquo;s one example from the code.
+Notice <code>requestCount.increment()</code> is called every time RPC call method is called.</p>
+
+<p><a href="https://github.com/apache/hbase/blob/dfb2a800c43b30c326dbdcec673387f7033f2092/hbase-server/src/main/java/org/apache/hadoop/hbase/regionserver/RSRpcServices.java#L1377">https://github.com/apache/hbase/blob/dfb2a800c43b30c326dbdcec673387f7033f2092/hbase-server/src/main/java/org/apache/hadoop/hbase/regionserver/RSRpcServices.java#L1377</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  @Override
+</span><span class='line'>  @QosPriority(priority=HConstants.ADMIN_QOS)
+</span><span class='line'>  public CompactRegionResponse compactRegion(final RpcController controller,
+</span><span class='line'>      final CompactRegionRequest request) throws ServiceException {
+</span><span class='line'>    try {
+</span><span class='line'>      checkOpen();
+</span><span class='line'>      requestCount.increment();
+</span><span class='line'>      Region region = getRegion(request.getRegion());</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When you restart the region server, not only read/write counters but also totalRequestCount are also reset to 0.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">_at_ bigt23</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-10-29T23:10:50+09:00" pubdate data-updated="true">Oct 29<sup>th</sup>, 2016</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/hbase/'>hbase</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tgib23.github.io/blog/2016/10/29/behavior-of-hbase-read-slash-write-requests-counter/" data-via="" data-counturl="http://tgib23.github.io/blog/2016/10/29/behavior-of-hbase-read-slash-write-requests-counter/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible/" title="Previous Post: install npm package from npm pack-ed file using ansible">&laquo; install npm package from npm pack-ed file using ansible</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/10/29/behavior-of-hbase-read-slash-write-requests-counter/">Behavior of Hbase Read/Write Requests Counter</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible/">Install Npm Package From Npm Pack-ed File Using Ansible</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/">Use Extra-vars of Ansible From Packer</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/">Deploy Rails Websocket App Into Heroku</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/03/first-post/">Initial Steps to Use Websocket-rails</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - _at_ bigt23 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

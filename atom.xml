@@ -4,7 +4,7 @@
   <title><![CDATA[some tech talks]]></title>
   <link href="http://tgib23.github.io/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2016-03-20T22:41:15+09:00</updated>
+  <updated>2016-10-30T00:39:43+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -12,6 +12,148 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Behavior of Hbase Read/Write Requests Counter]]></title>
+    <link href="http://tgib23.github.io/blog/2016/10/29/behavior-of-hbase-read-slash-write-requests-counter/"/>
+    <updated>2016-10-29T23:10:50+09:00</updated>
+    <id>http://tgib23.github.io/blog/2016/10/29/behavior-of-hbase-read-slash-write-requests-counter</id>
+    <content type="html"><![CDATA[<p>HBase has Read/Write Requests System Counter feature and we can monitor it from HBase Web UI or API.
+Against my instincts, the numbers of those counters could DECREASE while running.
+This article covers how we could see the decrease of those counters.</p>
+
+<p>We can see read/write request counters of HBase from<br/>
+<a href="http://master-server-node:60010/master-status#requestStats">http://master-server-node:60010/master-status#requestStats</a> <br/>
+or<br/>
+<a href="http://region-server-nodes:60010/jmx">http://region-server-nodes:60010/jmx</a></p>
+
+<p>These numbers are calculated by summing each region’s counts.
+Check the iteration part of the code.
+<a href="https://github.com/apache/hbase/blob/947ea85b0c086a022d7b50868b8499a0560331ad/hbase-server/src/main/java/org/apache/hadoop/hbase/regionserver/MetricsRegionServerWrapperImpl.java#L495">https://github.com/apache/hbase/blob/947ea85b0c086a022d7b50868b8499a0560331ad/hbase-server/src/main/java/org/apache/hadoop/hbase/regionserver/MetricsRegionServerWrapperImpl.java#L495</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>    for (Region r : regionServer.getOnlineRegionsLocalContext()) {
+</span><span class='line'>      tempNumMutationsWithoutWAL += r.getNumMutationsWithoutWAL();
+</span><span class='line'>      tempDataInMemoryWithoutWAL += r.getDataInMemoryWithoutWAL();
+</span><span class='line'>      tempReadRequestsCount += r.getReadRequestsCount();
+</span><span class='line'>      tempWriteRequestsCount += r.getWriteRequestsCount();
+</span><span class='line'>      tempCheckAndMutateChecksFailed += r.getCheckAndMutateChecksFailed();
+</span><span class='line'>      tempCheckAndMutateChecksPassed += r.getCheckAndMutateChecksPassed();
+</span><span class='line'>      tempBlockedRequestsCount += r.getBlockedRequestsCount();</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So, every time regions get moved or deleted, the number of counters decreases.</p>
+
+<p>Here is a sample check the behaviour.</p>
+
+<ol>
+<li>check <a href="http://master-server-node:60010/master-status#requestStats">http://master-server-node:60010/master-status#requestStats</a></li>
+<li>create table and put some record
+
+<ul>
+<li><pre><code>$ hbase shell   
+hbase&gt; create 'weblog2', 'stats'
+hbase&gt; put 'weblog2', 'row1', 'stats:weekly', 'test-weekly-value'
+hbase&gt; put 'weblog2', 'row1', 'stats:weekly', 'test-weekly-value'
+hbase&gt; put 'weblog2', 'row2', 'stats:daily', 'test-weekly-value'
+hbase&gt; put 'weblog2', 'row3', 'stats:monthly', 'test-weekly-value'
+</code></pre></li>
+</ul>
+</li>
+<li>reload the above web page and identify which node increases the write counter. That node has the region.</li>
+<li>now, delete the table and compare how the value changed
+
+<ul>
+<li>check the counter</li>
+</ul>
+</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl 'http://syamada-v4-dist0:60030/jmx' -s | grep RequestCount
+</span><span class='line'>   "totalRequestCount" : 12,
+</span><span class='line'>   "readRequestCount" : 8,
+</span><span class='line'>   "writeRequestCount" : 5,</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>disable and drop the table</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ hbase shell
+</span><span class='line'>hbase&gt; disable 'weblog2'
+</span><span class='line'>hbase&gt; drop 'weblog2'</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>check the counter again</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl 'http://syamada-v4-dist0:60030/jmx' -s | grep RequestCount
+</span><span class='line'>   "totalRequestCount" : 13,
+</span><span class='line'>   "readRequestCount" : 0,
+</span><span class='line'>   "writeRequestCount" : 0,
+</span><span class='line'>   "blockedRequestCount" : 0,</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This happens when you move the Region, too.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>hbase&gt; move ‘ENCODED_REGIONNAME’, ‘SERVER_NAME’</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The counter values are not migrated when region moved. All counters for the region reset to 0.</p>
+
+<p>Notice in the example above, “totalRequestCount” is not reset to 0.
+“totalRequestCount” is maintained by an instance variable managed by RegionServer, not Region.
+Every time RegionServer accepts RPC call from clients, RegionServer increments the count.
+Here&rsquo;s one example from the code.
+Notice <code>requestCount.increment()</code> is called every time RPC call method is called.</p>
+
+<p><a href="https://github.com/apache/hbase/blob/dfb2a800c43b30c326dbdcec673387f7033f2092/hbase-server/src/main/java/org/apache/hadoop/hbase/regionserver/RSRpcServices.java#L1377">https://github.com/apache/hbase/blob/dfb2a800c43b30c326dbdcec673387f7033f2092/hbase-server/src/main/java/org/apache/hadoop/hbase/regionserver/RSRpcServices.java#L1377</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  @Override
+</span><span class='line'>  @QosPriority(priority=HConstants.ADMIN_QOS)
+</span><span class='line'>  public CompactRegionResponse compactRegion(final RpcController controller,
+</span><span class='line'>      final CompactRegionRequest request) throws ServiceException {
+</span><span class='line'>    try {
+</span><span class='line'>      checkOpen();
+</span><span class='line'>      requestCount.increment();
+</span><span class='line'>      Region region = getRegion(request.getRegion());</span></code></pre></td></tr></table></div></figure>
+
+
+<p>When you restart the region server, not only read/write counters but also totalRequestCount are also reset to 0.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Install Npm Package From Npm Pack-ed File Using Ansible]]></title>
