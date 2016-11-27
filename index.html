@@ -316,7 +316,7 @@
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir app/Controller/users
-</span><span class='line'>$ vim app/controllers/users/omniauth_callbacks_controller.rb
+</span><span class='line'>$ emacs app/controllers/users/omniauth_callbacks_controller.rb
 </span><span class='line'>class Users::OmniauthCallbacksController &lt; Devise::OmniauthCallbacksController
 </span><span class='line'>  def facebook
 </span><span class='line'>    callback_from :facebook
@@ -411,11 +411,11 @@
 </span><span class='line'>+  end
 </span><span class='line'>+
 </span><span class='line'>+  def self.new_with_session(params, session)
-</span><span class='line'>+   emacs  super.tap do |user|
-</span><span class='line'>+      if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
-</span><span class='line'>+        user.email = data["email"] if user.email.blank?
-</span><span class='line'>+      end
-</span><span class='line'>+    end
+</span><span class='line'>+   super.tap do |user|
+</span><span class='line'>+     if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
+</span><span class='line'>+       user.email = data["email"] if user.email.blank?
+</span><span class='line'>+     end
+</span><span class='line'>+   end
 </span><span class='line'>+  end
 </span><span class='line'>+
 </span><span class='line'>+  private

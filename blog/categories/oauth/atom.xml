@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Oauth | some tech talks]]></title>
   <link href="http://tgib23.github.io/blog/categories/oauth/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2016-11-27T13:40:11+09:00</updated>
+  <updated>2016-11-27T15:38:45+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -134,7 +134,7 @@ user_facebook_omniauth_authorize GET|POST /users/auth/facebook(.:format)        
 <h3>3. create Callback</h3>
 
 <pre><code>$ mkdir app/Controller/users
-$ vim app/controllers/users/omniauth_callbacks_controller.rb
+$ emacs app/controllers/users/omniauth_callbacks_controller.rb
 class Users::OmniauthCallbacksController &lt; Devise::OmniauthCallbacksController
   def facebook
     callback_from :facebook
@@ -190,11 +190,11 @@ index 288823c..bd060ad 100644
 +  end
 +
 +  def self.new_with_session(params, session)
-+   emacs  super.tap do |user|
-+      if data = session["devise.facebook_data"] &amp;&amp; session["devise.facebook_data"]["extra"]["raw_info"]
-+        user.email = data["email"] if user.email.blank?
-+      end
-+    end
++   super.tap do |user|
++     if data = session["devise.facebook_data"] &amp;&amp; session["devise.facebook_data"]["extra"]["raw_info"]
++       user.email = data["email"] if user.email.blank?
++     end
++   end
 +  end
 +
 +  private
