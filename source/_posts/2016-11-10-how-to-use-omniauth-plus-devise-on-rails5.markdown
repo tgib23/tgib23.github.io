@@ -7,6 +7,7 @@ categories: [oauth, omniauth, devise, rails5, facebook]
 ---
 
 This post is no-brainer step by step memo to use omniauth and devise on rails5 for setting up oauth webapp with facebook.
+Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0 are used.
 
 ### 0. env & requiement
 ```
@@ -39,6 +40,13 @@ index 4aa8f6b..1d0e2d4 100644
 +gem 'omniauth-facebook'
 
 $ bundle install
+$ gem list | grep devise
+devise (4.2.0)
+$ gem list | grep omniauth
+omniauth (1.3.1)
+omniauth-facebook (4.0.0)
+omniauth-oauth (1.1.0)
+omniauth-oauth2 (1.4.0)
 $ rails g devise:install
 ```
 
