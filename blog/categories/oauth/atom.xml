@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Oauth | some tech talks]]></title>
+  <link href="http://tgib23.github.io/blog/categories/oauth/atom.xml" rel="self"/>
+  <link href="http://tgib23.github.io/"/>
+  <updated>2016-11-27T13:40:11+09:00</updated>
+  <id>http://tgib23.github.io/</id>
+  <author>
+    <name><![CDATA[_at_ bigt23]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How to Use Omniauth + Devise on Rails5 From Scratch]]></title>
+    <link href="http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/"/>
+    <updated>2016-11-10T00:11:23+09:00</updated>
+    <id>http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5</id>
+    <content type="html"><![CDATA[<p>This post is no-brainer step by step memo to use omniauth and devise on rails5 for setting up oauth webapp with facebook.</p>
+
+<h3>0. env &amp; requiement</h3>
+
+<pre><code>$ ruby -v
+ruby 2.3.0p0 (2015-12-25 revision 53290) [x86_64-darwin15]
+
+$ rails -v
+Rails 5.0.0.1
+</code></pre>
+
+<p>Obtain facebook AppID and AppSecret from <a href="https://developers.facebook.com/">https://developers.facebook.com/</a></p>
+
+<h3>1. initial steps</h3>
+
+<p>create rails app
+<code>
+$ rails new omniauth &amp;&amp; cd omniauth
+</code></p>
+
+<p>modify Gemfile and add devise and omniauth
+&#8220;`
+$ git diff
+ diff &ndash;git a/Gemfile b/Gemfile
+index 4aa8f6b..1d0e2d4 100644
+&mdash; a/Gemfile
++++ b/Gemfile
+@@ -46,3 +46,6 @@ end</p>
+
+<p> # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+ gem &lsquo;tzinfo-data&rsquo;, platforms: [:mingw, :mswin, :x64_mingw, :jruby]
++gem &lsquo;devise&rsquo;
++gem &lsquo;omniauth&rsquo;
++gem &lsquo;omniauth-facebook&rsquo;</p>
+
+<p>$ bundle install
+$ rails g devise:install
+&#8220;`</p>
+
+<p>If thor-0.19.2 causes error here, just uninstall thor-0.19.2 and use thor-0.19.1
+&#8220;`
+gem &lsquo;omniauth&rsquo;
+gem &lsquo;omniauth-facebook&rsquo;
++gem &lsquo;thor&rsquo;, &lsquo;0.19.1&rsquo;</p>
+
+<p>$ bundle update
+$ gem uninstall thor -v 0.19.2</p>
+
+<pre><code>
+### 2. create User model &amp; set facebook AppID and AppSecret
+Create User model and add omniauth
+</code></pre>
+
+<p>$ rails g devise User
+$ rails generate model User name:string email:string
+$ rails generate migration AddOmniauthToUsers provider:index uid:index
+$ rake db:migrate
+<code>
+set facebook AppID and AppSecret
+</code>
+$ emacs config/initializers/devise.rb
++  config.omniauth :facebook, &ldquo;APP_ID&rdquo;, &ldquo;APP_SECRET&rdquo;
+<code>
+modify app/models/user.rb and set omniauth module
+</code>
+$ git diff
+diff &ndash;git a/app/models/user.rb b/app/models/user.rb
+index b2091f9..288823c 100644
+&mdash; a/app/models/user.rb
++++ b/app/models/user.rb
+@@ -2,5 +2,5 @@ class User &lt; ApplicationRecord
+   # Include default devise modules. Others available are:
+   # :confirmable, :lockable, :timeoutable and :omniauthable
+   devise :database_authenticatable, :registerable,
+-         :recoverable, :rememberable, :trackable, :validatable
++         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook]
+&#8220;`</p>
+
+<p>set path config/routes.rb and confirm
+&#8220;`
+$ git diff
+diff &ndash;git a/config/routes.rb b/config/routes.rb
+index 2f790f8..e88fb06 100644
+&mdash; a/config/routes.rb
++++ b/config/routes.rb
+@@ -1,4 +1,4 @@
+ Rails.application.routes.draw do
+-  devise_for :users
+   # For details on the DSL available within this file, see <a href="http://guides.rubyonrails.org/routing.html">http://guides.rubyonrails.org/routing.html</a>
++  devise_for :users, controllers: { omniauth_callbacks: &lsquo;users/omniauth_callbacks&rsquo; }
+ end</p>
+
+<p>$ rake routes
+                          Prefix Verb     URI Pattern                             Controller#Action
+                new_user_session GET      /users/sign_in(.:format)                devise/sessions#new
+                    user_session POST     /users/sign_in(.:format)                devise/sessions#create
+            destroy_user_session DELETE   /users/sign_out(.:format)               devise/sessions#destroy
+user_facebook_omniauth_authorize GET|POST /users/auth/facebook(.:format)          users/omniauth_callbacks#passthru
+ user_facebook_omniauth_callback GET|POST /users/auth/facebook/callback(.:format) users/omniauth_callbacks#facebook
+                   user_password POST     /users/password(.:format)               devise/passwords#create
+               new_user_password GET      /users/password/new(.:format)           devise/passwords#new
+              edit_user_password GET      /users/password/edit(.:format)          devise/passwords#edit
+                                 PATCH    /users/password(.:format)               devise/passwords#update
+                                 PUT      /users/password(.:format)               devise/passwords#update
+        cancel_user_registration GET      /users/cancel(.:format)                 devise/registrations#cancel
+               user_registration POST     /users(.:format)                        devise/registrations#create
+           new_user_registration GET      /users/sign_up(.:format)                devise/registrations#new
+          edit_user_registration GET      /users/edit(.:format)                   devise/registrations#edit
+                                 PATCH    /users(.:format)                        devise/registrations#update
+                                 PUT      /users(.:format)                        devise/registrations#update
+                                 DELETE   /users(.:format)                        devise/registrations#destroy
+&#8220;`</p>
+
+<h3>3. create Callback</h3>
+
+<pre><code>$ mkdir app/Controller/users
+$ vim app/controllers/users/omniauth_callbacks_controller.rb
+class Users::OmniauthCallbacksController &lt; Devise::OmniauthCallbacksController
+  def facebook
+    callback_from :facebook
+  end
+
+  def twitter
+    callback_from :twitter
+  end
+
+  private
+
+  def callback_from(provider)
+    provider = provider.to_s
+
+    @user = User.find_for_oauth(request.env['omniauth.auth'])
+
+    if @user.persisted?
+      sign_in_and_redirect @user, :event =&gt; :authentication #this will throw if @user is not activated
+      set_flash_message(:notice, :success, :kind =&gt; "Facebook") if is_navigational_format?
+    else
+      session["devise.facebook_data"] = request.env["omniauth.auth"]
+      redirect_to new_user_registration_url
+    end
+  end
+end
+</code></pre>
+
+<h3>4. add account setting methods to User model</h3>
+
+<pre><code>$ git diff
+diff --git a/app/models/user.rb b/app/models/user.rb
+index 288823c..bd060ad 100644
+--- a/app/models/user.rb
++++ b/app/models/user.rb
+@@ -3,4 +3,33 @@ class User &lt; ApplicationRecord
+   # :confirmable, :lockable, :timeoutable and :omniauthable
+   devise :database_authenticatable, :registerable,
+          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook]
++
++  def self.find_for_oauth(auth)
++    user = User.where(uid: auth.uid, provider: auth.provider).first
++
++    unless user
++      user = User.create(
++        uid:      auth.uid,
++        provider: auth.provider,
++        email:    User.dummy_email(auth),
++        password: Devise.friendly_token[0, 20]
++      )
++    end
++
++    user
++  end
++
++  def self.new_with_session(params, session)
++   emacs  super.tap do |user|
++      if data = session["devise.facebook_data"] &amp;&amp; session["devise.facebook_data"]["extra"]["raw_info"]
++        user.email = data["email"] if user.email.blank?
++      end
++    end
++  end
++
++  private
++
++  def self.dummy_email(auth)
++    "#{auth.uid}-#{auth.provider}@example.com"
++  end
+ end
+</code></pre>
+
+<h3>5. make view</h3>
+
+<p>welcome/home is signin portal. home/index tells you if you are signed in or not.</p>
+
+<pre><code>$ rails g controller Welcome home
+$ rails g controller Home index
+</code></pre>
+
+<p>modify layout
+&#8220;`
+$ git diff
+diff &ndash;git a/app/views/layouts/application.html.erb b/app/views/layouts/application.html.erb
+index e164e1b..30f4849 100644
+&mdash; a/app/views/layouts/application.html.erb
++++ b/app/views/layouts/application.html.erb
+@@ -9,6 +9,18 @@
+   </head></p>
+
+<p>   <body>
++    <div id="notify">
++      <p class="notice">&lt;%= notice %></p>
++      <p class="alert">&lt;%= alert %></p>
++    </div>
++    <div id="user-info">
++      &lt;% if user_signed_in? %>
++        &lt;%#= current_user.name %>
++        [&lt;%= link_to &lsquo;Sign out&rsquo;, destroy_user_session_path, method: :delete  %>]
++      &lt;% else %>
++        &lt;%= link_to &ldquo;Sign in with Facebook&rdquo;, user_facebook_omniauth_authorize_path %>
++      &lt;% end %>
++    </div>
+     &lt;%= yield %>
+   </body>
+ </html></p>
+
+<pre><code>
+### 6. set root view
+add root path and user_root
+</code></pre>
+
+<p>$ git diff
+diff &ndash;git a/config/routes.rb b/config/routes.rb
+index 189c56f..d936a40 100644
+&mdash; a/config/routes.rb
++++ b/config/routes.rb
+@@ -3,6 +3,9 @@ Rails.application.routes.draw do</p>
+
+<p>   get &lsquo;welcome/home&rsquo;</p>
+
+<ul>
+<li>get &ldquo;home&rdquo;, to: &ldquo;home#index&rdquo;, as: &ldquo;user_root&rdquo;</li>
+<li>root &lsquo;home#index&rsquo;
++
+
+<h1>For details on the DSL available within this file, see <a href="http://guides.rubyonrails.org/routing.html">http://guides.rubyonrails.org/routing.html</a></h1>
+
+<p>devise_for :users, controllers: { omniauth_callbacks: &lsquo;users/omniauth_callbacks&rsquo; }
+end</p></li>
+</ul>
+
+
+<pre><code>
+### 7. insert authenticate_user! method to welcome/home 
+</code></pre>
+
+<p>$ git diff
+diff &ndash;git a/app/controllers/welcome_controller.rb b/app/controllers/welcome_controller.rb
+index 1467f18..52bd4fb 100644
+&mdash; a/app/controllers/welcome_controller.rb
++++ b/app/controllers/welcome_controller.rb
+@@ -1,4 +1,5 @@
+ class WelcomeController &lt; ApplicationController
++  before_action :authenticate_user!
+   def home
+   end
+ end
+&#8220;`</p>
+
+<p>&ldquo;before_action :authenticate_user!&rdquo; will make the login view automatically.</p>
+
+<h3>8. boot and check if webapp works</h3>
+
+<pre><code>$ rails s
+</code></pre>
+
+<p>and go check <a href="http://localhost:3000/welcome/home">http://localhost:3000/welcome/home</a> .
+Click &ldquo;Sign in with Facebook&rdquo; and check if it works.</p>
+]]></content>
+  </entry>
+  
+</feed>

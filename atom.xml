@@ -4,7 +4,7 @@
   <title><![CDATA[some tech talks]]></title>
   <link href="http://tgib23.github.io/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2016-10-30T00:39:43+09:00</updated>
+  <updated>2016-11-27T13:40:11+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -12,6 +12,481 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to Use Omniauth + Devise on Rails5 From Scratch]]></title>
+    <link href="http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/"/>
+    <updated>2016-11-10T00:11:23+09:00</updated>
+    <id>http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5</id>
+    <content type="html"><![CDATA[<p>This post is no-brainer step by step memo to use omniauth and devise on rails5 for setting up oauth webapp with facebook.</p>
+
+<h3>0. env &amp; requiement</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ruby -v
+</span><span class='line'>ruby 2.3.0p0 (2015-12-25 revision 53290) [x86_64-darwin15]
+</span><span class='line'>
+</span><span class='line'>$ rails -v
+</span><span class='line'>Rails 5.0.0.1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Obtain facebook AppID and AppSecret from <a href="https://developers.facebook.com/">https://developers.facebook.com/</a></p>
+
+<h3>1. initial steps</h3>
+
+<p>create rails app</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails new omniauth && cd omniauth</span></code></pre></td></tr></table></div></figure>
+
+
+<p>modify Gemfile and add devise and omniauth</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git diff
+</span><span class='line'> diff --git a/Gemfile b/Gemfile
+</span><span class='line'>index 4aa8f6b..1d0e2d4 100644
+</span><span class='line'>--- a/Gemfile
+</span><span class='line'>+++ b/Gemfile
+</span><span class='line'>@@ -46,3 +46,6 @@ end
+</span><span class='line'>
+</span><span class='line'> # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+</span><span class='line'> gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+</span><span class='line'>+gem 'devise'
+</span><span class='line'>+gem 'omniauth'
+</span><span class='line'>+gem 'omniauth-facebook'
+</span><span class='line'>
+</span><span class='line'>$ bundle install
+</span><span class='line'>$ rails g devise:install</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If thor-0.19.2 causes error here, just uninstall thor-0.19.2 and use thor-0.19.1</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem 'omniauth'
+</span><span class='line'>gem 'omniauth-facebook'
+</span><span class='line'>+gem 'thor', '0.19.1'
+</span><span class='line'>
+</span><span class='line'>$ bundle update
+</span><span class='line'>$ gem uninstall thor -v 0.19.2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. create User model &amp; set facebook AppID and AppSecret</h3>
+
+<p>Create User model and add omniauth</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails g devise User
+</span><span class='line'>$ rails generate model User name:string email:string
+</span><span class='line'>$ rails generate migration AddOmniauthToUsers provider:index uid:index
+</span><span class='line'>$ rake db:migrate</span></code></pre></td></tr></table></div></figure>
+
+
+<p>set facebook AppID and AppSecret</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ emacs config/initializers/devise.rb
+</span><span class='line'>+  config.omniauth :facebook, "APP_ID", "APP_SECRET"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>modify app/models/user.rb and set omniauth module</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git diff
+</span><span class='line'>diff --git a/app/models/user.rb b/app/models/user.rb
+</span><span class='line'>index b2091f9..288823c 100644
+</span><span class='line'>--- a/app/models/user.rb
+</span><span class='line'>+++ b/app/models/user.rb
+</span><span class='line'>@@ -2,5 +2,5 @@ class User &lt; ApplicationRecord
+</span><span class='line'>   # Include default devise modules. Others available are:
+</span><span class='line'>   # :confirmable, :lockable, :timeoutable and :omniauthable
+</span><span class='line'>   devise :database_authenticatable, :registerable,
+</span><span class='line'>-         :recoverable, :rememberable, :trackable, :validatable
+</span><span class='line'>+         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>set path config/routes.rb and confirm</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git diff
+</span><span class='line'>diff --git a/config/routes.rb b/config/routes.rb
+</span><span class='line'>index 2f790f8..e88fb06 100644
+</span><span class='line'>--- a/config/routes.rb
+</span><span class='line'>+++ b/config/routes.rb
+</span><span class='line'>@@ -1,4 +1,4 @@
+</span><span class='line'> Rails.application.routes.draw do
+</span><span class='line'>-  devise_for :users
+</span><span class='line'>   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+</span><span class='line'>+  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
+</span><span class='line'> end
+</span><span class='line'>
+</span><span class='line'>$ rake routes
+</span><span class='line'>                          Prefix Verb     URI Pattern                             Controller#Action
+</span><span class='line'>                new_user_session GET      /users/sign_in(.:format)                devise/sessions#new
+</span><span class='line'>                    user_session POST     /users/sign_in(.:format)                devise/sessions#create
+</span><span class='line'>            destroy_user_session DELETE   /users/sign_out(.:format)               devise/sessions#destroy
+</span><span class='line'>user_facebook_omniauth_authorize GET|POST /users/auth/facebook(.:format)          users/omniauth_callbacks#passthru
+</span><span class='line'> user_facebook_omniauth_callback GET|POST /users/auth/facebook/callback(.:format) users/omniauth_callbacks#facebook
+</span><span class='line'>                   user_password POST     /users/password(.:format)               devise/passwords#create
+</span><span class='line'>               new_user_password GET      /users/password/new(.:format)           devise/passwords#new
+</span><span class='line'>              edit_user_password GET      /users/password/edit(.:format)          devise/passwords#edit
+</span><span class='line'>                                 PATCH    /users/password(.:format)               devise/passwords#update
+</span><span class='line'>                                 PUT      /users/password(.:format)               devise/passwords#update
+</span><span class='line'>        cancel_user_registration GET      /users/cancel(.:format)                 devise/registrations#cancel
+</span><span class='line'>               user_registration POST     /users(.:format)                        devise/registrations#create
+</span><span class='line'>           new_user_registration GET      /users/sign_up(.:format)                devise/registrations#new
+</span><span class='line'>          edit_user_registration GET      /users/edit(.:format)                   devise/registrations#edit
+</span><span class='line'>                                 PATCH    /users(.:format)                        devise/registrations#update
+</span><span class='line'>                                 PUT      /users(.:format)                        devise/registrations#update
+</span><span class='line'>                                 DELETE   /users(.:format)                        devise/registrations#destroy</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3. create Callback</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir app/Controller/users
+</span><span class='line'>$ vim app/controllers/users/omniauth_callbacks_controller.rb
+</span><span class='line'>class Users::OmniauthCallbacksController &lt; Devise::OmniauthCallbacksController
+</span><span class='line'>  def facebook
+</span><span class='line'>    callback_from :facebook
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  def twitter
+</span><span class='line'>    callback_from :twitter
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  private
+</span><span class='line'>
+</span><span class='line'>  def callback_from(provider)
+</span><span class='line'>    provider = provider.to_s
+</span><span class='line'>
+</span><span class='line'>    @user = User.find_for_oauth(request.env['omniauth.auth'])
+</span><span class='line'>
+</span><span class='line'>    if @user.persisted?
+</span><span class='line'>      sign_in_and_redirect @user, :event =&gt; :authentication #this will throw if @user is not activated
+</span><span class='line'>      set_flash_message(:notice, :success, :kind =&gt; "Facebook") if is_navigational_format?
+</span><span class='line'>    else
+</span><span class='line'>      session["devise.facebook_data"] = request.env["omniauth.auth"]
+</span><span class='line'>      redirect_to new_user_registration_url
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>4. add account setting methods to User model</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git diff
+</span><span class='line'>diff --git a/app/models/user.rb b/app/models/user.rb
+</span><span class='line'>index 288823c..bd060ad 100644
+</span><span class='line'>--- a/app/models/user.rb
+</span><span class='line'>+++ b/app/models/user.rb
+</span><span class='line'>@@ -3,4 +3,33 @@ class User &lt; ApplicationRecord
+</span><span class='line'>   # :confirmable, :lockable, :timeoutable and :omniauthable
+</span><span class='line'>   devise :database_authenticatable, :registerable,
+</span><span class='line'>          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook]
+</span><span class='line'>+
+</span><span class='line'>+  def self.find_for_oauth(auth)
+</span><span class='line'>+    user = User.where(uid: auth.uid, provider: auth.provider).first
+</span><span class='line'>+
+</span><span class='line'>+    unless user
+</span><span class='line'>+      user = User.create(
+</span><span class='line'>+        uid:      auth.uid,
+</span><span class='line'>+        provider: auth.provider,
+</span><span class='line'>+        email:    User.dummy_email(auth),
+</span><span class='line'>+        password: Devise.friendly_token[0, 20]
+</span><span class='line'>+      )
+</span><span class='line'>+    end
+</span><span class='line'>+
+</span><span class='line'>+    user
+</span><span class='line'>+  end
+</span><span class='line'>+
+</span><span class='line'>+  def self.new_with_session(params, session)
+</span><span class='line'>+   emacs  super.tap do |user|
+</span><span class='line'>+      if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
+</span><span class='line'>+        user.email = data["email"] if user.email.blank?
+</span><span class='line'>+      end
+</span><span class='line'>+    end
+</span><span class='line'>+  end
+</span><span class='line'>+
+</span><span class='line'>+  private
+</span><span class='line'>+
+</span><span class='line'>+  def self.dummy_email(auth)
+</span><span class='line'>+    "#{auth.uid}-#{auth.provider}@example.com"
+</span><span class='line'>+  end
+</span><span class='line'> end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>5. make view</h3>
+
+<p>welcome/home is signin portal. home/index tells you if you are signed in or not.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails g controller Welcome home
+</span><span class='line'>$ rails g controller Home index</span></code></pre></td></tr></table></div></figure>
+
+
+<p>modify layout</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git diff
+</span><span class='line'>diff --git a/app/views/layouts/application.html.erb b/app/views/layouts/application.html.erb
+</span><span class='line'>index e164e1b..30f4849 100644
+</span><span class='line'>--- a/app/views/layouts/application.html.erb
+</span><span class='line'>+++ b/app/views/layouts/application.html.erb
+</span><span class='line'>@@ -9,6 +9,18 @@
+</span><span class='line'>   &lt;/head&gt;
+</span><span class='line'>
+</span><span class='line'>   &lt;body&gt;
+</span><span class='line'>+    &lt;div id="notify"&gt;
+</span><span class='line'>+      &lt;p class="notice"&gt;&lt;%= notice %&gt;&lt;/p&gt;
+</span><span class='line'>+      &lt;p class="alert"&gt;&lt;%= alert %&gt;&lt;/p&gt;
+</span><span class='line'>+    &lt;/div&gt;
+</span><span class='line'>+    &lt;div id="user-info"&gt;
+</span><span class='line'>+      &lt;% if user_signed_in? %&gt;
+</span><span class='line'>+        &lt;%#= current_user.name %&gt;
+</span><span class='line'>+        [&lt;%= link_to 'Sign out', destroy_user_session_path, method: :delete  %&gt;]
+</span><span class='line'>+      &lt;% else %&gt;
+</span><span class='line'>+        &lt;%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path %&gt;
+</span><span class='line'>+      &lt;% end %&gt;
+</span><span class='line'>+    &lt;/div&gt;
+</span><span class='line'>     &lt;%= yield %&gt;
+</span><span class='line'>   &lt;/body&gt;
+</span><span class='line'> &lt;/html&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>6. set root view</h3>
+
+<p>add root path and user_root</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git diff
+</span><span class='line'>diff --git a/config/routes.rb b/config/routes.rb
+</span><span class='line'>index 189c56f..d936a40 100644
+</span><span class='line'>--- a/config/routes.rb
+</span><span class='line'>+++ b/config/routes.rb
+</span><span class='line'>@@ -3,6 +3,9 @@ Rails.application.routes.draw do
+</span><span class='line'>
+</span><span class='line'>   get 'welcome/home'
+</span><span class='line'>
+</span><span class='line'>+  get "home", to: "home#index", as: "user_root"
+</span><span class='line'>+  root 'home#index'
+</span><span class='line'>+
+</span><span class='line'>   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+</span><span class='line'>   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
+</span><span class='line'> end
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>7. insert authenticate_user! method to welcome/home</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git diff
+</span><span class='line'>diff --git a/app/controllers/welcome_controller.rb b/app/controllers/welcome_controller.rb
+</span><span class='line'>index 1467f18..52bd4fb 100644
+</span><span class='line'>--- a/app/controllers/welcome_controller.rb
+</span><span class='line'>+++ b/app/controllers/welcome_controller.rb
+</span><span class='line'>@@ -1,4 +1,5 @@
+</span><span class='line'> class WelcomeController &lt; ApplicationController
+</span><span class='line'>+  before_action :authenticate_user!
+</span><span class='line'>   def home
+</span><span class='line'>   end
+</span><span class='line'> end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&ldquo;before_action :authenticate_user!&rdquo; will make the login view automatically.</p>
+
+<h3>8. boot and check if webapp works</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails s</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and go check <a href="http://localhost:3000/welcome/home">http://localhost:3000/welcome/home</a> .
+Click &ldquo;Sign in with Facebook&rdquo; and check if it works.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Behavior of Hbase Read/Write Requests Counter]]></title>
