@@ -9,8 +9,8 @@
   <meta name="author" content="_at_ bigt23">
 
   
-  <meta name="description" content="This post is no-brainer step by step memo to use omniauth and devise on rails5 for setting up oauth webapp with facebook. 0. env &amp; requiement 1
-2 &hellip;">
+  <meta name="description" content="This post is no-brainer step by step memo to use omniauth and devise on rails5 for setting up oauth webapp with facebook.
+Rails 5.0.0.1, ruby 2.3.0, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -95,7 +95,8 @@
   </header>
 
 
-  <div class="entry-content"><p>This post is no-brainer step by step memo to use omniauth and devise on rails5 for setting up oauth webapp with facebook.</p>
+  <div class="entry-content"><p>This post is no-brainer step by step memo to use omniauth and devise on rails5 for setting up oauth webapp with facebook.
+Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0 are used.</p>
 
 <h3>0. env &amp; requiement</h3>
 
@@ -138,6 +139,13 @@
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ git diff
 </span><span class='line'> diff --git a/Gemfile b/Gemfile
 </span><span class='line'>index 4aa8f6b..1d0e2d4 100644
@@ -152,6 +160,13 @@
 </span><span class='line'>+gem 'omniauth-facebook'
 </span><span class='line'>
 </span><span class='line'>$ bundle install
+</span><span class='line'>$ gem list | grep devise
+</span><span class='line'>devise (4.2.0)
+</span><span class='line'>$ gem list | grep omniauth
+</span><span class='line'>omniauth (1.3.1)
+</span><span class='line'>omniauth-facebook (4.0.0)
+</span><span class='line'>omniauth-oauth (1.1.0)
+</span><span class='line'>omniauth-oauth2 (1.4.0)
 </span><span class='line'>$ rails g devise:install</span></code></pre></td></tr></table></div></figure>
 
 

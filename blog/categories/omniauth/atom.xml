@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Omniauth | some tech talks]]></title>
   <link href="http://tgib23.github.io/blog/categories/omniauth/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2016-11-27T15:38:45+09:00</updated>
+  <updated>2016-11-27T15:50:38+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -18,7 +18,8 @@
     <link href="http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/"/>
     <updated>2016-11-10T00:11:23+09:00</updated>
     <id>http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5</id>
-    <content type="html"><![CDATA[<p>This post is no-brainer step by step memo to use omniauth and devise on rails5 for setting up oauth webapp with facebook.</p>
+    <content type="html"><![CDATA[<p>This post is no-brainer step by step memo to use omniauth and devise on rails5 for setting up oauth webapp with facebook.
+Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0 are used.</p>
 
 <h3>0. env &amp; requiement</h3>
 
@@ -54,6 +55,13 @@ index 4aa8f6b..1d0e2d4 100644
 +gem &lsquo;omniauth-facebook&rsquo;</p>
 
 <p>$ bundle install
+$ gem list | grep devise
+devise (4.2.0)
+$ gem list | grep omniauth
+omniauth (1.3.1)
+omniauth-facebook (4.0.0)
+omniauth-oauth (1.1.0)
+omniauth-oauth2 (1.4.0)
 $ rails g devise:install
 &#8220;`</p>
 
