@@ -119,7 +119,7 @@ user_facebook_omniauth_authorize GET|POST /users/auth/facebook(.:format)        
 ### 3. create Callback
 ```
 $ mkdir app/Controller/users
-$ vim app/controllers/users/omniauth_callbacks_controller.rb
+$ emacs app/controllers/users/omniauth_callbacks_controller.rb
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def facebook
     callback_from :facebook
@@ -176,11 +176,11 @@ index 288823c..bd060ad 100644
 +  end
 +
 +  def self.new_with_session(params, session)
-+   emacs  super.tap do |user|
-+      if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
-+        user.email = data["email"] if user.email.blank?
-+      end
-+    end
++   super.tap do |user|
++     if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
++       user.email = data["email"] if user.email.blank?
++     end
++   end
 +  end
 +
 +  private
