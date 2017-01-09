@@ -65,7 +65,6 @@ $ gem uninstall thor -v 0.19.2
 Create User model and add omniauth
 ```
 $ rails g devise User
-$ rails generate model User name:string email:string
 $ rails generate migration AddOmniauthToUsers provider:index uid:index
 $ rake db:migrate
 ```
@@ -126,7 +125,7 @@ user_facebook_omniauth_authorize GET|POST /users/auth/facebook(.:format)        
 
 ### 3. create Callback
 ```
-$ mkdir app/Controller/users
+$ mkdir app/controllers/users
 $ emacs app/controllers/users/omniauth_callbacks_controller.rb
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def facebook
@@ -146,9 +145,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.persisted?
       sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
-      set_flash_message(:notice, :success, :kind => "Facebook") if is_navigational_format?
+      set_flash_message(:notice, :success, :kind => provider.capitalize) if is_navigational_format?
     else
-      session["devise.facebook_data"] = request.env["omniauth.auth"]
+      session["devise.#{provider}_data"] = request.env["omniauth.auth"]
       redirect_to new_user_registration_url
     end
   end
@@ -166,7 +165,7 @@ index 288823c..bd060ad 100644
 @@ -3,4 +3,33 @@ class User < ApplicationRecord
    # :confirmable, :lockable, :timeoutable and :omniauthable
    devise :database_authenticatable, :registerable,
-          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook]
+          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook, :twitter]
 +
 +  def self.find_for_oauth(auth)
 +    user = User.where(uid: auth.uid, provider: auth.provider).first
@@ -283,5 +282,30 @@ $ rails s
 
 and go check http://localhost:3000/welcome/home .
 Click "Sign in with Facebook" and check if it works.
+
+### Additional dotenv-rails
+
+You don't wanna push your facebook APP ID and APP SECRET to github or other public repository.
+Use "dotenv-rails" and use .env file for storing those info. 
+
+add dotenv-rails in Gemfile
+```
+gem 'omniauth'
+gem 'omniauth-facebook'
++gem 'dotenv-rails'
+
+$ bundle install
+
+$ emacs .env
+FACEBOOK_API="APP_ID"
+FACEBOOK_KEY="APP_SECRET"
+
+$ emacs config/initializers/devise.rb
+-  #config.omniauth :facebook, "APP_ID", "APP_SECRET"
++  config.omniauth :facebook, ENV['FACEBOOK_API'], ENV['FACEBOOK_KEY']
+
+```
+
+Then, restart rails
 
 
