@@ -7,7 +7,7 @@ categories: [devise, omniauth, devise, rails5, twitter]
 ---
 
 This post follows previous post [How to use Omniauth + Devise on Rails5 from scratch](http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/), which is about how to setup facebook login.
-This post shows how to additionally setup twitter login.
+This post shows how to additionally setup twitter login. You can get APP ID and APP SECRET from [here](https://apps.twitter.com/).
 
 ### 1. initial step
 add omniauth-twitter in Gemfile
