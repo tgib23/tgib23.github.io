@@ -3,6 +3,12 @@
   
   
   <url>
+    <loc>http://tgib23.github.io/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/</loc>
+    <lastmod>2017-01-09T15:15:27+09:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/</loc>
     <lastmod>2016-11-10T00:11:23+09:00</lastmod>
     <priority>0.8</priority>
@@ -41,14 +47,14 @@
   
   <url>
     <loc>http://tgib23.github.io/blog/archives/</loc>
-    <lastmod>2017-01-09T15:12:09+09:00</lastmod>
+    <lastmod>2017-01-09T21:02:43+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>http://tgib23.github.io/</loc>
-    <lastmod>2017-01-09T15:12:09+09:00</lastmod>
+    <lastmod>2017-01-09T21:02:43+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>

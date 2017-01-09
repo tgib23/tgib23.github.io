@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rails5 | some tech talks]]></title>
   <link href="http://tgib23.github.io/blog/categories/rails5/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2017-01-09T15:12:09+09:00</updated>
+  <updated>2017-01-09T21:02:43+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -12,6 +12,89 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Add Twitter Login With Omniauth + Devise on Rails5]]></title>
+    <link href="http://tgib23.github.io/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/"/>
+    <updated>2017-01-09T15:15:27+09:00</updated>
+    <id>http://tgib23.github.io/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5</id>
+    <content type="html"><![CDATA[<p>This post follows previous post <a href="http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/">How to use Omniauth + Devise on Rails5 from scratch</a>, which is about how to setup facebook login.
+This post shows how to additionally setup twitter login.</p>
+
+<h3>1. initial step</h3>
+
+<p>add omniauth-twitter in Gemfile
+&#8220;`
+diff &ndash;git a/Gemfile b/Gemfile
+index de3f792..271a916 100644
+&mdash; a/Gemfile
++++ b/Gemfile
+@@ -56,3 +56,4 @@ gem &lsquo;devise&rsquo;
+ gem &lsquo;omniauth&rsquo;
+ gem &lsquo;omniauth-facebook&rsquo;
+ gem &lsquo;dotenv-rails&rsquo;
++gem &lsquo;omniauth-twitter&rsquo;</p>
+
+<p>$ bundle install</p>
+
+<p>$ gem list | grep omniauth
+omniauth (1.3.1)
+omniauth-facebook (4.0.0)
+omniauth-oauth (1.1.0)
+omniauth-oauth2 (1.4.0)
+omniauth-twitter (1.2.1)
+&#8220;`</p>
+
+<h3>2. add Twitter configuration</h3>
+
+<p>set Twitter AppID and AppSecret
+&#8220;`
+$ emacs config/initializers/devise.rb
+  config.omniauth :facebook, ENV[&lsquo;FACEBOOK_API&rsquo;], ENV[&lsquo;FACEBOOK_KEY&rsquo;]
++  config.omniauth :twitter,  ENV[&lsquo;TWITTER_API&rsquo;],  ENV[&lsquo;TWITTER_KEY&rsquo;]</p>
+
+<p>$ emacs .env
+FACEBOOK_API=&ldquo;FACEBOOK_APP_ID&rdquo;
+FACEBOOK_KEY=&ldquo;FACEBOOK_APP_SECRET&rdquo;
++TWITTER_API=&ldquo;TWITTER_APP_ID&rdquo;
++TWITTER_KEY=&ldquo;TWITTER_APP_SECRET&rdquo;</p>
+
+<p>$ git diff app/models/user.rb
+diff &ndash;git a/app/models/user.rb b/app/models/user.rb
+index 52d48be..f62d358 100644
+&mdash; a/app/models/user.rb
++++ b/app/models/user.rb
+@@ -2,7 +2,7 @@ class User &lt; ApplicationRecord
+   # Include default devise modules. Others available are:
+   # :confirmable, :lockable, :timeoutable and :omniauthable
+   devise :database_authenticatable, :registerable,
+-         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook]
++         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook, :twitter]</p>
+
+<pre><code>
+
+### 3. modify view to allow twitter login
+</code></pre>
+
+<p>diff &ndash;git a/app/views/layouts/application.html.erb b/app/views/layouts/application.html.erb
+index a9c6fde..d970abf 100644
+&mdash; a/app/views/layouts/application.html.erb
++++ b/app/views/layouts/application.html.erb
+@@ -19,6 +19,8 @@
+         [&lt;%= link_to &lsquo;Sign out&rsquo;, destroy_user_session_path, method: :delete  %>]
+       &lt;% else %>
+         &lt;%= link_to &ldquo;Sign in with Facebook&rdquo;, user_facebook_omniauth_authorize_path %>
++        <br>
++        &lt;%= link_to &ldquo;Sign in with Twitter&rdquo;, user_twitter_omniauth_authorize_path %>
+       &lt;% end %>
+     </div>
+&#8220;`</p>
+
+<p>Then, restart rails</p>
+
+<p>Here are the <a href="https://github.com/tgib23/douzou_chan2/pull/2/files">total diff files</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to Use Omniauth + Devise on Rails5 From Scratch]]></title>
@@ -61,8 +144,9 @@ $ gem list | grep omniauth
 omniauth (1.3.1)
 omniauth-facebook (4.0.0)
 omniauth-oauth (1.1.0)
-omniauth-oauth2 (1.4.0)
-$ rails g devise:install
+omniauth-oauth2 (1.4.0)</p>
+
+<p>$ rails g devise:install
 &#8220;`</p>
 
 <p>If thor-0.19.2 causes error here, just uninstall thor-0.19.2 and use thor-0.19.1
@@ -179,7 +263,7 @@ index 288823c..bd060ad 100644
 @@ -3,4 +3,33 @@ class User &lt; ApplicationRecord
    # :confirmable, :lockable, :timeoutable and :omniauthable
    devise :database_authenticatable, :registerable,
-          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook, :twitter]
+          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook]
 +
 +  def self.find_for_oauth(auth)
 +    user = User.where(uid: auth.uid, provider: auth.provider).first
@@ -324,6 +408,8 @@ FACEBOOK_KEY=&ldquo;APP_SECRET&rdquo;</p>
 <p>&#8220;`</p>
 
 <p>Then, restart rails</p>
+
+<p>Here are the <a href="https://github.com/tgib23/douzou_chan2/pull/1/files">total diff files</a></p>
 ]]></content>
   </entry>
   

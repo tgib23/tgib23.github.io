@@ -4,7 +4,7 @@
   <title><![CDATA[some tech talks]]></title>
   <link href="http://tgib23.github.io/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2017-01-09T15:12:09+09:00</updated>
+  <updated>2017-01-09T21:02:43+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -12,6 +12,139 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Add Twitter Login With Omniauth + Devise on Rails5]]></title>
+    <link href="http://tgib23.github.io/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/"/>
+    <updated>2017-01-09T15:15:27+09:00</updated>
+    <id>http://tgib23.github.io/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5</id>
+    <content type="html"><![CDATA[<p>This post follows previous post <a href="http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/">How to use Omniauth + Devise on Rails5 from scratch</a>, which is about how to setup facebook login.
+This post shows how to additionally setup twitter login.</p>
+
+<h3>1. initial step</h3>
+
+<p>add omniauth-twitter in Gemfile</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>diff --git a/Gemfile b/Gemfile
+</span><span class='line'>index de3f792..271a916 100644
+</span><span class='line'>--- a/Gemfile
+</span><span class='line'>+++ b/Gemfile
+</span><span class='line'>@@ -56,3 +56,4 @@ gem 'devise'
+</span><span class='line'> gem 'omniauth'
+</span><span class='line'> gem 'omniauth-facebook'
+</span><span class='line'> gem 'dotenv-rails'
+</span><span class='line'>+gem 'omniauth-twitter'
+</span><span class='line'>
+</span><span class='line'>$ bundle install
+</span><span class='line'>
+</span><span class='line'>$ gem list | grep omniauth
+</span><span class='line'>omniauth (1.3.1)
+</span><span class='line'>omniauth-facebook (4.0.0)
+</span><span class='line'>omniauth-oauth (1.1.0)
+</span><span class='line'>omniauth-oauth2 (1.4.0)
+</span><span class='line'>omniauth-twitter (1.2.1)</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. add Twitter configuration</h3>
+
+<p>set Twitter AppID and AppSecret</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ emacs config/initializers/devise.rb
+</span><span class='line'>  config.omniauth :facebook, ENV['FACEBOOK_API'], ENV['FACEBOOK_KEY']
+</span><span class='line'>+  config.omniauth :twitter,  ENV['TWITTER_API'],  ENV['TWITTER_KEY']
+</span><span class='line'>
+</span><span class='line'>$ emacs .env
+</span><span class='line'>FACEBOOK_API="FACEBOOK_APP_ID"
+</span><span class='line'>FACEBOOK_KEY="FACEBOOK_APP_SECRET"
+</span><span class='line'>+TWITTER_API="TWITTER_APP_ID"
+</span><span class='line'>+TWITTER_KEY="TWITTER_APP_SECRET"
+</span><span class='line'>
+</span><span class='line'>$ git diff app/models/user.rb
+</span><span class='line'>diff --git a/app/models/user.rb b/app/models/user.rb
+</span><span class='line'>index 52d48be..f62d358 100644
+</span><span class='line'>--- a/app/models/user.rb
+</span><span class='line'>+++ b/app/models/user.rb
+</span><span class='line'>@@ -2,7 +2,7 @@ class User &lt; ApplicationRecord
+</span><span class='line'>   # Include default devise modules. Others available are:
+</span><span class='line'>   # :confirmable, :lockable, :timeoutable and :omniauthable
+</span><span class='line'>   devise :database_authenticatable, :registerable,
+</span><span class='line'>-         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook]
+</span><span class='line'>+         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook, :twitter]
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3. modify view to allow twitter login</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>diff --git a/app/views/layouts/application.html.erb b/app/views/layouts/application.html.erb
+</span><span class='line'>index a9c6fde..d970abf 100644
+</span><span class='line'>--- a/app/views/layouts/application.html.erb
+</span><span class='line'>+++ b/app/views/layouts/application.html.erb
+</span><span class='line'>@@ -19,6 +19,8 @@
+</span><span class='line'>         [&lt;%= link_to 'Sign out', destroy_user_session_path, method: :delete  %&gt;]
+</span><span class='line'>       &lt;% else %&gt;
+</span><span class='line'>         &lt;%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path %&gt;
+</span><span class='line'>+        &lt;br&gt;
+</span><span class='line'>+        &lt;%= link_to "Sign in with Twitter", user_twitter_omniauth_authorize_path %&gt;
+</span><span class='line'>       &lt;% end %&gt;
+</span><span class='line'>     &lt;/div&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then, restart rails</p>
+
+<p>Here are the <a href="https://github.com/tgib23/douzou_chan2/pull/2/files">total diff files</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to Use Omniauth + Devise on Rails5 From Scratch]]></title>
@@ -69,6 +202,7 @@ Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
+<span class='line-number'>23</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ git diff
 </span><span class='line'> diff --git a/Gemfile b/Gemfile
 </span><span class='line'>index 4aa8f6b..1d0e2d4 100644
@@ -90,6 +224,7 @@ Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0
 </span><span class='line'>omniauth-facebook (4.0.0)
 </span><span class='line'>omniauth-oauth (1.1.0)
 </span><span class='line'>omniauth-oauth2 (1.4.0)
+</span><span class='line'>
 </span><span class='line'>$ rails g devise:install</span></code></pre></td></tr></table></div></figure>
 
 
@@ -329,7 +464,7 @@ Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0
 </span><span class='line'>@@ -3,4 +3,33 @@ class User &lt; ApplicationRecord
 </span><span class='line'>   # :confirmable, :lockable, :timeoutable and :omniauthable
 </span><span class='line'>   devise :database_authenticatable, :registerable,
-</span><span class='line'>          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook, :twitter]
+</span><span class='line'>          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook]
 </span><span class='line'>+
 </span><span class='line'>+  def self.find_for_oauth(auth)
 </span><span class='line'>+    user = User.where(uid: auth.uid, provider: auth.provider).first
@@ -536,6 +671,8 @@ Use &ldquo;dotenv-rails&rdquo; and use .env file for storing those info.</p>
 
 
 <p>Then, restart rails</p>
+
+<p>Here are the <a href="https://github.com/tgib23/douzou_chan2/pull/1/files">total diff files</a></p>
 ]]></content>
   </entry>
   
