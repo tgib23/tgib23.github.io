@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rails5 | some tech talks]]></title>
   <link href="http://tgib23.github.io/blog/categories/rails5/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2017-01-09T21:02:43+09:00</updated>
+  <updated>2017-01-09T21:09:20+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -19,7 +19,7 @@
     <updated>2017-01-09T15:15:27+09:00</updated>
     <id>http://tgib23.github.io/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5</id>
     <content type="html"><![CDATA[<p>This post follows previous post <a href="http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/">How to use Omniauth + Devise on Rails5 from scratch</a>, which is about how to setup facebook login.
-This post shows how to additionally setup twitter login.</p>
+This post shows how to additionally setup twitter login. You can get APP ID and APP SECRET from <a href="https://apps.twitter.com/">here</a>.</p>
 
 <h3>1. initial step</h3>
 
