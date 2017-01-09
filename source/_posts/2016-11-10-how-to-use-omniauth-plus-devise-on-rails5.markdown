@@ -47,6 +47,7 @@ omniauth (1.3.1)
 omniauth-facebook (4.0.0)
 omniauth-oauth (1.1.0)
 omniauth-oauth2 (1.4.0)
+
 $ rails g devise:install
 ```
 
@@ -165,7 +166,7 @@ index 288823c..bd060ad 100644
 @@ -3,4 +3,33 @@ class User < ApplicationRecord
    # :confirmable, :lockable, :timeoutable and :omniauthable
    devise :database_authenticatable, :registerable,
-          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook, :twitter]
+          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook]
 +
 +  def self.find_for_oauth(auth)
 +    user = User.where(uid: auth.uid, provider: auth.provider).first
@@ -308,4 +309,4 @@ $ emacs config/initializers/devise.rb
 
 Then, restart rails
 
-
+Here are the [total diff files](https://github.com/tgib23/douzou_chan2/pull/1/files)
