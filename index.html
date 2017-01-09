@@ -194,9 +194,7 @@ Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-<span class='line-number'>4</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ rails g devise User
-</span><span class='line'>$ rails generate model User name:string email:string
 </span><span class='line'>$ rails generate migration AddOmniauthToUsers provider:index uid:index
 </span><span class='line'>$ rake db:migrate</span></code></pre></td></tr></table></div></figure>
 
@@ -330,7 +328,7 @@ Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0
 <span class='line-number'>25</span>
 <span class='line-number'>26</span>
 <span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir app/Controller/users
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir app/controllers/users
 </span><span class='line'>$ emacs app/controllers/users/omniauth_callbacks_controller.rb
 </span><span class='line'>class Users::OmniauthCallbacksController &lt; Devise::OmniauthCallbacksController
 </span><span class='line'>  def facebook
@@ -350,9 +348,9 @@ Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0
 </span><span class='line'>
 </span><span class='line'>    if @user.persisted?
 </span><span class='line'>      sign_in_and_redirect @user, :event =&gt; :authentication #this will throw if @user is not activated
-</span><span class='line'>      set_flash_message(:notice, :success, :kind =&gt; "Facebook") if is_navigational_format?
+</span><span class='line'>      set_flash_message(:notice, :success, :kind =&gt; provider.capitalize) if is_navigational_format?
 </span><span class='line'>    else
-</span><span class='line'>      session["devise.facebook_data"] = request.env["omniauth.auth"]
+</span><span class='line'>      session["devise.#{provider}_data"] = request.env["omniauth.auth"]
 </span><span class='line'>      redirect_to new_user_registration_url
 </span><span class='line'>    end
 </span><span class='line'>  end
@@ -408,7 +406,7 @@ Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0
 </span><span class='line'>@@ -3,4 +3,33 @@ class User &lt; ApplicationRecord
 </span><span class='line'>   # :confirmable, :lockable, :timeoutable and :omniauthable
 </span><span class='line'>   devise :database_authenticatable, :registerable,
-</span><span class='line'>          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook]
+</span><span class='line'>          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook, :twitter]
 </span><span class='line'>+
 </span><span class='line'>+  def self.find_for_oauth(auth)
 </span><span class='line'>+    user = User.where(uid: auth.uid, provider: auth.provider).first
@@ -577,6 +575,44 @@ Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0
 
 <p>and go check <a href="http://localhost:3000/welcome/home">http://localhost:3000/welcome/home</a> .
 Click &ldquo;Sign in with Facebook&rdquo; and check if it works.</p>
+
+<h3>Additional dotenv-rails</h3>
+
+<p>You don&rsquo;t wanna push your facebook APP ID and APP SECRET to github or other public repository.
+Use &ldquo;dotenv-rails&rdquo; and use .env file for storing those info.</p>
+
+<p>add dotenv-rails in Gemfile</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem 'omniauth'
+</span><span class='line'>gem 'omniauth-facebook'
+</span><span class='line'>+gem 'dotenv-rails'
+</span><span class='line'>
+</span><span class='line'>$ bundle install
+</span><span class='line'>
+</span><span class='line'>$ emacs .env
+</span><span class='line'>FACEBOOK_API="APP_ID"
+</span><span class='line'>FACEBOOK_KEY="APP_SECRET"
+</span><span class='line'>
+</span><span class='line'>$ emacs config/initializers/devise.rb
+</span><span class='line'>-  #config.omniauth :facebook, "APP_ID", "APP_SECRET"
+</span><span class='line'>+  config.omniauth :facebook, ENV['FACEBOOK_API'], ENV['FACEBOOK_KEY']
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then, restart rails</p>
 </div>
   
   
@@ -1490,7 +1526,7 @@ here, define websocket method &ldquo;message_receive&rdquo; which accepts messag
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - _at_ bigt23 -
+  Copyright &copy; 2017 - _at_ bigt23 -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
