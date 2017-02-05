@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: rails-websocket | some tech talks]]></title>
+  <title><![CDATA[Category: Rails-websocket | some tech talks]]></title>
   <link href="http://tgib23.github.io/blog/categories/rails-websocket/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2017-02-05T23:28:18+09:00</updated>
+  <updated>2017-02-06T00:12:31+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[deploy rails websocket app into heroku]]></title>
+    <title type="html"><![CDATA[Deploy Rails Websocket App Into Heroku]]></title>
     <link href="http://tgib23.github.io/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/"/>
     <updated>2014-10-30T14:14:33+09:00</updated>
     <id>http://tgib23.github.io/blog/2014/10/30/deploy-rails-websocket-app-into-heroku</id>
