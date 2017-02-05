@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Oauth | some tech talks]]></title>
+  <title><![CDATA[Category: oauth | some tech talks]]></title>
   <link href="http://tgib23.github.io/blog/categories/oauth/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2017-01-09T21:09:20+09:00</updated>
+  <updated>2017-02-05T22:33:49+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[How to Use Omniauth + Devise on Rails5 From Scratch]]></title>
+    <title type="html"><![CDATA[How to use Omniauth + Devise on Rails5 from scratch]]></title>
     <link href="http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/"/>
     <updated>2016-11-10T00:11:23+09:00</updated>
     <id>http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5</id>

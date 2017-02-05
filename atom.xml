@@ -4,7 +4,7 @@
   <title><![CDATA[some tech talks]]></title>
   <link href="http://tgib23.github.io/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2017-01-09T21:09:20+09:00</updated>
+  <updated>2017-02-05T22:33:49+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Add Twitter Login With Omniauth + Devise on Rails5]]></title>
+    <title type="html"><![CDATA[Add twitter login with Omniauth + Devise on Rails5]]></title>
     <link href="http://tgib23.github.io/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/"/>
     <updated>2017-01-09T15:15:27+09:00</updated>
     <id>http://tgib23.github.io/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5</id>
@@ -147,7 +147,7 @@ This post shows how to additionally setup twitter login. You can get APP ID and 
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[How to Use Omniauth + Devise on Rails5 From Scratch]]></title>
+    <title type="html"><![CDATA[How to use Omniauth + Devise on Rails5 from scratch]]></title>
     <link href="http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/"/>
     <updated>2016-11-10T00:11:23+09:00</updated>
     <id>http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5</id>
@@ -819,7 +819,7 @@ Notice <code>requestCount.increment()</code> is called every time RPC call metho
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Install Npm Package From Npm Pack-ed File Using Ansible]]></title>
+    <title type="html"><![CDATA[install npm package from npm pack-ed file using ansible]]></title>
     <link href="http://tgib23.github.io/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible/"/>
     <updated>2016-03-20T22:28:10+09:00</updated>
     <id>http://tgib23.github.io/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible</id>
@@ -836,7 +836,7 @@ Notice <code>requestCount.increment()</code> is called every time RPC call metho
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Use Extra-vars of Ansible From Packer]]></title>
+    <title type="html"><![CDATA[use extra-vars of ansible from packer]]></title>
     <link href="http://tgib23.github.io/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/"/>
     <updated>2015-11-15T00:47:21+09:00</updated>
     <id>http://tgib23.github.io/blog/2015/11/15/use-extra-vars-of-ansible-from-packer</id>
@@ -934,7 +934,7 @@ Notice <code>requestCount.increment()</code> is called every time RPC call metho
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Deploy Rails Websocket App Into Heroku]]></title>
+    <title type="html"><![CDATA[deploy rails websocket app into heroku]]></title>
     <link href="http://tgib23.github.io/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/"/>
     <updated>2014-10-30T14:14:33+09:00</updated>
     <id>http://tgib23.github.io/blog/2014/10/30/deploy-rails-websocket-app-into-heroku</id>
@@ -1065,7 +1065,7 @@ Notice <code>requestCount.increment()</code> is called every time RPC call metho
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Initial Steps to Use Websocket-rails]]></title>
+    <title type="html"><![CDATA[initial steps to use websocket-rails]]></title>
     <link href="http://tgib23.github.io/blog/2014/08/03/first-post/"/>
     <updated>2014-08-03T21:39:04+09:00</updated>
     <id>http://tgib23.github.io/blog/2014/08/03/first-post</id>
