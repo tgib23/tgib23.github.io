@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mapr | some tech talks]]></title>
   <link href="http://tgib23.github.io/blog/categories/mapr/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2017-08-22T15:40:56+09:00</updated>
+  <updated>2017-08-22T21:11:06+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -23,12 +23,16 @@ This article show how to use it with sample code.</p>
 
 <h1>Step 0.</h1>
 
-<p>The environment is as follows.
-* CentOS : 7.2
-* MapR 5.2.2
-* MEP 3.1
-* python-2.7.5-48.el7.x86_64
-* python-devel-2.7.5-48.el7.x86_64</p>
+<p>The environment is as follows.</p>
+
+<ul>
+<li>CentOS : 7.2</li>
+<li>MapR 5.2.2</li>
+<li>MEP 3.1</li>
+<li>python-2.7.5-48.el7.x86_64</li>
+<li>python-devel-2.7.5-48.el7.x86_64</li>
+</ul>
+
 
 <h1>Step 1.</h1>
 
