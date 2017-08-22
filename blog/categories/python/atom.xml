@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Python | some tech talks]]></title>
+  <link href="http://tgib23.github.io/blog/categories/python/atom.xml" rel="self"/>
+  <link href="http://tgib23.github.io/"/>
+  <updated>2017-08-22T15:40:56+09:00</updated>
+  <id>http://tgib23.github.io/</id>
+  <author>
+    <name><![CDATA[_at_ bigt23]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How to Access MapR Streams From Python Bindings]]></title>
+    <link href="http://tgib23.github.io/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/"/>
+    <updated>2017-08-22T15:38:09+09:00</updated>
+    <id>http://tgib23.github.io/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings</id>
+    <content type="html"><![CDATA[<p>From MEP 3.0, MapR offers Python binding for MapR Streams.
+This article show how to use it with sample code.</p>
+
+<h1>Step 0.</h1>
+
+<p>The environment is as follows.
+* CentOS : 7.2
+* MapR 5.2.2
+* MEP 3.1
+* python-2.7.5-48.el7.x86_64
+* python-devel-2.7.5-48.el7.x86_64</p>
+
+<h1>Step 1.</h1>
+
+<p>Create stream and topic as follows.
+<code>
+$ maprcli stream create -path  /streams/python-test-stream -produceperm p -consumeperm p -topicperm p
+$ maprcli stream topic create -path /streams/python-test-stream -topic test-topic
+</code></p>
+
+<h1>Step 2.</h1>
+
+<p>Install what you need.
+&#8220;`</p>
+
+<h1>yum install python2-pip python-wheel -y</h1>
+
+<h1>pip install &ndash;upgrade pip</h1>
+
+<h1>yum install librdkafka mapr-librdkafka -y</h1>
+
+<h1>yum groupinstall &lsquo;Development Tools&rsquo; -y</h1>
+
+<h1>pip install &ndash;global-option=build_ext &ndash;global-option=&ldquo;&ndash;library-dirs=/opt/mapr/lib&rdquo; &ndash;global-option=&ldquo;&ndash;include-dirs=/opt/mapr/include/&rdquo; <a href="http://package.mapr.com/releases/MEP/MEP-3.0/mac/mapr-streams-python-0.9.2.tar.gz">http://package.mapr.com/releases/MEP/MEP-3.0/mac/mapr-streams-python-0.9.2.tar.gz</a></h1>
+
+<pre><code>
+# Step 3.
+Prepare code.
+There is a sample code here http://maprdocs.mapr.com/home/MapR_Streams/MapRStreamsPythonExample.html .
+Modify the stream and topic for this sample.
+
+* producer.py
+</code></pre>
+
+<p>from mapr_streams_python import Producer
+p = Producer({&lsquo;streams.producer.default.stream&rsquo;: &lsquo;/streams/python-test-stream&rsquo;})
+some_data_source= [&ldquo;msg1&rdquo;, &ldquo;msg2&rdquo;, &ldquo;msg3&rdquo;]
+for data in some_data_source:
+    p.produce(&lsquo;test-topic&rsquo;, data.encode(&lsquo;utf-8&rsquo;))
+p.flush()
+&#8220;`</p>
+
+<ul>
+<li>consumer.py</li>
+</ul>
+
+
+<pre><code>from mapr_streams_python import Consumer, KafkaError
+c = Consumer({'group.id': 'mygroup',
+              'default.topic.config': {'auto.offset.reset': 'earliest'}})
+c.subscribe(['/streams/python-test-stream:test-topic'])
+running = True
+while running:
+    msg = c.poll(timeout=1.0)
+    if msg is None: continue
+    if not msg.error():
+        print('Received message: %s' % msg.value().decode('utf-8'))
+    elif msg.error().code() != KafkaError._PARTITION_EOF:
+        print(msg.error())
+        running = False
+c.close()
+</code></pre>
+
+<h1>Step 4.</h1>
+
+<p>Set LD_LIBRARY_PATH to /opt/mapr/lib and the directory containing libjvm.
+Find the libjvm with find command as below.
+&#8220;`</p>
+
+<h1>find / -name libjvm*</h1>
+
+<p>/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/amd64/server/libjvm.so
+&#8220;`</p>
+
+<p>Set the LD_LIBRARY_PATH with above.
+<code>
+$ export LD_LIBRARY_PATH=/opt/mapr/lib/:/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/amd64/server
+</code></p>
+
+<h1>Step 5.</h1>
+
+<p>Run the programs!
+<code>
+$ python producer.py
+$ python consumer.py
+Received message: msg1
+Received message: msg2
+Received message: msg3
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

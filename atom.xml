@@ -4,7 +4,7 @@
   <title><![CDATA[some tech talks]]></title>
   <link href="http://tgib23.github.io/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2017-05-24T18:05:59+09:00</updated>
+  <updated>2017-08-22T15:40:56+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -12,6 +12,144 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to Access MapR Streams From Python Bindings]]></title>
+    <link href="http://tgib23.github.io/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/"/>
+    <updated>2017-08-22T15:38:09+09:00</updated>
+    <id>http://tgib23.github.io/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings</id>
+    <content type="html"><![CDATA[<p>From MEP 3.0, MapR offers Python binding for MapR Streams.
+This article show how to use it with sample code.</p>
+
+<h1>Step 0.</h1>
+
+<p>The environment is as follows.
+* CentOS : 7.2
+* MapR 5.2.2
+* MEP 3.1
+* python-2.7.5-48.el7.x86_64
+* python-devel-2.7.5-48.el7.x86_64</p>
+
+<h1>Step 1.</h1>
+
+<p>Create stream and topic as follows.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ maprcli stream create -path  /streams/python-test-stream -produceperm p -consumeperm p -topicperm p
+</span><span class='line'>$ maprcli stream topic create -path /streams/python-test-stream -topic test-topic</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Step 2.</h1>
+
+<p>Install what you need.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># yum install python2-pip python-wheel -y
+</span><span class='line'># pip install --upgrade pip
+</span><span class='line'># yum install librdkafka mapr-librdkafka -y
+</span><span class='line'># yum groupinstall 'Development Tools' -y
+</span><span class='line'># pip install --global-option=build_ext --global-option="--library-dirs=/opt/mapr/lib" --global-option="--include-dirs=/opt/mapr/include/" http://package.mapr.com/releases/MEP/MEP-3.0/mac/mapr-streams-python-0.9.2.tar.gz</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Step 3.</h1>
+
+<p>Prepare code.
+There is a sample code here <a href="http://maprdocs.mapr.com/home/MapR_Streams/MapRStreamsPythonExample.html">http://maprdocs.mapr.com/home/MapR_Streams/MapRStreamsPythonExample.html</a> .
+Modify the stream and topic for this sample.</p>
+
+<ul>
+<li>producer.py</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>from mapr_streams_python import Producer
+</span><span class='line'>p = Producer({'streams.producer.default.stream': '/streams/python-test-stream'})
+</span><span class='line'>some_data_source= ["msg1", "msg2", "msg3"]
+</span><span class='line'>for data in some_data_source:
+</span><span class='line'>    p.produce('test-topic', data.encode('utf-8'))
+</span><span class='line'>p.flush()</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>consumer.py</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>from mapr_streams_python import Consumer, KafkaError
+</span><span class='line'>c = Consumer({'group.id': 'mygroup',
+</span><span class='line'>              'default.topic.config': {'auto.offset.reset': 'earliest'}})
+</span><span class='line'>c.subscribe(['/streams/python-test-stream:test-topic'])
+</span><span class='line'>running = True
+</span><span class='line'>while running:
+</span><span class='line'>    msg = c.poll(timeout=1.0)
+</span><span class='line'>    if msg is None: continue
+</span><span class='line'>    if not msg.error():
+</span><span class='line'>        print('Received message: %s' % msg.value().decode('utf-8'))
+</span><span class='line'>    elif msg.error().code() != KafkaError._PARTITION_EOF:
+</span><span class='line'>        print(msg.error())
+</span><span class='line'>        running = False
+</span><span class='line'>c.close()</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Step 4.</h1>
+
+<p>Set LD_LIBRARY_PATH to /opt/mapr/lib and the directory containing libjvm.
+Find the libjvm with find command as below.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># find / -name libjvm*
+</span><span class='line'>/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/amd64/server/libjvm.so</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Set the LD_LIBRARY_PATH with above.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ export LD_LIBRARY_PATH=/opt/mapr/lib/:/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/amd64/server</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Step 5.</h1>
+
+<p>Run the programs!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ python producer.py
+</span><span class='line'>$ python consumer.py
+</span><span class='line'>Received message: msg1
+</span><span class='line'>Received message: msg2
+</span><span class='line'>Received message: msg3</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to Setup Squirrel SQL Client on Mac for Hive, Drill, and Impala on MapR Cluster]]></title>

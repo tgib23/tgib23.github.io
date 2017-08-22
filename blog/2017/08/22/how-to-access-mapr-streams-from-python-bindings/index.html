@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>How to Access MapR Streams From Python Bindings - some tech talks</title>
+  <meta name="author" content="_at_ bigt23">
+
+  
+  <meta name="description" content="From MEP 3.0, MapR offers Python binding for MapR Streams.
+This article show how to use it with sample code. Step 0. The environment is as follows &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://tgib23.github.io/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="some tech talks" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">some tech talks</a></h1>
+  
+    <h2>ruby, rails, book reviews</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:tgib23.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">How to Access MapR Streams From Python Bindings</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-08-22T15:38:09+09:00" pubdate data-updated="true">Aug 22<sup>nd</sup>, 2017</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>From MEP 3.0, MapR offers Python binding for MapR Streams.
+This article show how to use it with sample code.</p>
+
+<h1>Step 0.</h1>
+
+<p>The environment is as follows.
+* CentOS : 7.2
+* MapR 5.2.2
+* MEP 3.1
+* python-2.7.5-48.el7.x86_64
+* python-devel-2.7.5-48.el7.x86_64</p>
+
+<h1>Step 1.</h1>
+
+<p>Create stream and topic as follows.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ maprcli stream create -path  /streams/python-test-stream -produceperm p -consumeperm p -topicperm p
+</span><span class='line'>$ maprcli stream topic create -path /streams/python-test-stream -topic test-topic</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Step 2.</h1>
+
+<p>Install what you need.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># yum install python2-pip python-wheel -y
+</span><span class='line'># pip install --upgrade pip
+</span><span class='line'># yum install librdkafka mapr-librdkafka -y
+</span><span class='line'># yum groupinstall 'Development Tools' -y
+</span><span class='line'># pip install --global-option=build_ext --global-option="--library-dirs=/opt/mapr/lib" --global-option="--include-dirs=/opt/mapr/include/" http://package.mapr.com/releases/MEP/MEP-3.0/mac/mapr-streams-python-0.9.2.tar.gz</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Step 3.</h1>
+
+<p>Prepare code.
+There is a sample code here <a href="http://maprdocs.mapr.com/home/MapR_Streams/MapRStreamsPythonExample.html">http://maprdocs.mapr.com/home/MapR_Streams/MapRStreamsPythonExample.html</a> .
+Modify the stream and topic for this sample.</p>
+
+<ul>
+<li>producer.py</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>from mapr_streams_python import Producer
+</span><span class='line'>p = Producer({'streams.producer.default.stream': '/streams/python-test-stream'})
+</span><span class='line'>some_data_source= ["msg1", "msg2", "msg3"]
+</span><span class='line'>for data in some_data_source:
+</span><span class='line'>    p.produce('test-topic', data.encode('utf-8'))
+</span><span class='line'>p.flush()</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>consumer.py</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>from mapr_streams_python import Consumer, KafkaError
+</span><span class='line'>c = Consumer({'group.id': 'mygroup',
+</span><span class='line'>              'default.topic.config': {'auto.offset.reset': 'earliest'}})
+</span><span class='line'>c.subscribe(['/streams/python-test-stream:test-topic'])
+</span><span class='line'>running = True
+</span><span class='line'>while running:
+</span><span class='line'>    msg = c.poll(timeout=1.0)
+</span><span class='line'>    if msg is None: continue
+</span><span class='line'>    if not msg.error():
+</span><span class='line'>        print('Received message: %s' % msg.value().decode('utf-8'))
+</span><span class='line'>    elif msg.error().code() != KafkaError._PARTITION_EOF:
+</span><span class='line'>        print(msg.error())
+</span><span class='line'>        running = False
+</span><span class='line'>c.close()</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Step 4.</h1>
+
+<p>Set LD_LIBRARY_PATH to /opt/mapr/lib and the directory containing libjvm.
+Find the libjvm with find command as below.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># find / -name libjvm*
+</span><span class='line'>/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/amd64/server/libjvm.so</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Set the LD_LIBRARY_PATH with above.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ export LD_LIBRARY_PATH=/opt/mapr/lib/:/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/amd64/server</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Step 5.</h1>
+
+<p>Run the programs!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ python producer.py
+</span><span class='line'>$ python consumer.py
+</span><span class='line'>Received message: msg1
+</span><span class='line'>Received message: msg2
+</span><span class='line'>Received message: msg3</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">_at_ bigt23</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-08-22T15:38:09+09:00" pubdate data-updated="true">Aug 22<sup>nd</sup>, 2017</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/mapr/'>mapr</a>, <a class='category' href='/blog/categories/mapr-streams/'>mapr streams</a>, <a class='category' href='/blog/categories/python/'>python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://tgib23.github.io/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/" data-via="" data-counturl="http://tgib23.github.io/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/05/24/how-to-setup-squirrel-sql-client-on-mac-for-hive-spark-and-drill-on-mapr-cluster/" title="Previous Post: How to setup Squirrel SQL Client on Mac for Hive, Drill, and Impala on MapR cluster">&laquo; How to setup Squirrel SQL Client on Mac for Hive, Drill, and Impala on MapR cluster</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p>Hi! I am <a href="https://twitter.com/bigt23">@bigt23</a>.</p>
+  <p>An engineer located in Japan working mainly for big data issues.</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/">How to Access MapR Streams From Python Bindings</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/24/how-to-setup-squirrel-sql-client-on-mac-for-hive-spark-and-drill-on-mapr-cluster/">How to Setup Squirrel SQL Client on Mac for Hive, Drill, and Impala on MapR Cluster</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/">Add Twitter Login With Omniauth + Devise on Rails5</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/">How to Use Omniauth + Devise on Rails5 From Scratch</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/10/29/behavior-of-hbase-read-slash-write-requests-counter/">Behavior of Hbase Read/Write Requests Counter</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - _at_ bigt23 -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
