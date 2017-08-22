@@ -12,6 +12,7 @@ This article show how to use it with sample code.
 # Step 0.
 
 The environment is as follows.
+
 * CentOS : 7.2
 * MapR 5.2.2
 * MEP 3.1
