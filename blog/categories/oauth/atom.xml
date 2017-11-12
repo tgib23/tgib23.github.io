@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Oauth | some tech talks]]></title>
   <link href="http://tgib23.github.io/blog/categories/oauth/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2017-11-12T17:07:47+09:00</updated>
+  <updated>2017-11-12T17:09:57+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -170,27 +170,27 @@ index 52d48be..f62d358 100644
    devise :database_authenticatable, :registerable,
 -         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook, :twitter, :google_oauth2]
 +         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook, :twitter, :google_oauth2, :instagram]
-
-### 3. modify view to allow instagram login
 </code></pre>
 
-<p>diff &ndash;git a/app/views/layouts/application.html.erb b/app/views/layouts/application.html.erb
+<h3>3. modify view to allow instagram login</h3>
+
+<pre><code>diff --git a/app/views/layouts/application.html.erb b/app/views/layouts/application.html.erb
 index a9c6fde..d970abf 100644
-&mdash; a/app/views/layouts/application.html.erb
+--- a/app/views/layouts/application.html.erb
 +++ b/app/views/layouts/application.html.erb
 @@ -19,6 +19,8 @@
-         [&lt;%= link_to &lsquo;Sign out&rsquo;, destroy_user_session_path, method: :delete  %>]
-       &lt;% else %>
-         &lt;%= link_to &ldquo;Sign in with Facebook&rdquo;, user_facebook_omniauth_authorize_path %>
-        <br>
-        &lt;%= link_to &ldquo;Sign in with Twitter&rdquo;, user_twitter_omniauth_authorize_path %>
-        <br>
-        &lt;%= link_to &ldquo;Sign in with Google Plus&rdquo;, user_google_oauth2_omniauth_authorize_path %>
-+         <br>
-+         &lt;%= link_to &ldquo;Sign in with Instagram&rdquo;, user_instagram_omniauth_authorize_path %>
-       &lt;% end %>
-     </div>
-&#8220;`</p>
+         [&lt;%= link_to 'Sign out', destroy_user_session_path, method: :delete  %&gt;]
+       &lt;% else %&gt;
+         &lt;%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path %&gt;
+        &lt;br&gt;
+        &lt;%= link_to "Sign in with Twitter", user_twitter_omniauth_authorize_path %&gt;
+        &lt;br&gt;
+        &lt;%= link_to "Sign in with Google Plus", user_google_oauth2_omniauth_authorize_path %&gt;
++         &lt;br&gt;
++         &lt;%= link_to "Sign in with Instagram", user_instagram_omniauth_authorize_path %&gt;
+       &lt;% end %&gt;
+     &lt;/div&gt;
+</code></pre>
 
 <p>Then, restart rails</p>
 
