@@ -12,7 +12,7 @@ This post shows how to additionally setup twitter login. You can get APP ID and 
 ### 1. initial step
 add omniauth-twitter in Gemfile
 ```
-diff --git a/Gemfile b/Gemfile
+$ diff --git a/Gemfile b/Gemfile
 index de3f792..271a916 100644
 --- a/Gemfile
 +++ b/Gemfile
@@ -41,6 +41,7 @@ $ emacs config/initializers/devise.rb
 +  config.omniauth :twitter,  ENV['TWITTER_API'],  ENV['TWITTER_KEY']
 
 $ emacs .env
+...
 FACEBOOK_API="FACEBOOK_APP_ID"
 FACEBOOK_KEY="FACEBOOK_APP_SECRET"
 +TWITTER_API="TWITTER_APP_ID"

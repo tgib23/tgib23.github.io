@@ -310,3 +310,11 @@ $ emacs config/initializers/devise.rb
 Then, restart rails
 
 Here are the [total diff files](https://github.com/tgib23/douzou_chan2/pull/1/files)
+
+### 9. Build for other oauth login
+
+Check my articles for other oauth login.
+
+* [Add Twitter Login With Omniauth + Devise on Rails5](http://tgib23.github.io/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/)
+* [Add Google Plus and Instagram Login With Omniauth + Devise on Rails5](http://tgib23.github.io/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5/)
+
