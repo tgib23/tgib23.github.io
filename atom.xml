@@ -4,7 +4,7 @@
   <title><![CDATA[some tech talks]]></title>
   <link href="http://tgib23.github.io/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2017-11-12T17:15:45+09:00</updated>
+  <updated>2017-11-12T17:23:59+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -165,7 +165,8 @@ Notice that I use semantic-ui, so the changes on the code is not the same as thi
 
 <h1>Implement Instagram Login</h1>
 
-<p>The changes are the same as Google Plus Login.</p>
+<p>The changes are the same as Google Plus Login.
+Get Instagram client id and client secret from <a href="https://www.instagram.com/developer/">here</a></p>
 
 <h3>1. initial step</h3>
 
