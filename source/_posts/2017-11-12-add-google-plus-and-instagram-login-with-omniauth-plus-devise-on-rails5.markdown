@@ -107,6 +107,7 @@ Notice that I use semantic-ui, so the changes on the code is not the same as thi
 # Implement Instagram Login
 
 The changes are the same as Google Plus Login.
+Get Instagram client id and client secret from [here](https://www.instagram.com/developer/)
 
 ### 1. initial step
 add omniauth-instagram in Gemfile
