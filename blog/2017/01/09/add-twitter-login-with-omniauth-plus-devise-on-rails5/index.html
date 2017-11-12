@@ -117,7 +117,7 @@ This post shows how to additionally setup twitter login. You can get APP ID and 
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>diff --git a/Gemfile b/Gemfile
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ diff --git a/Gemfile b/Gemfile
 </span><span class='line'>index de3f792..271a916 100644
 </span><span class='line'>--- a/Gemfile
 </span><span class='line'>+++ b/Gemfile
@@ -162,11 +162,13 @@ This post shows how to additionally setup twitter login. You can get APP ID and 
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
+<span class='line-number'>22</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ emacs config/initializers/devise.rb
 </span><span class='line'>  config.omniauth :facebook, ENV['FACEBOOK_API'], ENV['FACEBOOK_KEY']
 </span><span class='line'>+  config.omniauth :twitter,  ENV['TWITTER_API'],  ENV['TWITTER_KEY']
 </span><span class='line'>
 </span><span class='line'>$ emacs .env
+</span><span class='line'>...
 </span><span class='line'>FACEBOOK_API="FACEBOOK_APP_ID"
 </span><span class='line'>FACEBOOK_KEY="FACEBOOK_APP_SECRET"
 </span><span class='line'>+TWITTER_API="TWITTER_APP_ID"
@@ -285,6 +287,10 @@ This post shows how to additionally setup twitter login. You can get APP ID and 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5/">Add Google Plus and Instagram Login With Omniauth + Devise on Rails5</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/">How to Access MapR Streams From Python Bindings</a>
       </li>
     
@@ -298,10 +304,6 @@ This post shows how to additionally setup twitter login. You can get APP ID and 
     
       <li class="post">
         <a href="/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/">How to Use Omniauth + Devise on Rails5 From Scratch</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/10/29/behavior-of-hbase-read-slash-write-requests-counter/">Behavior of Hbase Read/Write Requests Counter</a>
       </li>
     
   </ul>

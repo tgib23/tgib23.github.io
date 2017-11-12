@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Twitter | some tech talks]]></title>
   <link href="http://tgib23.github.io/blog/categories/twitter/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2017-08-22T21:11:06+09:00</updated>
+  <updated>2017-11-12T17:07:47+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -25,7 +25,7 @@ This post shows how to additionally setup twitter login. You can get APP ID and 
 
 <p>add omniauth-twitter in Gemfile
 &#8220;`
-diff &ndash;git a/Gemfile b/Gemfile
+$ diff &ndash;git a/Gemfile b/Gemfile
 index de3f792..271a916 100644
 &mdash; a/Gemfile
 +++ b/Gemfile
@@ -54,6 +54,7 @@ $ emacs config/initializers/devise.rb
 +  config.omniauth :twitter,  ENV[&lsquo;TWITTER_API&rsquo;],  ENV[&lsquo;TWITTER_KEY&rsquo;]</p>
 
 <p>$ emacs .env
+&hellip;
 FACEBOOK_API=&ldquo;FACEBOOK_APP_ID&rdquo;
 FACEBOOK_KEY=&ldquo;FACEBOOK_APP_SECRET&rdquo;
 +TWITTER_API=&ldquo;TWITTER_APP_ID&rdquo;

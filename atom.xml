@@ -4,7 +4,7 @@
   <title><![CDATA[some tech talks]]></title>
   <link href="http://tgib23.github.io/atom.xml" rel="self"/>
   <link href="http://tgib23.github.io/"/>
-  <updated>2017-08-22T21:11:06+09:00</updated>
+  <updated>2017-11-12T17:07:47+09:00</updated>
   <id>http://tgib23.github.io/</id>
   <author>
     <name><![CDATA[_at_ bigt23]]></name>
@@ -12,6 +12,288 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Add Google Plus and Instagram Login With Omniauth + Devise on Rails5]]></title>
+    <link href="http://tgib23.github.io/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5/"/>
+    <updated>2017-11-12T16:23:58+09:00</updated>
+    <id>http://tgib23.github.io/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5</id>
+    <content type="html"><![CDATA[<p>This post shows how to implement google plus and instagram login with omniauth and devise on rails5.
+This change totally depends on my previous implementation for <a href="http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/">facebook</a> and <a href="http://tgib23.github.io/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/">twitter</a>, so if you are new to implement this, you should look at those posts first.
+I write about google plus first, then add instagram login later.</p>
+
+<h1>Implement Google Plus Login</h1>
+
+<h3>0. Get Google APP ID and SECRET</h3>
+
+<p>You can get CLIENT ID and CLIENT_SECRET from <a href="code.google.com/apis/console">here</a>.
+If you are building on local machine, you should add &ldquo;<a href="http://localhost:3000/users/auth/google_oauth2/callback">http://localhost:3000/users/auth/google_oauth2/callback</a>&rdquo; to Authorized Redirect URI.</p>
+
+<h3>1. initial step</h3>
+
+<p>add omniauth-google-oauth2 to Gemfile</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'> gem 'omniauth-twitter'
+</span><span class='line'>+gem 'omniauth-google-oauth2'
+</span><span class='line'> gem 'geocoder'
+</span><span class='line'>
+</span><span class='line'>$ bundle install
+</span><span class='line'>
+</span><span class='line'>$ gem list | grep omniauth
+</span><span class='line'>omniauth (1.3.1)
+</span><span class='line'>omniauth-facebook (4.0.0)
+</span><span class='line'>omniauth-google-oauth2 (0.5.2)
+</span><span class='line'>omniauth-instagram (1.2.0)
+</span><span class='line'>omniauth-oauth (1.1.0)
+</span><span class='line'>omniauth-oauth2 (1.4.0)</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. add Google Plus configuration</h3>
+
+<p>Set Google Client ID and Client Secret.
+Because I use &ldquo;dotenv-rails&rdquo;, I use ENV vars.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ emacs config/initializers/devise.rb
+</span><span class='line'>  config.omniauth :facebook, ENV['FACEBOOK_API'], ENV['FACEBOOK_KEY']
+</span><span class='line'>  config.omniauth :twitter,  ENV['TWITTER_API'],  ENV['TWITTER_KEY']
+</span><span class='line'>+  config.omniauth :google_oauth2,  ENV['GOOGLE_CLIENT_ID'],  ENV['GOOGLE_CLIENT_SECRET']
+</span><span class='line'>
+</span><span class='line'>$ emacs .env
+</span><span class='line'>FACEBOOK_API="xxxxxxxxxx"
+</span><span class='line'>FACEBOOK_KEY="xxxxxxxxxxxxxx"
+</span><span class='line'>TWITTER_API="xxxxxxxxxxxxx"
+</span><span class='line'>TWITTER_KEY="xxxxxxxxxxxxx"
+</span><span class='line'>+ GOOGLE_CLIENT_ID="xxxxxxxxxxxxxxxx"
+</span><span class='line'>+ GOOGLE_CLIENT_SECRET="xxxxxxxxxxxxxxxxx"
+</span><span class='line'>
+</span><span class='line'>$ git diff app/models/user.rb
+</span><span class='line'>diff --git a/app/models/user.rb b/app/models/user.rb
+</span><span class='line'>index 52d48be..f62d358 100644
+</span><span class='line'>--- a/app/models/user.rb
+</span><span class='line'>+++ b/app/models/user.rb
+</span><span class='line'>@@ -2,7 +2,7 @@ class User &lt; ApplicationRecord
+</span><span class='line'>   # Include default devise modules. Others available are:
+</span><span class='line'>   # :confirmable, :lockable, :timeoutable and :omniauthable
+</span><span class='line'>   devise :database_authenticatable, :registerable,
+</span><span class='line'>-         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook, :twitter]
+</span><span class='line'>+         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook, :twitter, :google_oauth2]
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3. modify view to allow google plus login</h3>
+
+<p>Add link for google plus login.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>diff --git a/app/views/layouts/application.html.erb b/app/views/layouts/application.html.erb
+</span><span class='line'>--- a/app/views/layouts/application.html.erb
+</span><span class='line'>+++ b/app/views/layouts/application.html.erb
+</span><span class='line'>@@ -19,6 +19,8 @@
+</span><span class='line'>         [&lt;%= link_to 'Sign out', destroy_user_session_path, method: :delete  %&gt;]
+</span><span class='line'>       &lt;% else %&gt;
+</span><span class='line'>         &lt;%= link_to "Sign in with Facebook", user_facebook_omniauth_authorize_path %&gt;
+</span><span class='line'>         &lt;br&gt;
+</span><span class='line'>         &lt;%= link_to "Sign in with Twitter", user_twitter_omniauth_authorize_path %&gt;
+</span><span class='line'>+        &lt;br&gt;
+</span><span class='line'>+        &lt;%= link_to "Sign in with Google Plus", user_google_oauth2_omniauth_authorize_path %&gt;
+</span><span class='line'>       &lt;% end %&gt;
+</span><span class='line'>     &lt;/div&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>4. Delete except info</h3>
+
+<p>Because I met &ldquo;ActionDispatch::Cookies::CookieOverflow (ActionDispatch::Cookies::CookieOverflow):&rdquo; error, I modified omniauth_callback_controller as follows.
+This will eliminate extra fields from cookie.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>-      session["devise.#{provider}_data"] = request.env["omniauth.auth"]
+</span><span class='line'>+      session["devise.#{provider}_data"] = request.env["omniauth.auth"].except("extra")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here are the <a href="https://github.com/tgib23/douzou_chan2/pull/137/files">total diff files</a> for adding google plus login.
+Notice that I use semantic-ui, so the changes on the code is not the same as this blog.</p>
+
+<h1>Implement Instagram Login</h1>
+
+<p>The changes are the same as Google Plus Login.</p>
+
+<h3>1. initial step</h3>
+
+<p>add omniauth-instagram in Gemfile</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ diff --git a/Gemfile b/Gemfile
+</span><span class='line'>--- a/Gemfile
+</span><span class='line'>+++ b/Gemfile
+</span><span class='line'>gem 'omniauth-google-oauth2'
+</span><span class='line'>+ gem 'omniauth-instagram'
+</span><span class='line'>gem 'geocoder'
+</span><span class='line'>
+</span><span class='line'>$ bundle install
+</span><span class='line'>
+</span><span class='line'>$ gem list | grep omniauth
+</span><span class='line'>omniauth (1.3.1)
+</span><span class='line'>omniauth-facebook (4.0.0)
+</span><span class='line'>omniauth-google-oauth2 (0.5.2)
+</span><span class='line'>omniauth-instagram (1.2.0)
+</span><span class='line'>omniauth-oauth (1.1.0)
+</span><span class='line'>omniauth-oauth2 (1.4.0)
+</span><span class='line'>omniauth-twitter (1.2.1)</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. add Instagram configuration</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>$ emacs config/initializers/devise.rb
+</span><span class='line'>  config.omniauth :facebook,       ENV['FACEBOOK_API'],          ENV['FACEBOOK_KEY']
+</span><span class='line'>  config.omniauth :twitter,        ENV['TWITTER_API'],           ENV['TWITTER_KEY']
+</span><span class='line'>  config.omniauth :google_oauth2,  ENV['GOOGLE_CLIENT_ID'],      ENV['GOOGLE_CLIENT_SECRET']
+</span><span class='line'>+  config.omniauth :instagram,      ENV['INSTAGRAM_CLIENT_ID'],   ENV['INSTAGRAM_CLIENT_SECRET']
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>$ emacs .env
+</span><span class='line'>...
+</span><span class='line'>GOOGLE_CLIENT_ID="xxxxxxxxxxx"
+</span><span class='line'>GOOGLE_CLIENT_SECRET="xxxxxxxxxx"
+</span><span class='line'>+INSTAGRAM_CLIENT_ID="xxxxxxxxxxxxxxxx"
+</span><span class='line'>+INSTAGRAM_CLIENT_SECRET="xxxxxxxxxxxx"
+</span><span class='line'>
+</span><span class='line'>$ git diff app/models/user.rb
+</span><span class='line'>
+</span><span class='line'>diff --git a/app/models/user.rb b/app/models/user.rb
+</span><span class='line'>index 52d48be..f62d358 100644
+</span><span class='line'>--- a/app/models/user.rb
+</span><span class='line'>+++ b/app/models/user.rb
+</span><span class='line'>@@ -2,7 +2,7 @@ class User &lt; ApplicationRecord
+</span><span class='line'>   # Include default devise modules. Others available are:
+</span><span class='line'>   # :confirmable, :lockable, :timeoutable and :omniauthable
+</span><span class='line'>   devise :database_authenticatable, :registerable,
+</span><span class='line'>-         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook, :twitter, :google_oauth2]
+</span><span class='line'>+         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers =&gt; [:facebook, :twitter, :google_oauth2, :instagram]
+</span><span class='line'>
+</span><span class='line'>### 3. modify view to allow instagram login</span></code></pre></td></tr></table></div></figure>
+
+
+<p>diff &ndash;git a/app/views/layouts/application.html.erb b/app/views/layouts/application.html.erb
+index a9c6fde..d970abf 100644
+&mdash; a/app/views/layouts/application.html.erb
++++ b/app/views/layouts/application.html.erb
+@@ -19,6 +19,8 @@
+         [&lt;%= link_to &lsquo;Sign out&rsquo;, destroy_user_session_path, method: :delete  %>]
+       &lt;% else %>
+         &lt;%= link_to &ldquo;Sign in with Facebook&rdquo;, user_facebook_omniauth_authorize_path %>
+        <br>
+        &lt;%= link_to &ldquo;Sign in with Twitter&rdquo;, user_twitter_omniauth_authorize_path %>
+        <br>
+        &lt;%= link_to &ldquo;Sign in with Google Plus&rdquo;, user_google_oauth2_omniauth_authorize_path %>
++         <br>
++         &lt;%= link_to &ldquo;Sign in with Instagram&rdquo;, user_instagram_omniauth_authorize_path %>
+       &lt;% end %>
+     </div>
+&#8220;`</p>
+
+<p>Then, restart rails</p>
+
+<p>Here are the <a href="https://github.com/tgib23/douzou_chan2/pull/138/files">total diff files</a> for adding instagram login.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to Access MapR Streams From Python Bindings]]></title>
@@ -319,7 +601,7 @@ This post shows how to additionally setup twitter login. You can get APP ID and 
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>diff --git a/Gemfile b/Gemfile
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ diff --git a/Gemfile b/Gemfile
 </span><span class='line'>index de3f792..271a916 100644
 </span><span class='line'>--- a/Gemfile
 </span><span class='line'>+++ b/Gemfile
@@ -364,11 +646,13 @@ This post shows how to additionally setup twitter login. You can get APP ID and 
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
+<span class='line-number'>22</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ emacs config/initializers/devise.rb
 </span><span class='line'>  config.omniauth :facebook, ENV['FACEBOOK_API'], ENV['FACEBOOK_KEY']
 </span><span class='line'>+  config.omniauth :twitter,  ENV['TWITTER_API'],  ENV['TWITTER_KEY']
 </span><span class='line'>
 </span><span class='line'>$ emacs .env
+</span><span class='line'>...
 </span><span class='line'>FACEBOOK_API="FACEBOOK_APP_ID"
 </span><span class='line'>FACEBOOK_KEY="FACEBOOK_APP_SECRET"
 </span><span class='line'>+TWITTER_API="TWITTER_APP_ID"

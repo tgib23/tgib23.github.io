@@ -3,6 +3,12 @@
   
   
   <url>
+    <loc>http://tgib23.github.io/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5/</loc>
+    <lastmod>2017-11-12T16:23:58+09:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
     <loc>http://tgib23.github.io/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/</loc>
     <lastmod>2017-08-22T15:38:09+09:00</lastmod>
     <priority>0.8</priority>
@@ -58,17 +64,17 @@
   
   
   <url>
-    <loc>http://tgib23.github.io/blog/archives/</loc>
-    <lastmod>2017-08-22T21:11:06+09:00</lastmod>
+    <loc>http://tgib23.github.io/</loc>
+    <lastmod>2017-11-12T17:07:47+09:00</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>1.0</priority>
   </url>
   
   <url>
-    <loc>http://tgib23.github.io/</loc>
-    <lastmod>2017-08-22T21:11:06+09:00</lastmod>
+    <loc>http://tgib23.github.io/blog/archives/</loc>
+    <lastmod>2017-11-12T17:07:47+09:00</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <priority>0.7</priority>
   </url>
   
   
