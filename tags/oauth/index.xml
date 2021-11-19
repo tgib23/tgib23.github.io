@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>oauth on My New Hugo Site</title>
-    <link>http://example.org/tags/oauth/</link>
-    <description>Recent content in oauth on My New Hugo Site</description>
+    <title>oauth on some tech and other talks</title>
+    <link>https://tgib23.github.io/tags/oauth/</link>
+    <description>Recent content in oauth on some tech and other talks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 12 Nov 2017 16:23:58 +0900</lastBuildDate><atom:link href="http://example.org/tags/oauth/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 12 Nov 2017 16:23:58 +0900</lastBuildDate><atom:link href="https://tgib23.github.io/tags/oauth/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Add Google Plus and Instagram Login with Omniauth &#43; Devise on Rails5</title>
-      <link>http://example.org/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5/</link>
+      <link>https://tgib23.github.io/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5/</link>
       <pubDate>Sun, 12 Nov 2017 16:23:58 +0900</pubDate>
       
-      <guid>http://example.org/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5/</guid>
+      <guid>https://tgib23.github.io/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5/</guid>
       <description>This post shows how to implement google plus and instagram login with omniauth and devise on rails5. This change totally depends on my previous implementation for facebook and twitter, so if you are new to implement this, you should look at those posts first. I write about google plus first, then add instagram login later.
 Implement Google Plus Login 0. Get Google APP ID and SECRET You can get CLIENT ID and CLIENT_SECRET from here.</description>
     </item>
     
     <item>
       <title>How to use Omniauth &#43; Devise on Rails5 from scratch</title>
-      <link>http://example.org/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/</link>
+      <link>https://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/</link>
       <pubDate>Thu, 10 Nov 2016 00:11:23 +0900</pubDate>
       
-      <guid>http://example.org/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/</guid>
+      <guid>https://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/</guid>
       <description>This post is no-brainer step by step memo to use omniauth and devise on rails5 for setting up oauth webapp with facebook. Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0 are used.
 0. env &amp;amp; requiement $ ruby -v ruby 2.3.0p0 (2015-12-25 revision 53290) [x86_64-darwin15] $ rails -v Rails 5.0.0.1 Obtain facebook AppID and AppSecret from https://developers.facebook.com/
 1. initial steps create rails app

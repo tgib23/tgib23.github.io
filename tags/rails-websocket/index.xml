@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>rails-websocket on My New Hugo Site</title>
-    <link>http://example.org/tags/rails-websocket/</link>
-    <description>Recent content in rails-websocket on My New Hugo Site</description>
+    <title>rails-websocket on some tech and other talks</title>
+    <link>https://tgib23.github.io/tags/rails-websocket/</link>
+    <description>Recent content in rails-websocket on some tech and other talks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 30 Oct 2014 00:14:33 -0500</lastBuildDate><atom:link href="http://example.org/tags/rails-websocket/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 30 Oct 2014 00:14:33 -0500</lastBuildDate><atom:link href="https://tgib23.github.io/tags/rails-websocket/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>deploy rails websocket app into heroku</title>
-      <link>http://example.org/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/</link>
+      <link>https://tgib23.github.io/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/</link>
       <pubDate>Thu, 30 Oct 2014 00:14:33 -0500</pubDate>
       
-      <guid>http://example.org/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/</guid>
+      <guid>https://tgib23.github.io/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/</guid>
       <description>This post is to explain the configuration example to use heroku to deploy app with websocket-rails. The app is implemented in the previous post using standalone mode websocket server on local dev environment.
 1. create heroku Sign up for heroku and install heroku tool. Follow the heroku setup instruction in the rails tutorial.
 $ heroku create Creating gentle-tor-1752... done, stack is cedar https://gentle-tor-1752.herokuapp.com/ | git@heroku.com:gentle-tor-1752.git Now got gentle-tor-1752 for this entry.</description>

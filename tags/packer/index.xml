@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>packer on My New Hugo Site</title>
-    <link>http://example.org/tags/packer/</link>
-    <description>Recent content in packer on My New Hugo Site</description>
+    <title>packer on some tech and other talks</title>
+    <link>https://tgib23.github.io/tags/packer/</link>
+    <description>Recent content in packer on some tech and other talks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 15 Nov 2015 00:47:21 +0900</lastBuildDate><atom:link href="http://example.org/tags/packer/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 15 Nov 2015 00:47:21 +0900</lastBuildDate><atom:link href="https://tgib23.github.io/tags/packer/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>use extra-vars of ansible from packer</title>
-      <link>http://example.org/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/</link>
+      <link>https://tgib23.github.io/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/</link>
       <pubDate>Sun, 15 Nov 2015 00:47:21 +0900</pubDate>
       
-      <guid>http://example.org/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/</guid>
+      <guid>https://tgib23.github.io/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/</guid>
       <description>ansible&amp;rsquo;s &amp;quot;&amp;ndash;extra-vars&amp;quot; is the option to pass variables from command line. In using packer with ansible, you can still specify &amp;ldquo;&amp;ndash;extra-vars&amp;rdquo; through packer&amp;rsquo;s &amp;ldquo;extra_arguments&amp;rdquo;. Here&amp;rsquo;some example.
  ansible  We consider the case that we specify parameter &amp;ldquo;base_ami&amp;rdquo;, &amp;ldquo;parameter_1&amp;rdquo;, and &amp;ldquo;parameter_2&amp;rdquo; for ansible. {% raw %}
 $ cat sample.yml - hosts: sample roles: sample_dir vars: base_ami: &amp;#39;{{ base_ami }}&amp;#39; parameter_1: &amp;#39;{{ parameter_1 }}&amp;#39; parameter_2: &amp;#39;{{ parameter_2 }}&amp;#39; {% endraw %}</description>
