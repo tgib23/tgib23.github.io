@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on My New Hugo Site</title>
+    <link>http://example.org/post/</link>
+    <description>Recent content in Posts on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 19 Nov 2021 00:33:04 +0900</lastBuildDate><atom:link href="http://example.org/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>マトリックスと風の谷のナウシカの共通点について</title>
+      <link>http://example.org/blog/2021/11/19/similarities-between-matrix-series-and-nausicaa-of-the-valley-of-the-wind/</link>
+      <pubDate>Fri, 19 Nov 2021 00:33:04 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2021/11/19/similarities-between-matrix-series-and-nausicaa-of-the-valley-of-the-wind/</guid>
+      <description>マトリックス4が公開されますね！このシリーズ大好きなので今から待ち遠しいです。
+個人的にマトリックスの2と3も好きなのですが、1に比べると話が複雑になり、理解しづらくなるからかファンが少ない傾向にあると思います。 私も最初見たときは2の途中からついていっている自信がなくなりましたが、その後読んだ風の谷のナウシカの漫画版と話の構造が似ていることに気づいてからは、（私がちゃんと理解できているかはともかく）非常に楽しく鑑賞出来るようになりましたので、そのことについて触れてみたいと思います。ちなみに話の内容については説明しないので、未見の方は以下のリンクより購入してフォローしてください。
+For English veriosn, please access here</description>
+    </item>
+    
+    <item>
+      <title>マトリックスと風の谷のナウシカの共通点について</title>
+      <link>http://example.org/blog/2021/11/19/matoritukusutofeng-falsegu-falsenausikafalsegong-tong-dian-nituite/</link>
+      <pubDate>Fri, 19 Nov 2021 00:13:06 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2021/11/19/matoritukusutofeng-falsegu-falsenausikafalsegong-tong-dian-nituite/</guid>
+      <description>マトリックス4が公開されますね！このシリーズ大好きなので今から待ち遠しいです。
+個人的にマトリックスの2と3も好きなのですが、1に比べると話が複雑になり、理解しづらくなるからかファンが少ない傾向にあると思います。 私も最初見たときは2の途中からついていっている自信がなくなりましたが、その後読んだ風の谷のナウシカの漫画版と話の構造が似ていることに気づいてからは、（私がちゃんと理解できているかはともかく）非常に楽しく鑑賞出来るようになりましたので、そのことについて触れてみたいと思います。ちなみに話の内容については説明しないので、未見の方は以下のリンクより購入してフォローしてください。
+For English veriosn, please access here</description>
+    </item>
+    
+    <item>
+      <title>How to run H2O.ai on MapR Cluster</title>
+      <link>http://example.org/blog/2018/08/06/how-to-run-h2o-dot-ai-on-mapr-cluster/</link>
+      <pubDate>Mon, 06 Aug 2018 00:43:36 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2018/08/06/how-to-run-h2o-dot-ai-on-mapr-cluster/</guid>
+      <description>H2O.ai is powerful OSS tool for big-data analysis. In this blog, I introduce how to run H2O on MapR cluster, not on a single node.
+To run on a cluster, H2O provides following two styles of executions
+ Running H2O application on YARN Running H2O application on Spark (Sparkling Water)  I show how to setup in each case.
+Running H2O application on YARN http://h2o-release.s3.amazonaws.com/h2o/rel-wright/4/index.html
+wget http://h2o-release.s3.amazonaws.com/h2o/rel-wright/4/h2o-3.20.0.4-mapr5.2.zip Running H2O application on Spark (Sparkling Water) </description>
+    </item>
+    
+    <item>
+      <title>Add Google Plus and Instagram Login with Omniauth &#43; Devise on Rails5</title>
+      <link>http://example.org/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5/</link>
+      <pubDate>Sun, 12 Nov 2017 16:23:58 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5/</guid>
+      <description>This post shows how to implement google plus and instagram login with omniauth and devise on rails5. This change totally depends on my previous implementation for facebook and twitter, so if you are new to implement this, you should look at those posts first. I write about google plus first, then add instagram login later.
+Implement Google Plus Login 0. Get Google APP ID and SECRET You can get CLIENT ID and CLIENT_SECRET from here.</description>
+    </item>
+    
+    <item>
+      <title>How to access MapR Streams from Python bindings</title>
+      <link>http://example.org/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/</link>
+      <pubDate>Tue, 22 Aug 2017 15:38:09 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/</guid>
+      <description>From MEP 3.0, MapR offers Python binding for MapR Streams. This article show how to use it with sample code.
+Step 0. The environment is as follows.
+ CentOS : 7.2 MapR 5.2.2 MEP 3.1 python-2.7.5-48.el7.x86_64 python-devel-2.7.5-48.el7.x86_64  Step 1. Create stream and topic as follows.
+$ maprcli stream create -path /streams/python-test-stream -produceperm p -consumeperm p -topicperm p $ maprcli stream topic create -path /streams/python-test-stream -topic test-topic Step 2. Install what you need.</description>
+    </item>
+    
+    <item>
+      <title>How to setup Squirrel SQL Client on Mac for Hive, Drill, and Impala on MapR cluster</title>
+      <link>http://example.org/blog/2017/05/24/how-to-setup-squirrel-sql-client-on-mac-for-hive-spark-and-drill-on-mapr-cluster/</link>
+      <pubDate>Wed, 24 May 2017 17:35:18 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2017/05/24/how-to-setup-squirrel-sql-client-on-mac-for-hive-spark-and-drill-on-mapr-cluster/</guid>
+      <description>This post shows how to setup Squirrel SQL client for Hive, Drill, and Impala on Mac. I assume Mac client is already setup and this is the case with MapR 5.2.1 and MEP 3.0. Change the version numbers if you set up with other MapR or MEP versions.
+Install Squirrel Go to http://www.squirrelsql.org/#installation and follow the instruction.
+Then, Launch Squirrel App from Application Directory.
+Use Hive from Squirrel You have to follow three steps, bring jars, configuration, and run the query.</description>
+    </item>
+    
+    <item>
+      <title>Add twitter login with Omniauth &#43; Devise on Rails5</title>
+      <link>http://example.org/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/</link>
+      <pubDate>Mon, 09 Jan 2017 15:15:27 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/</guid>
+      <description>This post follows previous post How to use Omniauth + Devise on Rails5 from scratch, which is about how to setup facebook login. This post shows how to additionally setup twitter login. You can get APP ID and APP SECRET from here.
+1. initial step add omniauth-twitter in Gemfile
+$ diff --git a/Gemfile b/Gemfile index de3f792..271a916 100644 --- a/Gemfile +++ b/Gemfile @@ -56,3 +56,4 @@ gem &#39;devise&#39; gem &#39;omniauth&#39; gem &#39;omniauth-facebook&#39; gem &#39;dotenv-rails&#39; +gem &#39;omniauth-twitter&#39; $ bundle install $ gem list | grep omniauth omniauth (1.</description>
+    </item>
+    
+    <item>
+      <title>How to use Omniauth &#43; Devise on Rails5 from scratch</title>
+      <link>http://example.org/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/</link>
+      <pubDate>Thu, 10 Nov 2016 00:11:23 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/</guid>
+      <description>This post is no-brainer step by step memo to use omniauth and devise on rails5 for setting up oauth webapp with facebook. Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0 are used.
+0. env &amp;amp; requiement $ ruby -v ruby 2.3.0p0 (2015-12-25 revision 53290) [x86_64-darwin15] $ rails -v Rails 5.0.0.1 Obtain facebook AppID and AppSecret from https://developers.facebook.com/
+1. initial steps create rails app
+$ rails new omniauth &amp;amp;&amp;amp; cd omniauth modify Gemfile and add devise and omniauth</description>
+    </item>
+    
+    <item>
+      <title>Behavior of Hbase Read/Write Requests Counter</title>
+      <link>http://example.org/blog/2016/10/29/behavior-of-hbase-read-slash-write-requests-counter/</link>
+      <pubDate>Sat, 29 Oct 2016 23:10:50 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2016/10/29/behavior-of-hbase-read-slash-write-requests-counter/</guid>
+      <description>HBase has Read/Write Requests System Counter feature and we can monitor it from HBase Web UI or API. Against my instincts, the numbers of those counters could DECREASE while running. This article covers how we could see the decrease of those counters.
+We can see read/write request counters of HBase from
+http://master-server-node:60010/master-status#requestStats
+or
+http://region-server-nodes:60010/jmx
+These numbers are calculated by summing each region’s counts. Check the iteration part of the code. https://github.</description>
+    </item>
+    
+    <item>
+      <title>install npm package from npm pack-ed file using ansible</title>
+      <link>http://example.org/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible/</link>
+      <pubDate>Sun, 20 Mar 2016 22:28:10 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible/</guid>
+      <description>In case you want to install npm package file, created by &amp;ldquo;npm pack&amp;rdquo; command, just specify the path to the file to &amp;ldquo;name&amp;rdquo;.
+description: Install &amp;quot;sample&amp;quot; node.js package, created by &amp;quot;npm pack&amp;quot;, located at /tmp/sample.tar.gz - npm: name=/tmp/sample.tar.gz path=/app/location That&amp;rsquo;s it.</description>
+    </item>
+    
+    <item>
+      <title>use extra-vars of ansible from packer</title>
+      <link>http://example.org/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/</link>
+      <pubDate>Sun, 15 Nov 2015 00:47:21 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/</guid>
+      <description>ansible&amp;rsquo;s &amp;quot;&amp;ndash;extra-vars&amp;quot; is the option to pass variables from command line. In using packer with ansible, you can still specify &amp;ldquo;&amp;ndash;extra-vars&amp;rdquo; through packer&amp;rsquo;s &amp;ldquo;extra_arguments&amp;rdquo;. Here&amp;rsquo;some example.
+ ansible  We consider the case that we specify parameter &amp;ldquo;base_ami&amp;rdquo;, &amp;ldquo;parameter_1&amp;rdquo;, and &amp;ldquo;parameter_2&amp;rdquo; for ansible. {% raw %}
+$ cat sample.yml - hosts: sample roles: sample_dir vars: base_ami: &amp;#39;{{ base_ami }}&amp;#39; parameter_1: &amp;#39;{{ parameter_1 }}&amp;#39; parameter_2: &amp;#39;{{ parameter_2 }}&amp;#39; {% endraw %}</description>
+    </item>
+    
+    <item>
+      <title>deploy rails websocket app into heroku</title>
+      <link>http://example.org/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/</link>
+      <pubDate>Thu, 30 Oct 2014 00:14:33 -0500</pubDate>
+      
+      <guid>http://example.org/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/</guid>
+      <description>This post is to explain the configuration example to use heroku to deploy app with websocket-rails. The app is implemented in the previous post using standalone mode websocket server on local dev environment.
+1. create heroku Sign up for heroku and install heroku tool. Follow the heroku setup instruction in the rails tutorial.
+$ heroku create Creating gentle-tor-1752... done, stack is cedar https://gentle-tor-1752.herokuapp.com/ | git@heroku.com:gentle-tor-1752.git Now got gentle-tor-1752 for this entry.</description>
+    </item>
+    
+    <item>
+      <title>initial steps to use websocket-rails</title>
+      <link>http://example.org/blog/2014/08/03/first-post/</link>
+      <pubDate>Sun, 03 Aug 2014 21:39:04 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2014/08/03/first-post/</guid>
+      <description>This is the very initial steps to use websocket-rails. Basically, I follow the lessons from here. I also add some suplemental steps for smooth start and hopefully next steps to utilize this library.
+1. prepare $ ruby -v ruby 2.1.0p0 (2013-12-25 revision 44422) [x86_64-darwin11.0] $ rails -v [~/Dropbox/rails] Rails 4.1.4 $ gem -v 2.2.2 $ rails new websocket_rails_example &amp;amp;&amp;amp; cd websocket_rails_example ... ... $ gem install websocket-rails Welcome to WebsocketRails v0.</description>
+    </item>
+    
+  </channel>
+</rss>
