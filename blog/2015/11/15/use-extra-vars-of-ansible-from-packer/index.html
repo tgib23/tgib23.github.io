@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+    
+    
+      <link href="/css/fonts.css" rel="stylesheet" type="text/css">
+    
+  
+
+  
+  <title>use extra-vars of ansible from packer</title>
+
+  
+  
+  <link rel="stylesheet" href="/css/hugo-octopress.css">
+
+  
+  
+    <link rel="stylesheet" href="http://example.org//css/custom.css">
+  
+
+  
+    <link rel="stylesheet" href="/css/fork-awesome.min.css">
+  
+
+  
+  <link href="http://example.org/favicon.png" rel="icon">
+
+  
+  
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="">
+  <meta name="author" content="">
+
+  
+  <meta name="generator" content="Hugo 0.89.4" />
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+
+</head>
+<body>
+
+
+<header role="banner">
+<hgroup>
+  
+  <h1><a href="http://example.org/">My New Hugo Site</a></h1>
+    <h2></h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+<fieldset class="mobile-nav">
+  
+  <select onchange="location = this.value;">
+    <option value="">Navigate…</option>
+      
+  </select>
+</fieldset>
+
+
+<ul class="main-navigation">
+  
+  
+</ul>
+
+<ul class="subscription">
+  
+</ul>
+
+
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+  <p class="meta">Nov 15, 2015
+     - 1 minute read 
+    
+
+    
+  </p>
+  <h1 class="entry-title">
+     use extra-vars of ansible from packer 
+  </h1>
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+          <p>ansible&rsquo;s 
+<a href="http://docs.ansible.com/ansible/playbooks_variables.html#passing-variables-on-the-command-line" target="_blank" rel="noopener">&quot;&ndash;extra-vars&quot;</a> is the option to pass variables from command line. In using packer with ansible, you can still specify &ldquo;&ndash;extra-vars&rdquo; through packer&rsquo;s 
+<a href="https://www.packer.io/docs/provisioners/ansible-local.html#extra_arguments" target="_blank" rel="noopener">&ldquo;extra_arguments&rdquo;</a>. Here&rsquo;some example.</p>
+<ul>
+<li>ansible</li>
+</ul>
+<p>We consider the case that we specify parameter &ldquo;base_ami&rdquo;, &ldquo;parameter_1&rdquo;, and &ldquo;parameter_2&rdquo; for ansible.
+{% raw %}</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="color:#ae81ff">$ cat sample.yml</span>
+- <span style="color:#f92672">hosts</span>: <span style="color:#ae81ff">sample</span>
+  <span style="color:#f92672">roles</span>: <span style="color:#ae81ff">sample_dir</span>
+  <span style="color:#f92672">vars</span>:
+    <span style="color:#f92672">base_ami</span>: <span style="color:#e6db74">&#39;{{ base_ami }}&#39;</span>
+    <span style="color:#f92672">parameter_1</span>: <span style="color:#e6db74">&#39;{{ parameter_1 }}&#39;</span>
+    <span style="color:#f92672">parameter_2</span>: <span style="color:#e6db74">&#39;{{ parameter_2 }}&#39;</span>
+</code></pre></div><p>{% endraw %}</p>
+<ul>
+<li>packer</li>
+</ul>
+<p>Then, we use those parameters above in packer&rsquo;s json.
+{% raw %}</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#960050;background-color:#1e0010">$</span> <span style="color:#960050;background-color:#1e0010">cat</span> <span style="color:#960050;background-color:#1e0010">sample.json</span>
+{
+  <span style="color:#f92672">&#34;variables&#34;</span>: {
+    <span style="color:#f92672">&#34;base_ami&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>,
+    <span style="color:#f92672">&#34;parameter_1&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>,
+    <span style="color:#f92672">&#34;parameter_2&#34;</span>: <span style="color:#e6db74">&#34;&#34;</span>
+  },
+  <span style="color:#f92672">&#34;builders&#34;</span>
+  <span style="color:#960050;background-color:#1e0010">...</span>
+  <span style="color:#960050;background-color:#1e0010">...</span>
+  <span style="color:#e6db74">&#34;provisioners&#34;</span>: [{
+    <span style="color:#960050;background-color:#1e0010">...</span>
+    <span style="color:#960050;background-color:#1e0010">...</span>
+  }, {
+    <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;ansible-local&#34;</span>,
+    <span style="color:#f92672">&#34;playbook_file&#34;</span>: <span style="color:#e6db74">&#34;sample.yml&#34;</span>,
+    <span style="color:#f92672">&#34;staging_directory&#34;</span>: <span style="color:#e6db74">&#34;/tmp/ansible-local&#34;</span>
+    <span style="color:#e6db74">&#34;role_paths&#34;</span>: [
+      <span style="color:#e6db74">&#34;roles/sample_dir&#34;</span>
+    ],
+    <span style="color:#f92672">&#34;extra_arguments&#34;</span>: <span style="color:#e6db74">&#34;--extra-vars &#39;base_ami={{user `base_ami`}} parameter_1={{user `parameter_1`}} parameter_2={{user `parameter_2`}}&#39;&#34;</span>,
+
+  }]
+}
+</code></pre></div><p>{% endraw %}</p>
+<p>Now you can pass your ansible parameter from packer like this</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ sudo /usr/local/packer/packer build  -var <span style="color:#e6db74">&#39;base_ami=xxxxxxxx&#39;</span> -var <span style="color:#e6db74">&#39;parameter_1=yyyyyyyy&#39;</span> -var <span style="color:#e6db74">&#39;parameter_2=zzzzzzzzzz&#39;</span> ./sample.json
+</code></pre></div>
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn"></span></span>
+    
+    <time>Nov 15, 2015</time>
+    
+      <span class="categories">
+        Tags:
+        
+          <a class="category" href="http://example.org/tags/ansible">ansible</a>  <a class="category" href="http://example.org/tags/packer">packer</a>  
+    
+    </span>
+  </p>
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="http://example.org/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/" title="deploy rails websocket app into heroku">deploy rails websocket app into heroku</a>
+    
+
+    
+      <a class="basic-alignment right" href="http://example.org/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible/" title="install npm package from npm pack-ed file using ansible">install npm package from npm pack-ed file using ansible</a>
+    
+  </p>
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+
+    <p>
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      
+      
+      
+      
+      
+         
+      
+      
+      
+      
+      
+      
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+
+  
+  
+  
+</aside>
+
+  </div>
+</div>
+
+    <footer role="contentinfo">
+      <p>Copyright &copy; 2021  - <a href="http://example.org/license/">License</a> -
+        <span class="credit">Powered by <a target="_blank" href="https://gohugo.io" rel="noopener noreferrer">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/" rel="noopener noreferrer">Hugo-Octopress</a> theme.
+      </p>
+    </footer>
+
+    
+    
+
+
+
+    
+    
+    
+
+    
+  </body>
+</html>
+

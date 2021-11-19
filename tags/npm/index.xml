@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>npm on My New Hugo Site</title>
+    <link>http://example.org/tags/npm/</link>
+    <description>Recent content in npm on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 20 Mar 2016 22:28:10 +0900</lastBuildDate><atom:link href="http://example.org/tags/npm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>install npm package from npm pack-ed file using ansible</title>
+      <link>http://example.org/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible/</link>
+      <pubDate>Sun, 20 Mar 2016 22:28:10 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible/</guid>
+      <description>In case you want to install npm package file, created by &amp;ldquo;npm pack&amp;rdquo; command, just specify the path to the file to &amp;ldquo;name&amp;rdquo;.
+description: Install &amp;quot;sample&amp;quot; node.js package, created by &amp;quot;npm pack&amp;quot;, located at /tmp/sample.tar.gz - npm: name=/tmp/sample.tar.gz path=/app/location That&amp;rsquo;s it.</description>
+    </item>
+    
+  </channel>
+</rss>

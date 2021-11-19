@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>twitter on My New Hugo Site</title>
+    <link>http://example.org/tags/twitter/</link>
+    <description>Recent content in twitter on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 09 Jan 2017 15:15:27 +0900</lastBuildDate><atom:link href="http://example.org/tags/twitter/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Add twitter login with Omniauth &#43; Devise on Rails5</title>
+      <link>http://example.org/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/</link>
+      <pubDate>Mon, 09 Jan 2017 15:15:27 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/</guid>
+      <description>This post follows previous post How to use Omniauth + Devise on Rails5 from scratch, which is about how to setup facebook login. This post shows how to additionally setup twitter login. You can get APP ID and APP SECRET from here.
+1. initial step add omniauth-twitter in Gemfile
+$ diff --git a/Gemfile b/Gemfile index de3f792..271a916 100644 --- a/Gemfile +++ b/Gemfile @@ -56,3 +56,4 @@ gem &amp;#39;devise&amp;#39; gem &amp;#39;omniauth&amp;#39; gem &amp;#39;omniauth-facebook&amp;#39; gem &amp;#39;dotenv-rails&amp;#39; +gem &amp;#39;omniauth-twitter&amp;#39; $ bundle install $ gem list | grep omniauth omniauth (1.</description>
+    </item>
+    
+  </channel>
+</rss>

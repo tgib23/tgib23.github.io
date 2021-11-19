@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+    
+    
+      <link href="/css/fonts.css" rel="stylesheet" type="text/css">
+    
+  
+
+  
+  <title>deploy rails websocket app into heroku</title>
+
+  
+  
+  <link rel="stylesheet" href="/css/hugo-octopress.css">
+
+  
+  
+    <link rel="stylesheet" href="http://example.org//css/custom.css">
+  
+
+  
+    <link rel="stylesheet" href="/css/fork-awesome.min.css">
+  
+
+  
+  <link href="http://example.org/favicon.png" rel="icon">
+
+  
+  
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="">
+  <meta name="author" content="">
+
+  
+  <meta name="generator" content="Hugo 0.89.4" />
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+
+</head>
+<body>
+
+
+<header role="banner">
+<hgroup>
+  
+  <h1><a href="http://example.org/">My New Hugo Site</a></h1>
+    <h2></h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+<fieldset class="mobile-nav">
+  
+  <select onchange="location = this.value;">
+    <option value="">Navigate…</option>
+      
+  </select>
+</fieldset>
+
+
+<ul class="main-navigation">
+  
+  
+</ul>
+
+<ul class="subscription">
+  
+</ul>
+
+
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+  <p class="meta">Oct 30, 2014
+     - 2 minute read 
+    
+
+    
+  </p>
+  <h1 class="entry-title">
+     deploy rails websocket app into heroku 
+  </h1>
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+          <p>This post is to explain the configuration example to use heroku to deploy app with websocket-rails. The app is implemented in the 
+<a href="http://tgib23.github.io/blog/2014/08/03/first-post/" target="_blank" rel="noopener">previous post</a> using standalone mode websocket server on local dev environment.</p>
+<h3 id="1-create-heroku">1. create heroku</h3>
+<p>Sign up for heroku and install heroku tool. Follow the 
+<a href="https://www.railstutorial.org/book/beginning#sec-heroku_setup" target="_blank" rel="noopener">heroku setup instruction</a> in the rails tutorial.</p>
+<pre tabindex="0"><code>$ heroku create
+Creating gentle-tor-1752... done, stack is cedar
+https://gentle-tor-1752.herokuapp.com/ | git@heroku.com:gentle-tor-1752.git
+</code></pre><p>Now got gentle-tor-1752 for this entry.</p>
+<h3 id="2-redis-setup">2. redis setup</h3>
+<p>Because redis is used for the backend of websocket, we have to enable redis in heroku.</p>
+<pre tabindex="0"><code>$ heroku addons:add redistogo                                                                                                            
+Adding redistogo on gentle-tor-1752... done, v3 (free)
+Use `heroku addons:docs redistogo` to view documentation.
+</code></pre><p>Then, check the redis setting information from heroku web UI (app -&gt; redistogo). You will find info on redis db, such as below.</p>
+<pre tabindex="0"><code>redis://redistogo:xxxxxxxxxxxxxxxx@greeneye.redistogo.com:12345/
+</code></pre><p>Next, apply these info on the redis setting.</p>
+<pre tabindex="0"><code>$ vim config/initializers/websocket_rails.rb
+...
+-  config.redis_options = {:host =&gt; 'localhost', :port =&gt; '6379'}
++  config.redis_options = {:host =&gt; 'greeneye.redistogo.com', :port =&gt; '12345', :user =&gt; 'redistogo', :password =&gt; 'xxxxxxxxxxxxxxxx'}
+...
+</code></pre><p>If you don&rsquo;t like write password into code, maybe you can use environment variables.</p>
+<h3 id="3-change-websocket-url">3. change websocket url</h3>
+<p>Change the websocket url specified in the code. Again, there could be better way to do this, but I put it into code simply.</p>
+<pre tabindex="0"><code>$ vim app/views/chat/index.html.erb
+...
+-  var ws_rails = new WebSocketRails(&quot;localhost:3001/websocket&quot;);
++  var ws_rails = new WebSocketRails(&quot;aqueous-springs-2658.herokuapp.com/websocket&quot;);
+
+* change the hostname accoring to your setting.
+...
+</code></pre><h3 id="4-small-changes-for-heroku">4. small changes for heroku</h3>
+<p>put sqlite dev only and add pg and rails_12fator for prod env.</p>
+<pre tabindex="0"><code>+group :development do
++  # Use sqlite3 as the database for Active Record
++  gem 'sqlite3'
++end
++
++group :production do
++  gem 'pg', '0.17.1'
++  gem 'rails_12factor', '0.0.2'
++end
+</code></pre><p>commit Gemfile.lock</p>
+<pre tabindex="0"><code>$ bundle install
+$ git add Gemfile.lock
+$ git commit -am 'add Gemfile.lock'
+</code></pre><p>set root path</p>
+<pre tabindex="0"><code>$ vim config/routes.rb
+...
+root to: &quot;chat#index&quot;
+...
+</code></pre><h3 id="5-deploy-and-check">5. deploy and check</h3>
+<pre tabindex="0"><code>$ git push heroku master
+$ heroku open
+</code></pre>
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn"></span></span>
+    
+    <time>Oct 30, 2014</time>
+    
+      <span class="categories">
+        Tags:
+        
+          <a class="category" href="http://example.org/tags/heroku">heroku</a>  <a class="category" href="http://example.org/tags/rails">rails</a>  <a class="category" href="http://example.org/tags/rails-websocket">rails-websocket</a>  <a class="category" href="http://example.org/tags/websocket">websocket</a>  
+    
+    </span>
+  </p>
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="http://example.org/blog/2014/08/03/initial-steps-to-use-websocket-rails/" title="initial steps to use websocket-rails">initial steps to use websocket-rails</a>
+    
+
+    
+      <a class="basic-alignment right" href="http://example.org/blog/2015/11/15/use-extra-vars-of-ansible-from-packer/" title="use extra-vars of ansible from packer">use extra-vars of ansible from packer</a>
+    
+  </p>
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+
+    <p>
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      
+      
+      
+      
+      
+         
+      
+      
+      
+      
+      
+      
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+
+  
+  
+  
+</aside>
+
+  </div>
+</div>
+
+    <footer role="contentinfo">
+      <p>Copyright &copy; 2021  - <a href="http://example.org/license/">License</a> -
+        <span class="credit">Powered by <a target="_blank" href="https://gohugo.io" rel="noopener noreferrer">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/" rel="noopener noreferrer">Hugo-Octopress</a> theme.
+      </p>
+    </footer>
+
+    
+    
+
+
+
+    
+    
+    
+
+    
+  </body>
+</html>
+
