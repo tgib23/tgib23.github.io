@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>mapr streams on My New Hugo Site</title>
-    <link>http://example.org/tags/mapr-streams/</link>
-    <description>Recent content in mapr streams on My New Hugo Site</description>
+    <title>mapr streams on some tech and other talks</title>
+    <link>https://tgib23.github.io/tags/mapr-streams/</link>
+    <description>Recent content in mapr streams on some tech and other talks</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 22 Aug 2017 15:38:09 +0900</lastBuildDate><atom:link href="http://example.org/tags/mapr-streams/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 22 Aug 2017 15:38:09 +0900</lastBuildDate><atom:link href="https://tgib23.github.io/tags/mapr-streams/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>How to access MapR Streams from Python bindings</title>
-      <link>http://example.org/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/</link>
+      <link>https://tgib23.github.io/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/</link>
       <pubDate>Tue, 22 Aug 2017 15:38:09 +0900</pubDate>
       
-      <guid>http://example.org/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/</guid>
+      <guid>https://tgib23.github.io/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/</guid>
       <description>From MEP 3.0, MapR offers Python binding for MapR Streams. This article show how to use it with sample code.
 Step 0. The environment is as follows.
  CentOS : 7.2 MapR 5.2.2 MEP 3.1 python-2.7.5-48.el7.x86_64 python-devel-2.7.5-48.el7.x86_64  Step 1. Create stream and topic as follows.
