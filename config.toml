@@ -1,6 +1,6 @@
-baseURL = 'http://example.org/'
+baseURL = 'https://tgib23.github.io/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'some tech and other talks'
 
 [permalinks]
   post = "/blog/:year/:month/:day/:slug"
@@ -8,4 +8,4 @@ title = 'My New Hugo Site'
 [params]
     amazonJpAffiliate = "bigt23-22"
     customCSS = ["/css/custom.css"]
-
+    subtitle = "ruby, rails, book reviews"
