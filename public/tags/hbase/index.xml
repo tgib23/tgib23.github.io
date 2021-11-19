@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>hbase on My New Hugo Site</title>
+    <link>http://example.org/tags/hbase/</link>
+    <description>Recent content in hbase on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 29 Oct 2016 23:10:50 +0900</lastBuildDate><atom:link href="http://example.org/tags/hbase/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Behavior of Hbase Read/Write Requests Counter</title>
+      <link>http://example.org/blog/2016/10/29/behavior-of-hbase-read-slash-write-requests-counter/</link>
+      <pubDate>Sat, 29 Oct 2016 23:10:50 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2016/10/29/behavior-of-hbase-read-slash-write-requests-counter/</guid>
+      <description>HBase has Read/Write Requests System Counter feature and we can monitor it from HBase Web UI or API. Against my instincts, the numbers of those counters could DECREASE while running. This article covers how we could see the decrease of those counters.
+We can see read/write request counters of HBase from
+http://master-server-node:60010/master-status#requestStats
+or
+http://region-server-nodes:60010/jmx
+These numbers are calculated by summing each region’s counts. Check the iteration part of the code. https://github.</description>
+    </item>
+    
+  </channel>
+</rss>

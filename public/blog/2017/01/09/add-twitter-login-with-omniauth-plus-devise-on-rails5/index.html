@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+    
+    
+      <link href="/css/fonts.css" rel="stylesheet" type="text/css">
+    
+  
+
+  
+  <title>Add twitter login with Omniauth &#43; Devise on Rails5</title>
+
+  
+  
+  <link rel="stylesheet" href="/css/hugo-octopress.css">
+
+  
+  
+    <link rel="stylesheet" href="http://example.org//css/custom.css">
+  
+
+  
+    <link rel="stylesheet" href="/css/fork-awesome.min.css">
+  
+
+  
+  <link href="http://example.org/favicon.png" rel="icon">
+
+  
+  
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="">
+  <meta name="author" content="">
+
+  
+  <meta name="generator" content="Hugo 0.89.4" />
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+
+</head>
+<body>
+
+
+<header role="banner">
+<hgroup>
+  
+  <h1><a href="http://example.org/">My New Hugo Site</a></h1>
+    <h2></h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+<fieldset class="mobile-nav">
+  
+  <select onchange="location = this.value;">
+    <option value="">Navigate…</option>
+      
+  </select>
+</fieldset>
+
+
+<ul class="main-navigation">
+  
+  
+</ul>
+
+<ul class="subscription">
+  
+</ul>
+
+
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+  <p class="meta">Jan 9, 2017
+     - 2 minute read 
+    
+
+    
+  </p>
+  <h1 class="entry-title">
+     Add twitter login with Omniauth &#43; Devise on Rails5 
+  </h1>
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+          <p>This post follows previous post 
+<a href="http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/" target="_blank" rel="noopener">How to use Omniauth + Devise on Rails5 from scratch</a>, which is about how to setup facebook login.
+This post shows how to additionally setup twitter login. You can get APP ID and APP SECRET from 
+<a href="https://apps.twitter.com/" target="_blank" rel="noopener">here</a>.</p>
+<h3 id="1-initial-step">1. initial step</h3>
+<p>add omniauth-twitter in Gemfile</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ diff --git a/Gemfile b/Gemfile
+index de3f792..271a916 <span style="color:#ae81ff">100644</span>
+--- a/Gemfile
++++ b/Gemfile
+@@ -56,3 +56,4 @@ gem <span style="color:#e6db74">&#39;devise&#39;</span>
+ gem <span style="color:#e6db74">&#39;omniauth&#39;</span>
+ gem <span style="color:#e6db74">&#39;omniauth-facebook&#39;</span>
+ gem <span style="color:#e6db74">&#39;dotenv-rails&#39;</span>
++gem <span style="color:#e6db74">&#39;omniauth-twitter&#39;</span>
+
+$ bundle install
+
+$ gem list | grep omniauth
+omniauth <span style="color:#f92672">(</span>1.3.1<span style="color:#f92672">)</span>
+omniauth-facebook <span style="color:#f92672">(</span>4.0.0<span style="color:#f92672">)</span>
+omniauth-oauth <span style="color:#f92672">(</span>1.1.0<span style="color:#f92672">)</span>
+omniauth-oauth2 <span style="color:#f92672">(</span>1.4.0<span style="color:#f92672">)</span>
+omniauth-twitter <span style="color:#f92672">(</span>1.2.1<span style="color:#f92672">)</span>
+</code></pre></div><h3 id="2-add-twitter-configuration">2. add Twitter configuration</h3>
+<p>set Twitter AppID and AppSecret</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ emacs config/initializers/devise.rb
+  config.omniauth :facebook, ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;FACEBOOK_API&#39;</span><span style="color:#f92672">]</span>, ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;FACEBOOK_KEY&#39;</span><span style="color:#f92672">]</span>
++  config.omniauth :twitter,  ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;TWITTER_API&#39;</span><span style="color:#f92672">]</span>,  ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;TWITTER_KEY&#39;</span><span style="color:#f92672">]</span>
+
+$ emacs .env
+...
+FACEBOOK_API<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;FACEBOOK_APP_ID&#34;</span>
+FACEBOOK_KEY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;FACEBOOK_APP_SECRET&#34;</span>
++TWITTER_API<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;TWITTER_APP_ID&#34;</span>
++TWITTER_KEY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;TWITTER_APP_SECRET&#34;</span>
+
+$ git diff app/models/user.rb
+diff --git a/app/models/user.rb b/app/models/user.rb
+index 52d48be..f62d358 <span style="color:#ae81ff">100644</span>
+--- a/app/models/user.rb
++++ b/app/models/user.rb
+@@ -2,7 +2,7 @@ class User &lt; ApplicationRecord
+   <span style="color:#75715e"># Include default devise modules. Others available are:</span>
+   <span style="color:#75715e"># :confirmable, :lockable, :timeoutable and :omniauthable</span>
+   devise :database_authenticatable, :registerable,
+-         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">[</span>:facebook<span style="color:#f92672">]</span>
++         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">[</span>:facebook, :twitter<span style="color:#f92672">]</span>
+
+</code></pre></div><h3 id="3-modify-view-to-allow-twitter-login">3. modify view to allow twitter login</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ diff --git a/app/views/layouts/application.html.erb b/app/views/layouts/application.html.erb
+index a9c6fde..d970abf <span style="color:#ae81ff">100644</span>
+--- a/app/views/layouts/application.html.erb
++++ b/app/views/layouts/application.html.erb
+@@ -19,6 +19,8 @@
+         <span style="color:#f92672">[</span>&lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#39;Sign out&#39;</span>, destroy_user_session_path, method: :delete  %&gt;<span style="color:#f92672">]</span>
+       &lt;% <span style="color:#66d9ef">else</span> %&gt;
+         &lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#34;Sign in with Facebook&#34;</span>, user_facebook_omniauth_authorize_path %&gt;
++        &lt;br&gt;
++        &lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#34;Sign in with Twitter&#34;</span>, user_twitter_omniauth_authorize_path %&gt;
+       &lt;% end %&gt;
+     &lt;/div&gt;
+</code></pre></div><p>Then, restart rails</p>
+<p>Here are the 
+<a href="https://github.com/tgib23/douzou_chan2/pull/2/files" target="_blank" rel="noopener">total diff files</a></p>
+
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn"></span></span>
+    
+    <time>Jan 9, 2017</time>
+    
+      <span class="categories">
+        Tags:
+        
+          <a class="category" href="http://example.org/tags/devise">devise</a>  <a class="category" href="http://example.org/tags/omniauth">omniauth</a>  <a class="category" href="http://example.org/tags/rails5">rails5</a>  <a class="category" href="http://example.org/tags/twitter">twitter</a>  
+    
+    </span>
+  </p>
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="http://example.org/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/" title="How to use Omniauth &#43; Devise on Rails5 from scratch">How to use Omniauth &#43; Devise on Rails5 from scratch</a>
+    
+
+    
+      <a class="basic-alignment right" href="http://example.org/blog/2017/05/24/how-to-setup-squirrel-sql-client-on-mac-for-hive-spark-and-drill-on-mapr-cluster/" title="How to setup Squirrel SQL Client on Mac for Hive, Drill, and Impala on MapR cluster">How to setup Squirrel SQL Client on Mac for Hive, Drill, and Impala on MapR cluster</a>
+    
+  </p>
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+
+    <p>
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      
+      
+      
+      
+      
+         
+      
+      
+      
+      
+      
+      
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+
+  
+  
+  
+</aside>
+
+  </div>
+</div>
+
+    <footer role="contentinfo">
+      <p>Copyright &copy; 2021  - <a href="http://example.org/license/">License</a> -
+        <span class="credit">Powered by <a target="_blank" href="https://gohugo.io" rel="noopener noreferrer">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/" rel="noopener noreferrer">Hugo-Octopress</a> theme.
+      </p>
+    </footer>
+
+    
+    
+
+
+
+    
+    
+    
+
+    
+  </body>
+</html>
+

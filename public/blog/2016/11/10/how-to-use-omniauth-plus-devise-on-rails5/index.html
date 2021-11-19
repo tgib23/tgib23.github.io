@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+    
+    
+      <link href="/css/fonts.css" rel="stylesheet" type="text/css">
+    
+  
+
+  
+  <title>How to use Omniauth &#43; Devise on Rails5 from scratch</title>
+
+  
+  
+  <link rel="stylesheet" href="/css/hugo-octopress.css">
+
+  
+  
+    <link rel="stylesheet" href="http://example.org//css/custom.css">
+  
+
+  
+    <link rel="stylesheet" href="/css/fork-awesome.min.css">
+  
+
+  
+  <link href="http://example.org/favicon.png" rel="icon">
+
+  
+  
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="">
+  <meta name="author" content="">
+
+  
+  <meta name="generator" content="Hugo 0.89.4" />
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+
+</head>
+<body>
+
+
+<header role="banner">
+<hgroup>
+  
+  <h1><a href="http://example.org/">My New Hugo Site</a></h1>
+    <h2></h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+<fieldset class="mobile-nav">
+  
+  <select onchange="location = this.value;">
+    <option value="">Navigate…</option>
+      
+  </select>
+</fieldset>
+
+
+<ul class="main-navigation">
+  
+  
+</ul>
+
+<ul class="subscription">
+  
+</ul>
+
+
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+  <p class="meta">Nov 10, 2016
+     - 5 minute read 
+    
+
+    
+  </p>
+  <h1 class="entry-title">
+    <a href="http://example.org/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/">How to use Omniauth &#43; Devise on Rails5 from scratch</a>
+  </h1>
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+          <p>This post is no-brainer step by step memo to use omniauth and devise on rails5 for setting up oauth webapp with facebook.
+Rails 5.0.0.1, ruby 2.3.0, devise 4.2.0, omniauth 1.3.1, omniauth-facebook 4.0.0 are used.</p>
+<h3 id="0-env--requiement">0. env &amp; requiement</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ ruby -v
+ruby 2.3.0p0 <span style="color:#f92672">(</span>2015-12-25 revision 53290<span style="color:#f92672">)</span> <span style="color:#f92672">[</span>x86_64-darwin15<span style="color:#f92672">]</span>
+
+$ rails -v
+Rails 5.0.0.1
+</code></pre></div><p>Obtain facebook AppID and AppSecret from 
+<a href="https://developers.facebook.com/" target="_blank" rel="noopener">https://developers.facebook.com/</a></p>
+<h3 id="1-initial-steps">1. initial steps</h3>
+<p>create rails app</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ rails new omniauth <span style="color:#f92672">&amp;&amp;</span> cd omniauth
+</code></pre></div><p>modify Gemfile and add devise and omniauth</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git diff
+ diff --git a/Gemfile b/Gemfile
+index 4aa8f6b..1d0e2d4 <span style="color:#ae81ff">100644</span>
+--- a/Gemfile
++++ b/Gemfile
+@@ -46,3 +46,6 @@ end
+
+ <span style="color:#75715e"># Windows does not include zoneinfo files, so bundle the tzinfo-data gem</span>
+ gem <span style="color:#e6db74">&#39;tzinfo-data&#39;</span>, platforms: <span style="color:#f92672">[</span>:mingw, :mswin, :x64_mingw, :jruby<span style="color:#f92672">]</span>
++gem <span style="color:#e6db74">&#39;devise&#39;</span>
++gem <span style="color:#e6db74">&#39;omniauth&#39;</span>
++gem <span style="color:#e6db74">&#39;omniauth-facebook&#39;</span>
+
+$ bundle install
+$ gem list | grep devise
+devise <span style="color:#f92672">(</span>4.2.0<span style="color:#f92672">)</span>
+$ gem list | grep omniauth
+omniauth <span style="color:#f92672">(</span>1.3.1<span style="color:#f92672">)</span>
+omniauth-facebook <span style="color:#f92672">(</span>4.0.0<span style="color:#f92672">)</span>
+omniauth-oauth <span style="color:#f92672">(</span>1.1.0<span style="color:#f92672">)</span>
+omniauth-oauth2 <span style="color:#f92672">(</span>1.4.0<span style="color:#f92672">)</span>
+
+$ rails g devise:install
+</code></pre></div><p>If thor-0.19.2 causes error here, just uninstall thor-0.19.2 and use thor-0.19.1</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gem <span style="color:#e6db74">&#39;omniauth&#39;</span>
+gem <span style="color:#e6db74">&#39;omniauth-facebook&#39;</span>
++gem <span style="color:#e6db74">&#39;thor&#39;</span>, <span style="color:#e6db74">&#39;0.19.1&#39;</span>
+
+$ bundle update
+$ gem uninstall thor -v 0.19.2
+
+</code></pre></div><h3 id="2-create-user-model--set-facebook-appid-and-appsecret">2. create User model &amp; set facebook AppID and AppSecret</h3>
+<p>Create User model and add omniauth</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ rails g devise User
+$ rails generate migration AddOmniauthToUsers provider:index uid:index
+$ rake db:migrate
+</code></pre></div><p>set facebook AppID and AppSecret</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ emacs config/initializers/devise.rb
++  config.omniauth :facebook, <span style="color:#e6db74">&#34;APP_ID&#34;</span>, <span style="color:#e6db74">&#34;APP_SECRET&#34;</span>
+</code></pre></div><p>modify app/models/user.rb and set omniauth module</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git diff
+diff --git a/app/models/user.rb b/app/models/user.rb
+index b2091f9..288823c <span style="color:#ae81ff">100644</span>
+--- a/app/models/user.rb
++++ b/app/models/user.rb
+@@ -2,5 +2,5 @@ class User &lt; ApplicationRecord
+   <span style="color:#75715e"># Include default devise modules. Others available are:</span>
+   <span style="color:#75715e"># :confirmable, :lockable, :timeoutable and :omniauthable</span>
+   devise :database_authenticatable, :registerable,
+-         :recoverable, :rememberable, :trackable, :validatable
++         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">[</span>:facebook<span style="color:#f92672">]</span>
+</code></pre></div><p>set path config/routes.rb and confirm</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git diff
+diff --git a/config/routes.rb b/config/routes.rb
+index 2f790f8..e88fb06 <span style="color:#ae81ff">100644</span>
+--- a/config/routes.rb
++++ b/config/routes.rb
+@@ -1,4 +1,4 @@
+ Rails.application.routes.draw <span style="color:#66d9ef">do</span>
+-  devise_for :users
+   <span style="color:#75715e"># For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html</span>
++  devise_for :users, controllers: <span style="color:#f92672">{</span> omniauth_callbacks: <span style="color:#e6db74">&#39;users/omniauth_callbacks&#39;</span> <span style="color:#f92672">}</span>
+ end
+
+$ rake routes
+                          Prefix Verb     URI Pattern                             Controller#Action
+                new_user_session GET      /users/sign_in<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>                devise/sessions#new
+                    user_session POST     /users/sign_in<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>                devise/sessions#create
+            destroy_user_session DELETE   /users/sign_out<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>               devise/sessions#destroy
+user_facebook_omniauth_authorize GET|POST /users/auth/facebook<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>          users/omniauth_callbacks#passthru
+ user_facebook_omniauth_callback GET|POST /users/auth/facebook/callback<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span> users/omniauth_callbacks#facebook
+                   user_password POST     /users/password<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>               devise/passwords#create
+               new_user_password GET      /users/password/new<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>           devise/passwords#new
+              edit_user_password GET      /users/password/edit<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>          devise/passwords#edit
+                                 PATCH    /users/password<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>               devise/passwords#update
+                                 PUT      /users/password<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>               devise/passwords#update
+        cancel_user_registration GET      /users/cancel<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>                 devise/registrations#cancel
+               user_registration POST     /users<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>                        devise/registrations#create
+           new_user_registration GET      /users/sign_up<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>                devise/registrations#new
+          edit_user_registration GET      /users/edit<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>                   devise/registrations#edit
+                                 PATCH    /users<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>                        devise/registrations#update
+                                 PUT      /users<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>                        devise/registrations#update
+                                 DELETE   /users<span style="color:#f92672">(</span>.:format<span style="color:#f92672">)</span>                        devise/registrations#destroy
+</code></pre></div><h3 id="3-create-callback">3. create Callback</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir app/controllers/users
+$ emacs app/controllers/users/omniauth_callbacks_controller.rb
+class Users::OmniauthCallbacksController &lt; Devise::OmniauthCallbacksController
+  def facebook
+    callback_from :facebook
+  end
+
+  def twitter
+    callback_from :twitter
+  end
+
+  private
+
+  def callback_from<span style="color:#f92672">(</span>provider<span style="color:#f92672">)</span>
+    provider <span style="color:#f92672">=</span> provider.to_s
+
+    @user <span style="color:#f92672">=</span> User.find_for_oauth<span style="color:#f92672">(</span>request.env<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;omniauth.auth&#39;</span><span style="color:#f92672">])</span>
+
+    <span style="color:#66d9ef">if</span> @user.persisted?
+      sign_in_and_redirect @user, :event <span style="color:#f92672">=</span>&gt; :authentication <span style="color:#75715e">#this will throw if @user is not activated</span>
+      set_flash_message<span style="color:#f92672">(</span>:notice, :success, :kind <span style="color:#f92672">=</span>&gt; provider.capitalize<span style="color:#f92672">)</span> <span style="color:#66d9ef">if</span> is_navigational_format?
+    <span style="color:#66d9ef">else</span>
+      session<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;devise.#{provider}_data&#34;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> request.env<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;omniauth.auth&#34;</span><span style="color:#f92672">]</span>
+      redirect_to new_user_registration_url
+    end
+  end
+end
+</code></pre></div><h3 id="4-add-account-setting-methods-to-user-model">4. add account setting methods to User model</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git diff
+diff --git a/app/models/user.rb b/app/models/user.rb
+index 288823c..bd060ad <span style="color:#ae81ff">100644</span>
+--- a/app/models/user.rb
++++ b/app/models/user.rb
+@@ -3,4 +3,33 @@ class User &lt; ApplicationRecord
+   <span style="color:#75715e"># :confirmable, :lockable, :timeoutable and :omniauthable</span>
+   devise :database_authenticatable, :registerable,
+          :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">[</span>:facebook<span style="color:#f92672">]</span>
++
++  def self.find_for_oauth<span style="color:#f92672">(</span>auth<span style="color:#f92672">)</span>
++    user <span style="color:#f92672">=</span> User.where<span style="color:#f92672">(</span>uid: auth.uid, provider: auth.provider<span style="color:#f92672">)</span>.first
++
++    unless user
++      user <span style="color:#f92672">=</span> User.create<span style="color:#f92672">(</span>
++        uid:      auth.uid,
++        provider: auth.provider,
++        email:    User.dummy_email<span style="color:#f92672">(</span>auth<span style="color:#f92672">)</span>,
++        password: Devise.friendly_token<span style="color:#f92672">[</span>0, 20<span style="color:#f92672">]</span>
++      <span style="color:#f92672">)</span>
++    end
++
++    user
++  end
++
++  def self.new_with_session<span style="color:#f92672">(</span>params, session<span style="color:#f92672">)</span>
++   super.tap <span style="color:#66d9ef">do</span> |user|
++     <span style="color:#66d9ef">if</span> data <span style="color:#f92672">=</span> session<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;devise.facebook_data&#34;</span><span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> session<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;devise.facebook_data&#34;</span><span style="color:#f92672">][</span><span style="color:#e6db74">&#34;extra&#34;</span><span style="color:#f92672">][</span><span style="color:#e6db74">&#34;raw_info&#34;</span><span style="color:#f92672">]</span>
++       user.email <span style="color:#f92672">=</span> data<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;email&#34;</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">if</span> user.email.blank?
++     end
++   end
++  end
++
++  private
++
++  def self.dummy_email<span style="color:#f92672">(</span>auth<span style="color:#f92672">)</span>
++    <span style="color:#e6db74">&#34;#{auth.uid}-#{auth.provider}@example.com&#34;</span>
++  end
+ end
+</code></pre></div><h3 id="5-make-view">5. make view</h3>
+<p>welcome/home is signin portal. home/index tells you if you are signed in or not.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ rails g controller Welcome home
+$ rails g controller Home index
+</code></pre></div><p>modify layout</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git diff
+diff --git a/app/views/layouts/application.html.erb b/app/views/layouts/application.html.erb
+index e164e1b..30f4849 <span style="color:#ae81ff">100644</span>
+--- a/app/views/layouts/application.html.erb
++++ b/app/views/layouts/application.html.erb
+@@ -9,6 +9,18 @@
+   &lt;/head&gt;
+
+   &lt;body&gt;
++    &lt;div id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;notify&#34;</span>&gt;
++      &lt;p class<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;notice&#34;</span>&gt;&lt;%<span style="color:#f92672">=</span> notice %&gt;&lt;/p&gt;
++      &lt;p class<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;alert&#34;</span>&gt;&lt;%<span style="color:#f92672">=</span> alert %&gt;&lt;/p&gt;
++    &lt;/div&gt;
++    &lt;div id<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;user-info&#34;</span>&gt;
++      &lt;% <span style="color:#66d9ef">if</span> user_signed_in? %&gt;
++        &lt;%#<span style="color:#f92672">=</span> current_user.name %&gt;
++        <span style="color:#f92672">[</span>&lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#39;Sign out&#39;</span>, destroy_user_session_path, method: :delete  %&gt;<span style="color:#f92672">]</span>
++      &lt;% <span style="color:#66d9ef">else</span> %&gt;
++        &lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#34;Sign in with Facebook&#34;</span>, user_facebook_omniauth_authorize_path %&gt;
++      &lt;% end %&gt;
++    &lt;/div&gt;
+     &lt;%<span style="color:#f92672">=</span> yield %&gt;
+   &lt;/body&gt;
+ &lt;/html&gt;
+
+</code></pre></div><h3 id="6-set-root-view">6. set root view</h3>
+<p>add root path and user_root</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git diff
+diff --git a/config/routes.rb b/config/routes.rb
+index 189c56f..d936a40 <span style="color:#ae81ff">100644</span>
+--- a/config/routes.rb
++++ b/config/routes.rb
+@@ -3,6 +3,9 @@ Rails.application.routes.draw <span style="color:#66d9ef">do</span>
+
+   get <span style="color:#e6db74">&#39;welcome/home&#39;</span>
+
++  get <span style="color:#e6db74">&#34;home&#34;</span>, to: <span style="color:#e6db74">&#34;home#index&#34;</span>, as: <span style="color:#e6db74">&#34;user_root&#34;</span>
++  root <span style="color:#e6db74">&#39;home#index&#39;</span>
++
+   <span style="color:#75715e"># For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html</span>
+   devise_for :users, controllers: <span style="color:#f92672">{</span> omniauth_callbacks: <span style="color:#e6db74">&#39;users/omniauth_callbacks&#39;</span> <span style="color:#f92672">}</span>
+ end
+
+</code></pre></div><h3 id="7-insert-authenticate_user-method-to-welcomehome">7. insert authenticate_user! method to welcome/home</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git diff
+diff --git a/app/controllers/welcome_controller.rb b/app/controllers/welcome_controller.rb
+index 1467f18..52bd4fb <span style="color:#ae81ff">100644</span>
+--- a/app/controllers/welcome_controller.rb
++++ b/app/controllers/welcome_controller.rb
+@@ -1,4 +1,5 @@
+ class WelcomeController &lt; ApplicationController
++  before_action :authenticate_user!
+   def home
+   end
+ end
+</code></pre></div><p>&ldquo;before_action :authenticate_user!&rdquo; will make the login view automatically.</p>
+<h3 id="8-boot-and-check-if-webapp-works">8. boot and check if webapp works</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ rails s
+</code></pre></div><p>and go check http://localhost:3000/welcome/home .
+Click &ldquo;Sign in with Facebook&rdquo; and check if it works.</p>
+<h3 id="additional-dotenv-rails">Additional dotenv-rails</h3>
+<p>You don&rsquo;t wanna push your facebook APP ID and APP SECRET to github or other public repository.
+Use &ldquo;dotenv-rails&rdquo; and use .env file for storing those info.</p>
+<p>add dotenv-rails in Gemfile</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gem <span style="color:#e6db74">&#39;omniauth&#39;</span>
+gem <span style="color:#e6db74">&#39;omniauth-facebook&#39;</span>
++gem <span style="color:#e6db74">&#39;dotenv-rails&#39;</span>
+
+$ bundle install
+
+$ emacs .env
+FACEBOOK_API<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;APP_ID&#34;</span>
+FACEBOOK_KEY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;APP_SECRET&#34;</span>
+
+$ emacs config/initializers/devise.rb
+-  <span style="color:#75715e">#config.omniauth :facebook, &#34;APP_ID&#34;, &#34;APP_SECRET&#34;</span>
++  config.omniauth :facebook, ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;FACEBOOK_API&#39;</span><span style="color:#f92672">]</span>, ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;FACEBOOK_KEY&#39;</span><span style="color:#f92672">]</span>
+
+</code></pre></div><p>Then, restart rails</p>
+<p>Here are the 
+<a href="https://github.com/tgib23/douzou_chan2/pull/1/files" target="_blank" rel="noopener">total diff files</a></p>
+<h3 id="9-build-for-other-oauth-login">9. Build for other oauth login</h3>
+<p>Check my articles for other oauth login.</p>
+<ul>
+<li>
+<a href="http://tgib23.github.io/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/" target="_blank" rel="noopener">Add Twitter Login With Omniauth + Devise on Rails5</a></li>
+<li>
+<a href="http://tgib23.github.io/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5/" target="_blank" rel="noopener">Add Google Plus and Instagram Login With Omniauth + Devise on Rails5</a></li>
+</ul>
+
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn"></span></span>
+    
+    <time>Nov 10, 2016</time>
+    
+      <span class="categories">
+        Tags:
+        
+          <a class="category" href="http://example.org/tags/devise">devise</a>  <a class="category" href="http://example.org/tags/facebook">facebook</a>  <a class="category" href="http://example.org/tags/oauth">oauth</a>  <a class="category" href="http://example.org/tags/omniauth">omniauth</a>  <a class="category" href="http://example.org/tags/rails5">rails5</a>  
+    
+    </span>
+  </p>
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="http://example.org/blog/2016/10/29/behavior-of-hbase-read-slash-write-requests-counter/" title="Behavior of Hbase Read/Write Requests Counter">Behavior of Hbase Read/Write Requests Counter</a>
+    
+
+    
+      <a class="basic-alignment right" href="http://example.org/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/" title="Add twitter login with Omniauth &#43; Devise on Rails5">Add twitter login with Omniauth &#43; Devise on Rails5</a>
+    
+  </p>
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+
+    <p>
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      
+      
+      
+      
+      
+         
+      
+      
+      
+      
+      
+      
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+
+  
+  
+  
+</aside>
+
+  </div>
+</div>
+
+    <footer role="contentinfo">
+      <p>Copyright &copy; 2021  - <a href="http://example.org/license/">License</a> -
+        <span class="credit">Powered by <a target="_blank" href="https://gohugo.io" rel="noopener noreferrer">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/" rel="noopener noreferrer">Hugo-Octopress</a> theme.
+      </p>
+    </footer>
+
+    
+    
+
+
+
+    
+    
+    
+
+    
+  </body>
+</html>
+

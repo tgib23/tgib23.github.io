@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+    
+    
+      <link href="/css/fonts.css" rel="stylesheet" type="text/css">
+    
+  
+
+  
+  <title>How to setup Squirrel SQL Client on Mac for Hive, Drill, and Impala on MapR cluster</title>
+
+  
+  
+  <link rel="stylesheet" href="/css/hugo-octopress.css">
+
+  
+  
+    <link rel="stylesheet" href="http://example.org//css/custom.css">
+  
+
+  
+    <link rel="stylesheet" href="/css/fork-awesome.min.css">
+  
+
+  
+  <link href="http://example.org/favicon.png" rel="icon">
+
+  
+  
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="">
+  <meta name="author" content="">
+
+  
+  <meta name="generator" content="Hugo 0.89.4" />
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+
+</head>
+<body>
+
+
+<header role="banner">
+<hgroup>
+  
+  <h1><a href="http://example.org/">My New Hugo Site</a></h1>
+    <h2></h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+<fieldset class="mobile-nav">
+  
+  <select onchange="location = this.value;">
+    <option value="">Navigate…</option>
+      
+  </select>
+</fieldset>
+
+
+<ul class="main-navigation">
+  
+  
+</ul>
+
+<ul class="subscription">
+  
+</ul>
+
+
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+  <p class="meta">May 24, 2017
+     - 3 minute read 
+    
+
+    
+  </p>
+  <h1 class="entry-title">
+     How to setup Squirrel SQL Client on Mac for Hive, Drill, and Impala on MapR cluster 
+  </h1>
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+          <p>This post shows how to setup Squirrel SQL client for Hive, Drill, and Impala on Mac.
+I assume Mac client is 
+<a href="http://maprdocs.mapr.com/home/AdvancedInstallation/SettingUptheClient-macosx.html" target="_blank" rel="noopener">already setup</a> and this is the case with MapR 5.2.1 and MEP 3.0.
+Change the version numbers if you set up with other MapR or MEP versions.</p>
+<h1 id="install-squirrel">Install Squirrel</h1>
+<p>Go to http://www.squirrelsql.org/#installation and follow the instruction.</p>
+<p>Then, Launch Squirrel App from Application Directory.</p>
+<h1 id="use-hive-from-squirrel">Use Hive from Squirrel</h1>
+<p>You have to follow three steps, bring jars, configuration, and run the query.
+Let&rsquo;s see each detail.</p>
+<h2 id="bring-jars">Bring jars</h2>
+<p>Bring jars from cluster node with hive installed.
+You need to bring these jars below (assuming you use MR2).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">/opt/mapr/hive/hive-2.1/lib/commons-logging-1.2.jar
+/opt/mapr/hive/hive-2.1/lib/libfb303-0.9.3.jar
+/opt/mapr/hive/hive-2.1/lib/libthrift-0.9.3.jar
+/opt/mapr/hive/hive-2.1/lib/httpcore-4.4.jar
+/opt/mapr/hive/hive-2.1/lib/httpclient-4.4.jar
+/opt/mapr/hive/hive-2.1/lib/hive-shims-2.1.1-mapr-1703.jar
+/opt/mapr/hive/hive-2.1/lib/hive-service-2.1.1-mapr-1703.jar
+/opt/mapr/hive/hive-2.1/lib/hive-metastore-2.1.1-mapr-1703.jar
+/opt/mapr/hive/hive-2.1/lib/hive-exec-2.1.1-mapr-1703.jar
+/opt/mapr/hive/hive-2.1/lib/hive-jdbc-2.1.1-mapr-1703.jar
+/opt/mapr/hive/hive-2.1/lib/guava-14.0.1.jar
+/opt/mapr/hadoop/hadoop-2.7.0/share/hadoop/common/hadoop-common-2.7.0-mapr-1703.jar
+/opt/mapr/lib/slf4j-*
+</code></pre></div><p>Then, put those jars into some directory such as $HOME/squirrel/hive or something.</p>
+<h2 id="configuration">Configuration</h2>
+<p>Create Drivers and Aliases with those jars brought from cluster nodes.</p>
+<ol>
+<li>Click &ldquo;Drivers&rdquo; on the upper left side</li>
+<li>Click Green Cross</li>
+<li>On the window, put some Name like MapR Hive</li>
+<li>Fill in Example URL with the hiveserver2 node and port on the cluster, such as jdbc:hive2://cent62:10000</li>
+<li>Click &ldquo;Extra Class Path&rdquo;</li>
+<li>Click &ldquo;Add&rdquo; and choose the jar folder we put the jars above, and select all the jars. <img src="/images/20170524/blog0.png" alt="&lsquo;octopress preview&rsquo; &lsquo;octopress preview&rsquo;"></li>
+<li>Fill in the &ldquo;Class Name&rdquo; with &ldquo;org.apache.hive.jdbc.HiveDriver&rdquo;. Then, click OK.</li>
+<li>Click on &ldquo;Aliases&rdquo; on the upper left side.</li>
+<li>Click Green Cross.</li>
+<li>Put some Name like &ldquo;Hive on Cent6&rdquo;</li>
+<li>Choose the Drive we made on the step 7.</li>
+<li>Confirm the URL for hiveserver2 is correct. Modify if wrong. <img src="/images/20170524/blog1.png" alt="&lsquo;octopress preview&rsquo; &lsquo;octopress preview&rsquo;"></li>
+<li>Fill in User and Password.</li>
+<li>Click &ldquo;Test&rdquo;</li>
+<li>Fill in User and Password, then click &ldquo;Connect&rdquo;</li>
+<li>If succeeded, you are ready to go!</li>
+<li>Click &ldquo;OK&rdquo;</li>
+</ol>
+<h2 id="run-hive-query">Run Hive Query</h2>
+<ol>
+<li>Click Aliases and double click the alias you just made.</li>
+<li>On the popup window, click &ldquo;Connect&rdquo;</li>
+<li>Click &ldquo;SQL&rdquo; on upper middle section to execute queries</li>
+<li>Click yellow highlighted sections and enter some queries</li>
+<li>Then, click the icon of running man on upper left side or press Control-Enter, which will run the query and give you the result <img src="/images/20170524/blog3.png" alt="&lsquo;octopress preview&rsquo; &lsquo;octopress preview&rsquo;"></li>
+</ol>
+<h1 id="use-drill-from-squirrel">Use Drill from Squirrel</h1>
+<p>Using Drill case is mostly described 
+<a href="http://maprdocs.mapr.com/home/Drill/Downloading-Configuring-Driver.html" target="_blank" rel="noopener">here</a>, but I&rsquo;ll show you the steps anyways.</p>
+<h2 id="bring-jars-1">Bring jars</h2>
+<p>For Drill, you have to bring jars from 
+<a href="http://package.mapr.com/tools/MapR-JDBC/MapR_Drill/" target="_blank" rel="noopener">this URL</a></p>
+<h2 id="configuration-1">Configuration</h2>
+<p>Basically follow the same step as shown in Hive case.</p>
+<ul>
+<li>Create Drivers as follows
+<ul>
+<li>Use jdbc:drill:zk=<!-- raw HTML omitted -->/drill/<!-- raw HTML omitted --> to fill Example URL
+<ul>
+<li>cluster-id is &ldquo;${cluster name}-drillbits&rdquo; by default and specified at /opt/mapr/drill/drill-1.10.0/conf/drill-override.conf</li>
+</ul>
+</li>
+<li>add the jars above to Extra Class Path</li>
+<li>Use &ldquo;com.mapr.drill.jdbc41.Drive&rdquo; for Class Name <img src="/images/20170524/blog4.png" alt="&lsquo;octopress preview&rsquo; &lsquo;octopress preview&rsquo;"></li>
+</ul>
+</li>
+<li>Create Aliases with the Drive above. If connection test is successful, you are ready to go!</li>
+</ul>
+<h2 id="run-drill-query">Run Drill Query</h2>
+<p>This is almost the same process as Hive.
+If you haven&rsquo;t enabled Hive storage format, 
+<a href="http://maprdocs.mapr.com/home/Drill/configure_hive_storage_plugin.html" target="_blank" rel="noopener">enable it</a> before connection to query Hive table.
+After connection, Squirrel shows the enabled storages.
+<img src="/images/20170524/blog5.png" alt="&lsquo;octopress preview&rsquo; &lsquo;octopress preview&rsquo;"></p>
+<p>Now you can query Hive table from Drill.</p>
+<h1 id="use-impala-from-squirrel">Use Impala from Squirrel</h1>
+<p>The essence of using Impala from jdbc connection is also described 
+<a href="http://maprdocs.mapr.com/home/Impala/JDBCConnections-UsingtheJ.html" target="_blank" rel="noopener">here</a>, but I&rsquo;ll show the steps anyways.</p>
+<h2 id="jars-and-configurations">jars and Configurations</h2>
+<p>You can use the same jars and drivers as Hive case.
+Make Aliases and specify Impala server URL and port as jdbc:hive2://<!-- raw HTML omitted -->:21050/;auth=noSasl
+<img src="/images/20170524/blog6.png" alt="&lsquo;octopress preview&rsquo; &lsquo;octopress preview&rsquo;"></p>
+<h2 id="run-impala-query">Run Impala Query</h2>
+<p>Running Impala Query is the same as running hive query.</p>
+
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn"></span></span>
+    
+    <time>May 24, 2017</time>
+    
+      <span class="categories">
+        Tags:
+        
+          <a class="category" href="http://example.org/tags/drill">drill</a>  <a class="category" href="http://example.org/tags/hive">hive</a>  <a class="category" href="http://example.org/tags/impala">impala</a>  <a class="category" href="http://example.org/tags/mapr">mapr</a>  <a class="category" href="http://example.org/tags/squirrel">squirrel</a>  
+    
+    </span>
+  </p>
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="http://example.org/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/" title="Add twitter login with Omniauth &#43; Devise on Rails5">Add twitter login with Omniauth &#43; Devise on Rails5</a>
+    
+
+    
+      <a class="basic-alignment right" href="http://example.org/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/" title="How to access MapR Streams from Python bindings">How to access MapR Streams from Python bindings</a>
+    
+  </p>
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+
+    <p>
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      
+      
+      
+      
+      
+         
+      
+      
+      
+      
+      
+      
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+
+  
+  
+  
+</aside>
+
+  </div>
+</div>
+
+    <footer role="contentinfo">
+      <p>Copyright &copy; 2021  - <a href="http://example.org/license/">License</a> -
+        <span class="credit">Powered by <a target="_blank" href="https://gohugo.io" rel="noopener noreferrer">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/" rel="noopener noreferrer">Hugo-Octopress</a> theme.
+      </p>
+    </footer>
+
+    
+    
+
+
+
+    
+    
+    
+
+    
+  </body>
+</html>
+

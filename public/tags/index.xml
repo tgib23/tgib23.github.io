@@ -5,6 +5,259 @@
     <link>http://example.org/tags/</link>
     <description>Recent content in Tags on My New Hugo Site</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="http://example.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate>Fri, 19 Nov 2021 00:33:04 +0900</lastBuildDate><atom:link href="http://example.org/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>matrix</title>
+      <link>http://example.org/tags/matrix/</link>
+      <pubDate>Fri, 19 Nov 2021 00:33:04 +0900</pubDate>
+      
+      <guid>http://example.org/tags/matrix/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nausicaa of the valley of the wind</title>
+      <link>http://example.org/tags/nausicaa-of-the-valley-of-the-wind/</link>
+      <pubDate>Fri, 19 Nov 2021 00:33:04 +0900</pubDate>
+      
+      <guid>http://example.org/tags/nausicaa-of-the-valley-of-the-wind/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ナウシカ</title>
+      <link>http://example.org/tags/%E3%83%8A%E3%82%A6%E3%82%B7%E3%82%AB/</link>
+      <pubDate>Fri, 19 Nov 2021 00:33:04 +0900</pubDate>
+      
+      <guid>http://example.org/tags/%E3%83%8A%E3%82%A6%E3%82%B7%E3%82%AB/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>マトリックス</title>
+      <link>http://example.org/tags/%E3%83%9E%E3%83%88%E3%83%AA%E3%83%83%E3%82%AF%E3%82%B9/</link>
+      <pubDate>Fri, 19 Nov 2021 00:33:04 +0900</pubDate>
+      
+      <guid>http://example.org/tags/%E3%83%9E%E3%83%88%E3%83%AA%E3%83%83%E3%82%AF%E3%82%B9/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>風の谷のナウシカ</title>
+      <link>http://example.org/tags/%E9%A2%A8%E3%81%AE%E8%B0%B7%E3%81%AE%E3%83%8A%E3%82%A6%E3%82%B7%E3%82%AB/</link>
+      <pubDate>Fri, 19 Nov 2021 00:33:04 +0900</pubDate>
+      
+      <guid>http://example.org/tags/%E9%A2%A8%E3%81%AE%E8%B0%B7%E3%81%AE%E3%83%8A%E3%82%A6%E3%82%B7%E3%82%AB/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>devise</title>
+      <link>http://example.org/tags/devise/</link>
+      <pubDate>Sun, 12 Nov 2017 16:23:58 +0900</pubDate>
+      
+      <guid>http://example.org/tags/devise/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>google plus</title>
+      <link>http://example.org/tags/google-plus/</link>
+      <pubDate>Sun, 12 Nov 2017 16:23:58 +0900</pubDate>
+      
+      <guid>http://example.org/tags/google-plus/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>instagram</title>
+      <link>http://example.org/tags/instagram/</link>
+      <pubDate>Sun, 12 Nov 2017 16:23:58 +0900</pubDate>
+      
+      <guid>http://example.org/tags/instagram/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>oauth</title>
+      <link>http://example.org/tags/oauth/</link>
+      <pubDate>Sun, 12 Nov 2017 16:23:58 +0900</pubDate>
+      
+      <guid>http://example.org/tags/oauth/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>omniauth</title>
+      <link>http://example.org/tags/omniauth/</link>
+      <pubDate>Sun, 12 Nov 2017 16:23:58 +0900</pubDate>
+      
+      <guid>http://example.org/tags/omniauth/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rails5</title>
+      <link>http://example.org/tags/rails5/</link>
+      <pubDate>Sun, 12 Nov 2017 16:23:58 +0900</pubDate>
+      
+      <guid>http://example.org/tags/rails5/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mapr</title>
+      <link>http://example.org/tags/mapr/</link>
+      <pubDate>Tue, 22 Aug 2017 15:38:09 +0900</pubDate>
+      
+      <guid>http://example.org/tags/mapr/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mapr streams</title>
+      <link>http://example.org/tags/mapr-streams/</link>
+      <pubDate>Tue, 22 Aug 2017 15:38:09 +0900</pubDate>
+      
+      <guid>http://example.org/tags/mapr-streams/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>http://example.org/tags/python/</link>
+      <pubDate>Tue, 22 Aug 2017 15:38:09 +0900</pubDate>
+      
+      <guid>http://example.org/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>drill</title>
+      <link>http://example.org/tags/drill/</link>
+      <pubDate>Wed, 24 May 2017 17:35:18 +0900</pubDate>
+      
+      <guid>http://example.org/tags/drill/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hive</title>
+      <link>http://example.org/tags/hive/</link>
+      <pubDate>Wed, 24 May 2017 17:35:18 +0900</pubDate>
+      
+      <guid>http://example.org/tags/hive/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>impala</title>
+      <link>http://example.org/tags/impala/</link>
+      <pubDate>Wed, 24 May 2017 17:35:18 +0900</pubDate>
+      
+      <guid>http://example.org/tags/impala/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>squirrel</title>
+      <link>http://example.org/tags/squirrel/</link>
+      <pubDate>Wed, 24 May 2017 17:35:18 +0900</pubDate>
+      
+      <guid>http://example.org/tags/squirrel/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>twitter</title>
+      <link>http://example.org/tags/twitter/</link>
+      <pubDate>Mon, 09 Jan 2017 15:15:27 +0900</pubDate>
+      
+      <guid>http://example.org/tags/twitter/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>facebook</title>
+      <link>http://example.org/tags/facebook/</link>
+      <pubDate>Thu, 10 Nov 2016 00:11:23 +0900</pubDate>
+      
+      <guid>http://example.org/tags/facebook/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hbase</title>
+      <link>http://example.org/tags/hbase/</link>
+      <pubDate>Sat, 29 Oct 2016 23:10:50 +0900</pubDate>
+      
+      <guid>http://example.org/tags/hbase/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ansible</title>
+      <link>http://example.org/tags/ansible/</link>
+      <pubDate>Sun, 20 Mar 2016 22:28:10 +0900</pubDate>
+      
+      <guid>http://example.org/tags/ansible/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>npm</title>
+      <link>http://example.org/tags/npm/</link>
+      <pubDate>Sun, 20 Mar 2016 22:28:10 +0900</pubDate>
+      
+      <guid>http://example.org/tags/npm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>packer</title>
+      <link>http://example.org/tags/packer/</link>
+      <pubDate>Sun, 15 Nov 2015 00:47:21 +0900</pubDate>
+      
+      <guid>http://example.org/tags/packer/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>heroku</title>
+      <link>http://example.org/tags/heroku/</link>
+      <pubDate>Thu, 30 Oct 2014 00:14:33 -0500</pubDate>
+      
+      <guid>http://example.org/tags/heroku/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rails</title>
+      <link>http://example.org/tags/rails/</link>
+      <pubDate>Thu, 30 Oct 2014 00:14:33 -0500</pubDate>
+      
+      <guid>http://example.org/tags/rails/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rails-websocket</title>
+      <link>http://example.org/tags/rails-websocket/</link>
+      <pubDate>Thu, 30 Oct 2014 00:14:33 -0500</pubDate>
+      
+      <guid>http://example.org/tags/rails-websocket/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>websocket</title>
+      <link>http://example.org/tags/websocket/</link>
+      <pubDate>Thu, 30 Oct 2014 00:14:33 -0500</pubDate>
+      
+      <guid>http://example.org/tags/websocket/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

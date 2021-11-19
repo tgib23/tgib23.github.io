@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+    
+    
+      <link href="/css/fonts.css" rel="stylesheet" type="text/css">
+    
+  
+
+  
+  <title>Behavior of Hbase Read/Write Requests Counter</title>
+
+  
+  
+  <link rel="stylesheet" href="/css/hugo-octopress.css">
+
+  
+  
+    <link rel="stylesheet" href="http://example.org//css/custom.css">
+  
+
+  
+    <link rel="stylesheet" href="/css/fork-awesome.min.css">
+  
+
+  
+  <link href="http://example.org/favicon.png" rel="icon">
+
+  
+  
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="">
+  <meta name="author" content="">
+
+  
+  <meta name="generator" content="Hugo 0.89.4" />
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+
+</head>
+<body>
+
+
+<header role="banner">
+<hgroup>
+  
+  <h1><a href="http://example.org/">My New Hugo Site</a></h1>
+    <h2></h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+<fieldset class="mobile-nav">
+  
+  <select onchange="location = this.value;">
+    <option value="">Navigate…</option>
+      
+  </select>
+</fieldset>
+
+
+<ul class="main-navigation">
+  
+  
+</ul>
+
+<ul class="subscription">
+  
+</ul>
+
+
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+  <p class="meta">Oct 29, 2016
+     - 2 minute read 
+    
+
+    
+  </p>
+  <h1 class="entry-title">
+     Behavior of Hbase Read/Write Requests Counter 
+  </h1>
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+          <p>HBase has Read/Write Requests System Counter feature and we can monitor it from HBase Web UI or API.
+Against my instincts, the numbers of those counters could DECREASE while running.
+This article covers how we could see the decrease of those counters.</p>
+<p>We can see read/write request counters of HBase from<br>
+http://master-server-node:60010/master-status#requestStats<br>
+or<br>
+http://region-server-nodes:60010/jmx</p>
+<p>These numbers are calculated by summing each region’s counts.
+Check the iteration part of the code.
+
+<a href="https://github.com/apache/hbase/blob/947ea85b0c086a022d7b50868b8499a0560331ad/hbase-server/src/main/java/org/apache/hadoop/hbase/regionserver/MetricsRegionServerWrapperImpl.java#L495" target="_blank" rel="noopener">https://github.com/apache/hbase/blob/947ea85b0c086a022d7b50868b8499a0560331ad/hbase-server/src/main/java/org/apache/hadoop/hbase/regionserver/MetricsRegionServerWrapperImpl.java#L495</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Region r <span style="color:#f92672">:</span> regionServer<span style="color:#f92672">.</span><span style="color:#a6e22e">getOnlineRegionsLocalContext</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+          tempNumMutationsWithoutWAL <span style="color:#f92672">+=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">getNumMutationsWithoutWAL</span><span style="color:#f92672">();</span>
+          tempDataInMemoryWithoutWAL <span style="color:#f92672">+=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">getDataInMemoryWithoutWAL</span><span style="color:#f92672">();</span>
+          tempReadRequestsCount <span style="color:#f92672">+=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">getReadRequestsCount</span><span style="color:#f92672">();</span>
+          tempWriteRequestsCount <span style="color:#f92672">+=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">getWriteRequestsCount</span><span style="color:#f92672">();</span>
+          tempCheckAndMutateChecksFailed <span style="color:#f92672">+=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">getCheckAndMutateChecksFailed</span><span style="color:#f92672">();</span>
+          tempCheckAndMutateChecksPassed <span style="color:#f92672">+=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">getCheckAndMutateChecksPassed</span><span style="color:#f92672">();</span>
+          tempBlockedRequestsCount <span style="color:#f92672">+=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">getBlockedRequestsCount</span><span style="color:#f92672">();</span>
+</code></pre></div><p>So, every time regions get moved or deleted, the number of counters decreases.</p>
+<p>Here is a sample check the behaviour.</p>
+<ol>
+<li>check http://master-server-node:60010/master-status#requestStats</li>
+<li>create table and put some record</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"> $ hbase shell   
+ hbase&gt; create <span style="color:#e6db74">&#39;weblog2&#39;</span>, <span style="color:#e6db74">&#39;stats&#39;</span>
+ hbase&gt; put <span style="color:#e6db74">&#39;weblog2&#39;</span>, <span style="color:#e6db74">&#39;row1&#39;</span>, <span style="color:#e6db74">&#39;stats:weekly&#39;</span>, <span style="color:#e6db74">&#39;test-weekly-value&#39;</span>
+ hbase&gt; put <span style="color:#e6db74">&#39;weblog2&#39;</span>, <span style="color:#e6db74">&#39;row1&#39;</span>, <span style="color:#e6db74">&#39;stats:weekly&#39;</span>, <span style="color:#e6db74">&#39;test-weekly-value&#39;</span>
+ hbase&gt; put <span style="color:#e6db74">&#39;weblog2&#39;</span>, <span style="color:#e6db74">&#39;row2&#39;</span>, <span style="color:#e6db74">&#39;stats:daily&#39;</span>, <span style="color:#e6db74">&#39;test-weekly-value&#39;</span>
+ hbase&gt; put <span style="color:#e6db74">&#39;weblog2&#39;</span>, <span style="color:#e6db74">&#39;row3&#39;</span>, <span style="color:#e6db74">&#39;stats:monthly&#39;</span>, <span style="color:#e6db74">&#39;test-weekly-value&#39;</span>
+</code></pre></div><ol start="3">
+<li>reload the above web page and identify which node increases the write counter. That node has the region.</li>
+<li>now, delete the table and compare how the value changed
+<ul>
+<li>check the counter</li>
+</ul>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl <span style="color:#e6db74">&#39;http://syamada-v4-dist0:60030/jmx&#39;</span> -s | grep RequestCount
+   <span style="color:#e6db74">&#34;totalRequestCount&#34;</span> : 12,
+   <span style="color:#e6db74">&#34;readRequestCount&#34;</span> : 8,
+   <span style="color:#e6db74">&#34;writeRequestCount&#34;</span> : 5,
+</code></pre></div><ul>
+<li>disable and drop the table</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ hbase shell
+hbase&gt; disable <span style="color:#e6db74">&#39;weblog2&#39;</span>
+hbase&gt; drop <span style="color:#e6db74">&#39;weblog2&#39;</span>
+</code></pre></div><ul>
+<li>check the counter again</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl <span style="color:#e6db74">&#39;http://syamada-v4-dist0:60030/jmx&#39;</span> -s | grep RequestCount
+   <span style="color:#e6db74">&#34;totalRequestCount&#34;</span> : 13,
+   <span style="color:#e6db74">&#34;readRequestCount&#34;</span> : 0,
+   <span style="color:#e6db74">&#34;writeRequestCount&#34;</span> : 0,
+   <span style="color:#e6db74">&#34;blockedRequestCount&#34;</span> : 0,
+</code></pre></div><p>This happens when you move the Region, too.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">hbase&gt; move ‘ENCODED_REGIONNAME’, ‘SERVER_NAME’
+</code></pre></div><p>The counter values are not migrated when region moved. All counters for the region reset to 0.</p>
+<p>Notice in the example above, “totalRequestCount” is not reset to 0.
+“totalRequestCount” is maintained by an instance variable managed by RegionServer, not Region.
+Every time RegionServer accepts RPC call from clients, RegionServer increments the count.
+Here&rsquo;s one example from the code.
+Notice <code>requestCount.increment()</code> is called every time RPC call method is called.</p>
+<p>
+<a href="https://github.com/apache/hbase/blob/dfb2a800c43b30c326dbdcec673387f7033f2092/hbase-server/src/main/java/org/apache/hadoop/hbase/regionserver/RSRpcServices.java#L1377" target="_blank" rel="noopener">https://github.com/apache/hbase/blob/dfb2a800c43b30c326dbdcec673387f7033f2092/hbase-server/src/main/java/org/apache/hadoop/hbase/regionserver/RSRpcServices.java#L1377</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  <span style="color:#a6e22e">@Override</span>
+  <span style="color:#a6e22e">@QosPriority</span><span style="color:#f92672">(</span>priority<span style="color:#f92672">=</span>HConstants<span style="color:#f92672">.</span><span style="color:#a6e22e">ADMIN_QOS</span><span style="color:#f92672">)</span>
+  <span style="color:#66d9ef">public</span> CompactRegionResponse <span style="color:#a6e22e">compactRegion</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> RpcController controller<span style="color:#f92672">,</span>
+      <span style="color:#66d9ef">final</span> CompactRegionRequest request<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> ServiceException <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+      checkOpen<span style="color:#f92672">();</span>
+      requestCount<span style="color:#f92672">.</span><span style="color:#a6e22e">increment</span><span style="color:#f92672">();</span>
+      Region region <span style="color:#f92672">=</span> getRegion<span style="color:#f92672">(</span>request<span style="color:#f92672">.</span><span style="color:#a6e22e">getRegion</span><span style="color:#f92672">());</span>
+</code></pre></div><p>When you restart the region server, not only read/write counters but also totalRequestCount are also reset to 0.</p>
+
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn"></span></span>
+    
+    <time>Oct 29, 2016</time>
+    
+      <span class="categories">
+        Tags:
+        
+          <a class="category" href="http://example.org/tags/hbase">hbase</a>  
+    
+    </span>
+  </p>
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="http://example.org/blog/2016/03/20/install-npm-package-from-npm-pack-ed-file-using-ansible/" title="install npm package from npm pack-ed file using ansible">install npm package from npm pack-ed file using ansible</a>
+    
+
+    
+      <a class="basic-alignment right" href="http://example.org/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/" title="How to use Omniauth &#43; Devise on Rails5 from scratch">How to use Omniauth &#43; Devise on Rails5 from scratch</a>
+    
+  </p>
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+
+    <p>
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      
+      
+      
+      
+      
+         
+      
+      
+      
+      
+      
+      
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+
+  
+  
+  
+</aside>
+
+  </div>
+</div>
+
+    <footer role="contentinfo">
+      <p>Copyright &copy; 2021  - <a href="http://example.org/license/">License</a> -
+        <span class="credit">Powered by <a target="_blank" href="https://gohugo.io" rel="noopener noreferrer">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/" rel="noopener noreferrer">Hugo-Octopress</a> theme.
+      </p>
+    </footer>
+
+    
+    
+
+
+
+    
+    
+    
+
+    
+  </body>
+</html>
+

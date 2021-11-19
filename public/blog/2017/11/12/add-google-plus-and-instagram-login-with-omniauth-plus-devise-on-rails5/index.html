@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+    
+    
+      <link href="/css/fonts.css" rel="stylesheet" type="text/css">
+    
+  
+
+  
+  <title>Add Google Plus and Instagram Login with Omniauth &#43; Devise on Rails5</title>
+
+  
+  
+  <link rel="stylesheet" href="/css/hugo-octopress.css">
+
+  
+  
+    <link rel="stylesheet" href="http://example.org//css/custom.css">
+  
+
+  
+    <link rel="stylesheet" href="/css/fork-awesome.min.css">
+  
+
+  
+  <link href="http://example.org/favicon.png" rel="icon">
+
+  
+  
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="">
+  <meta name="author" content="">
+
+  
+  <meta name="generator" content="Hugo 0.89.4" />
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+
+</head>
+<body>
+
+
+<header role="banner">
+<hgroup>
+  
+  <h1><a href="http://example.org/">My New Hugo Site</a></h1>
+    <h2></h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+<fieldset class="mobile-nav">
+  
+  <select onchange="location = this.value;">
+    <option value="">Navigate…</option>
+      
+  </select>
+</fieldset>
+
+
+<ul class="main-navigation">
+  
+  
+</ul>
+
+<ul class="subscription">
+  
+</ul>
+
+
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+  <p class="meta">Nov 12, 2017
+     - 3 minute read 
+    
+
+    
+  </p>
+  <h1 class="entry-title">
+    <a href="http://example.org/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5/">Add Google Plus and Instagram Login with Omniauth &#43; Devise on Rails5</a>
+  </h1>
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+          <p>This post shows how to implement google plus and instagram login with omniauth and devise on rails5.
+This change totally depends on my previous implementation for 
+<a href="http://tgib23.github.io/blog/2016/11/10/how-to-use-omniauth-plus-devise-on-rails5/" target="_blank" rel="noopener">facebook</a> and 
+<a href="http://tgib23.github.io/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/" target="_blank" rel="noopener">twitter</a>, so if you are new to implement this, you should look at those posts first.
+I write about google plus first, then add instagram login later.</p>
+<h1 id="implement-google-plus-login">Implement Google Plus Login</h1>
+<h3 id="0-get-google-app-id-and-secret">0. Get Google APP ID and SECRET</h3>
+<p>You can get CLIENT ID and CLIENT_SECRET from 
+<a href="code.google.com/apis/console">here</a>.
+If you are building on local machine, you should add &ldquo;http://localhost:3000/users/auth/google_oauth2/callback&rdquo; to Authorized Redirect URI.</p>
+<h3 id="1-initial-step">1. initial step</h3>
+<p>add omniauth-google-oauth2 to Gemfile</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"> gem <span style="color:#e6db74">&#39;omniauth-twitter&#39;</span>
++gem <span style="color:#e6db74">&#39;omniauth-google-oauth2&#39;</span>
+ gem <span style="color:#e6db74">&#39;geocoder&#39;</span>
+
+$ bundle install
+
+$ gem list | grep omniauth
+omniauth <span style="color:#f92672">(</span>1.3.1<span style="color:#f92672">)</span>
+omniauth-facebook <span style="color:#f92672">(</span>4.0.0<span style="color:#f92672">)</span>
+omniauth-google-oauth2 <span style="color:#f92672">(</span>0.5.2<span style="color:#f92672">)</span>
+omniauth-instagram <span style="color:#f92672">(</span>1.2.0<span style="color:#f92672">)</span>
+omniauth-oauth <span style="color:#f92672">(</span>1.1.0<span style="color:#f92672">)</span>
+omniauth-oauth2 <span style="color:#f92672">(</span>1.4.0<span style="color:#f92672">)</span>
+</code></pre></div><h3 id="2-add-google-plus-configuration">2. add Google Plus configuration</h3>
+<p>Set Google Client ID and Client Secret.
+Because I use &ldquo;dotenv-rails&rdquo;, I use ENV vars.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ emacs config/initializers/devise.rb
+  config.omniauth :facebook, ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;FACEBOOK_API&#39;</span><span style="color:#f92672">]</span>, ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;FACEBOOK_KEY&#39;</span><span style="color:#f92672">]</span>
+  config.omniauth :twitter,  ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;TWITTER_API&#39;</span><span style="color:#f92672">]</span>,  ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;TWITTER_KEY&#39;</span><span style="color:#f92672">]</span>
++  config.omniauth :google_oauth2,  ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;GOOGLE_CLIENT_ID&#39;</span><span style="color:#f92672">]</span>,  ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;GOOGLE_CLIENT_SECRET&#39;</span><span style="color:#f92672">]</span>
+
+$ emacs .env
+FACEBOOK_API<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;xxxxxxxxxx&#34;</span>
+FACEBOOK_KEY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;xxxxxxxxxxxxxx&#34;</span>
+TWITTER_API<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;xxxxxxxxxxxxx&#34;</span>
+TWITTER_KEY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;xxxxxxxxxxxxx&#34;</span>
++ GOOGLE_CLIENT_ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;xxxxxxxxxxxxxxxx&#34;</span>
++ GOOGLE_CLIENT_SECRET<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;xxxxxxxxxxxxxxxxx&#34;</span>
+
+$ git diff app/models/user.rb
+diff --git a/app/models/user.rb b/app/models/user.rb
+index 52d48be..f62d358 <span style="color:#ae81ff">100644</span>
+--- a/app/models/user.rb
++++ b/app/models/user.rb
+@@ -2,7 +2,7 @@ class User &lt; ApplicationRecord
+   <span style="color:#75715e"># Include default devise modules. Others available are:</span>
+   <span style="color:#75715e"># :confirmable, :lockable, :timeoutable and :omniauthable</span>
+   devise :database_authenticatable, :registerable,
+-         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">[</span>:facebook, :twitter<span style="color:#f92672">]</span>
++         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">[</span>:facebook, :twitter, :google_oauth2<span style="color:#f92672">]</span>
+
+</code></pre></div><h3 id="3-modify-view-to-allow-google-plus-login">3. modify view to allow google plus login</h3>
+<p>Add link for google plus login.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">diff --git a/app/views/layouts/application.html.erb b/app/views/layouts/application.html.erb
+--- a/app/views/layouts/application.html.erb
++++ b/app/views/layouts/application.html.erb
+@@ -19,6 +19,8 @@
+         <span style="color:#f92672">[</span>&lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#39;Sign out&#39;</span>, destroy_user_session_path, method: :delete  %&gt;<span style="color:#f92672">]</span>
+       &lt;% <span style="color:#66d9ef">else</span> %&gt;
+         &lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#34;Sign in with Facebook&#34;</span>, user_facebook_omniauth_authorize_path %&gt;
+         &lt;br&gt;
+         &lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#34;Sign in with Twitter&#34;</span>, user_twitter_omniauth_authorize_path %&gt;
++        &lt;br&gt;
++        &lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#34;Sign in with Google Plus&#34;</span>, user_google_oauth2_omniauth_authorize_path %&gt;
+       &lt;% end %&gt;
+     &lt;/div&gt;
+</code></pre></div><h3 id="4-delete-except-info">4. Delete except info</h3>
+<p>Because I met &ldquo;ActionDispatch::Cookies::CookieOverflow (ActionDispatch::Cookies::CookieOverflow):&rdquo; error, I modified omniauth_callback_controller as follows.
+This will eliminate extra fields from cookie.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#f92672">-</span>      session<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;devise.</span><span style="color:#e6db74">#{</span>provider<span style="color:#e6db74">}</span><span style="color:#e6db74">_data&#34;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>env<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;omniauth.auth&#34;</span><span style="color:#f92672">]</span>
+<span style="color:#f92672">+</span>      session<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;devise.</span><span style="color:#e6db74">#{</span>provider<span style="color:#e6db74">}</span><span style="color:#e6db74">_data&#34;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>env<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;omniauth.auth&#34;</span><span style="color:#f92672">].</span>except(<span style="color:#e6db74">&#34;extra&#34;</span>)
+</code></pre></div><p>Here are the 
+<a href="https://github.com/tgib23/douzou_chan2/pull/137/files" target="_blank" rel="noopener">total diff files</a> for adding google plus login.
+Notice that I use semantic-ui, so the changes on the code is not the same as this blog.</p>
+<h1 id="implement-instagram-login">Implement Instagram Login</h1>
+<p>The changes are the same as Google Plus Login.
+Get Instagram client id and client secret from 
+<a href="https://www.instagram.com/developer/" target="_blank" rel="noopener">here</a></p>
+<h3 id="1-initial-step-1">1. initial step</h3>
+<p>add omniauth-instagram in Gemfile</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ diff --git a/Gemfile b/Gemfile
+--- a/Gemfile
++++ b/Gemfile
+gem <span style="color:#e6db74">&#39;omniauth-google-oauth2&#39;</span>
++ gem <span style="color:#e6db74">&#39;omniauth-instagram&#39;</span>
+gem <span style="color:#e6db74">&#39;geocoder&#39;</span>
+
+$ bundle install
+
+$ gem list | grep omniauth
+omniauth <span style="color:#f92672">(</span>1.3.1<span style="color:#f92672">)</span>
+omniauth-facebook <span style="color:#f92672">(</span>4.0.0<span style="color:#f92672">)</span>
+omniauth-google-oauth2 <span style="color:#f92672">(</span>0.5.2<span style="color:#f92672">)</span>
+omniauth-instagram <span style="color:#f92672">(</span>1.2.0<span style="color:#f92672">)</span>
+omniauth-oauth <span style="color:#f92672">(</span>1.1.0<span style="color:#f92672">)</span>
+omniauth-oauth2 <span style="color:#f92672">(</span>1.4.0<span style="color:#f92672">)</span>
+omniauth-twitter <span style="color:#f92672">(</span>1.2.1<span style="color:#f92672">)</span>
+</code></pre></div><h3 id="2-add-instagram-configuration">2. add Instagram configuration</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
+$ emacs config/initializers/devise.rb
+  config.omniauth :facebook,       ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;FACEBOOK_API&#39;</span><span style="color:#f92672">]</span>,          ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;FACEBOOK_KEY&#39;</span><span style="color:#f92672">]</span>
+  config.omniauth :twitter,        ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;TWITTER_API&#39;</span><span style="color:#f92672">]</span>,           ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;TWITTER_KEY&#39;</span><span style="color:#f92672">]</span>
+  config.omniauth :google_oauth2,  ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;GOOGLE_CLIENT_ID&#39;</span><span style="color:#f92672">]</span>,      ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;GOOGLE_CLIENT_SECRET&#39;</span><span style="color:#f92672">]</span>
++  config.omniauth :instagram,      ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;INSTAGRAM_CLIENT_ID&#39;</span><span style="color:#f92672">]</span>,   ENV<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;INSTAGRAM_CLIENT_SECRET&#39;</span><span style="color:#f92672">]</span>
+
+
+
+$ emacs .env
+...
+GOOGLE_CLIENT_ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;xxxxxxxxxxx&#34;</span>
+GOOGLE_CLIENT_SECRET<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;xxxxxxxxxx&#34;</span>
++INSTAGRAM_CLIENT_ID<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;xxxxxxxxxxxxxxxx&#34;</span>
++INSTAGRAM_CLIENT_SECRET<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;xxxxxxxxxxxx&#34;</span>
+
+$ git diff app/models/user.rb
+
+diff --git a/app/models/user.rb b/app/models/user.rb
+index 52d48be..f62d358 <span style="color:#ae81ff">100644</span>
+--- a/app/models/user.rb
++++ b/app/models/user.rb
+@@ -2,7 +2,7 @@ class User &lt; ApplicationRecord
+   <span style="color:#75715e"># Include default devise modules. Others available are:</span>
+   <span style="color:#75715e"># :confirmable, :lockable, :timeoutable and :omniauthable</span>
+   devise :database_authenticatable, :registerable,
+-         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">[</span>:facebook, :twitter, :google_oauth2<span style="color:#f92672">]</span>
++         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers <span style="color:#f92672">=</span>&gt; <span style="color:#f92672">[</span>:facebook, :twitter, :google_oauth2, :instagram<span style="color:#f92672">]</span>
+
+</code></pre></div><h3 id="3-modify-view-to-allow-instagram-login">3. modify view to allow instagram login</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">diff --git a/app/views/layouts/application.html.erb b/app/views/layouts/application.html.erb
+index a9c6fde..d970abf <span style="color:#ae81ff">100644</span>
+--- a/app/views/layouts/application.html.erb
++++ b/app/views/layouts/application.html.erb
+@@ -19,6 +19,8 @@
+         <span style="color:#f92672">[</span>&lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#39;Sign out&#39;</span>, destroy_user_session_path, method: :delete  %&gt;<span style="color:#f92672">]</span>
+       &lt;% <span style="color:#66d9ef">else</span> %&gt;
+         &lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#34;Sign in with Facebook&#34;</span>, user_facebook_omniauth_authorize_path %&gt;
+        &lt;br&gt;
+        &lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#34;Sign in with Twitter&#34;</span>, user_twitter_omniauth_authorize_path %&gt;
+        &lt;br&gt;
+        &lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#34;Sign in with Google Plus&#34;</span>, user_google_oauth2_omniauth_authorize_path %&gt;
++         &lt;br&gt;
++         &lt;%<span style="color:#f92672">=</span> link_to <span style="color:#e6db74">&#34;Sign in with Instagram&#34;</span>, user_instagram_omniauth_authorize_path %&gt;
+       &lt;% end %&gt;
+     &lt;/div&gt;
+</code></pre></div><p>Then, restart rails</p>
+<p>Here are the 
+<a href="https://github.com/tgib23/douzou_chan2/pull/138/files" target="_blank" rel="noopener">total diff files</a> for adding instagram login.</p>
+
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn"></span></span>
+    
+    <time>Nov 12, 2017</time>
+    
+      <span class="categories">
+        Tags:
+        
+          <a class="category" href="http://example.org/tags/devise">devise</a>  <a class="category" href="http://example.org/tags/google-plus">google plus</a>  <a class="category" href="http://example.org/tags/instagram">instagram</a>  <a class="category" href="http://example.org/tags/oauth">oauth</a>  <a class="category" href="http://example.org/tags/omniauth">omniauth</a>  <a class="category" href="http://example.org/tags/rails5">rails5</a>  
+    
+    </span>
+  </p>
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="http://example.org/blog/2017/08/22/how-to-access-mapr-streams-from-python-bindings/" title="How to access MapR Streams from Python bindings">How to access MapR Streams from Python bindings</a>
+    
+
+    
+      <a class="basic-alignment right" href="http://example.org/blog/2021/11/19/similarities-between-matrix-series-and-nausicaa-of-the-valley-of-the-wind/" title="マトリックスと風の谷のナウシカの共通点について">マトリックスと風の谷のナウシカの共通点について</a>
+    
+  </p>
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+
+    <p>
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      
+      
+      
+      
+      
+         
+      
+      
+      
+      
+      
+      
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+
+  
+  
+  
+</aside>
+
+  </div>
+</div>
+
+    <footer role="contentinfo">
+      <p>Copyright &copy; 2021  - <a href="http://example.org/license/">License</a> -
+        <span class="credit">Powered by <a target="_blank" href="https://gohugo.io" rel="noopener noreferrer">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/" rel="noopener noreferrer">Hugo-Octopress</a> theme.
+      </p>
+    </footer>
+
+    
+    
+
+
+
+    
+    
+    
+
+    
+  </body>
+</html>
+

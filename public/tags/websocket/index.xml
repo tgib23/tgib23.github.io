@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>websocket on My New Hugo Site</title>
+    <link>http://example.org/tags/websocket/</link>
+    <description>Recent content in websocket on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 30 Oct 2014 00:14:33 -0500</lastBuildDate><atom:link href="http://example.org/tags/websocket/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>deploy rails websocket app into heroku</title>
+      <link>http://example.org/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/</link>
+      <pubDate>Thu, 30 Oct 2014 00:14:33 -0500</pubDate>
+      
+      <guid>http://example.org/blog/2014/10/30/deploy-rails-websocket-app-into-heroku/</guid>
+      <description>This post is to explain the configuration example to use heroku to deploy app with websocket-rails. The app is implemented in the previous post using standalone mode websocket server on local dev environment.
+1. create heroku Sign up for heroku and install heroku tool. Follow the heroku setup instruction in the rails tutorial.
+$ heroku create Creating gentle-tor-1752... done, stack is cedar https://gentle-tor-1752.herokuapp.com/ | git@heroku.com:gentle-tor-1752.git Now got gentle-tor-1752 for this entry.</description>
+    </item>
+    
+    <item>
+      <title>initial steps to use websocket-rails</title>
+      <link>http://example.org/blog/2014/08/03/initial-steps-to-use-websocket-rails/</link>
+      <pubDate>Sun, 03 Aug 2014 21:39:04 +0900</pubDate>
+      
+      <guid>http://example.org/blog/2014/08/03/initial-steps-to-use-websocket-rails/</guid>
+      <description>This is the very initial steps to use websocket-rails. Basically, I follow the lessons from here. I also add some suplemental steps for smooth start and hopefully next steps to utilize this library.
+1. prepare $ ruby -v ruby 2.1.0p0 (2013-12-25 revision 44422) [x86_64-darwin11.0] $ rails -v [~/Dropbox/rails] Rails 4.1.4 $ gem -v 2.2.2 $ rails new websocket_rails_example &amp;amp;&amp;amp; cd websocket_rails_example ... ... $ gem install websocket-rails Welcome to WebsocketRails v0.</description>
+    </item>
+    
+  </channel>
+</rss>

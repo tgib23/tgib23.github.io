@@ -14,32 +14,14 @@
       
       <guid>http://example.org/blog/2021/11/19/similarities-between-matrix-series-and-nausicaa-of-the-valley-of-the-wind/</guid>
       <description>マトリックス4が公開されますね！このシリーズ大好きなので今から待ち遠しいです。
-個人的にマトリックスの2と3も好きなのですが、1に比べると話が複雑になり、理解しづらくなるからかファンが少ない傾向にあると思います。 私も最初見たときは2の途中からついていっている自信がなくなりましたが、その後読んだ風の谷のナウシカの漫画版と話の構造が似ていることに気づいてからは、（私がちゃんと理解できているかはともかく）非常に楽しく鑑賞出来るようになりましたので、そのことについて触れてみたいと思います。ちなみに話の内容については説明しないので、未見の方は以下のリンクより購入してフォローしてください。
-For English veriosn, please access here</description>
-    </item>
-    
-    <item>
-      <title>マトリックスと風の谷のナウシカの共通点について</title>
-      <link>http://example.org/blog/2021/11/19/matoritukusutofeng-falsegu-falsenausikafalsegong-tong-dian-nituite/</link>
-      <pubDate>Fri, 19 Nov 2021 00:13:06 +0900</pubDate>
-      
-      <guid>http://example.org/blog/2021/11/19/matoritukusutofeng-falsegu-falsenausikafalsegong-tong-dian-nituite/</guid>
-      <description>マトリックス4が公開されますね！このシリーズ大好きなので今から待ち遠しいです。
-個人的にマトリックスの2と3も好きなのですが、1に比べると話が複雑になり、理解しづらくなるからかファンが少ない傾向にあると思います。 私も最初見たときは2の途中からついていっている自信がなくなりましたが、その後読んだ風の谷のナウシカの漫画版と話の構造が似ていることに気づいてからは、（私がちゃんと理解できているかはともかく）非常に楽しく鑑賞出来るようになりましたので、そのことについて触れてみたいと思います。ちなみに話の内容については説明しないので、未見の方は以下のリンクより購入してフォローしてください。
-For English veriosn, please access here</description>
-    </item>
-    
-    <item>
-      <title>How to run H2O.ai on MapR Cluster</title>
-      <link>http://example.org/blog/2018/08/06/how-to-run-h2o-dot-ai-on-mapr-cluster/</link>
-      <pubDate>Mon, 06 Aug 2018 00:43:36 +0900</pubDate>
-      
-      <guid>http://example.org/blog/2018/08/06/how-to-run-h2o-dot-ai-on-mapr-cluster/</guid>
-      <description>H2O.ai is powerful OSS tool for big-data analysis. In this blog, I introduce how to run H2O on MapR cluster, not on a single node.
-To run on a cluster, H2O provides following two styles of executions
- Running H2O application on YARN Running H2O application on Spark (Sparkling Water)  I show how to setup in each case.
-Running H2O application on YARN http://h2o-release.s3.amazonaws.com/h2o/rel-wright/4/index.html
-wget http://h2o-release.s3.amazonaws.com/h2o/rel-wright/4/h2o-3.20.0.4-mapr5.2.zip Running H2O application on Spark (Sparkling Water) </description>
+  個人的にマトリックスの2と3も好きなのですが、1に比べると話が複雑になり、理解しづらくなるからかファンが少ない傾向にあると思います。 私も最初見たときは2の途中からついていっている自信がなくなりましたが、その後読んだ風の谷のナウシカの漫画版と話の構造が似ていることに気づいてからは、（私がちゃんと理解できているかはともかく）非常に楽しく鑑賞出来るようになりましたので、そのことについて触れてみたいと思います。ちなみに話の内容については説明しないので、未見の方は以下のリンクより購入してフォローしてください。
+For English veriosn, please access here
+  マトリックス コンプリート・トリロジー [Blu-ray]  amazon.co.jp      風の谷のナウシカ 全7巻箱入りセット  amazon.co.jp      風の谷のナウシカ [Blu-ray]  amazon.co.jp    以降はネタバレとなりますのでご注意ください。 また、当然ですが、マトリックスは攻殻機動隊をはじめ、多くの作品の影響を受けて作られていますし、風の谷のナウシカもそうであると思います。 そのため、この2作品のみを比較して語ること自体がバランスを欠いた物語の理解に繋がる可能性はありますので、その点はご容赦ください。 単純に2作品が似ている、と言いたいだけのポストです。 最後に、ここで語る内容については完全に私の私見&amp;quot;のみ&amp;quot;であり、監督や関係者のインタビューなどで裏を固めた文章ではありませんのでご注意ください。
+はじめに 風の谷のナウシカはスタジオジブリの1作目の映画で、同名の漫画が原作になっています。 漫画の連載開始が1982、映画の公開が1984、そしてその後漫画の制作が継続され1994に完結しています。 つまり、映画版は原作の漫画のほんの一部であり、実際に7巻あるうちの2巻目の途中で映画の内容は終わってしまいます。 映画版については非常に分かりやすいストーリー構成になっているのですが、その後の漫画版は非常に複雑で難解と言えます。 物語を難解にしている要素の一つは、この物語が内容が読み手の期待した方向に向かわない点です。 映画版で見ていたナウシカは生き物すべてを愛する、優しく美しい少女です。 映画版で自分を犠牲にして王蟲を助ける姿に感動した観客としては、その後の漫画版でも無垢なままのナウシカが健気に活躍する姿を予想したくなります。 ところが、その後のナウシカは巨神兵を操り、血みどろになりながら人類の闇と向き合う人物に変わっていきます。 ナウシカ自身が一生懸命であることには変わりないのですが、読み手としてはこの変化についていけないと物語の理解が進まなくなると思います。
+同様にマトリックスも1は分かりやすいSF映画で、自らが背負った運命に戸惑いながらも仲間との友情やトリニティの愛により覚醒していくネオの冒険活劇、という普遍的なストーリーになっていると思います。 1のクライマックスからネオがマトリックスにつながれた全人類を救う続編を期待した人も多かったのではないでしょうか？ ところが、全人類を救うはずだったアーキテクトとのコンタクトから物語は急展開し、3でのネオはザイオンを救うものの、ライバルのエージェント・スミスには負けた形となり、さらにマトリックスのシステムにつながった人たちはどうなったんだろう？という疑問に答えないまま物語は終了します。 そのため、見た後にどうもスッキリ出来ないという感覚になると思います。
+マトリックスとナウシカはこの客を裏切る展開という点だけではなく物語の構成自体や登場人物の役割などに共通点があると思います。（Visualでの共通点、というか影響については既に語られていますので こちら をどうぞ） これらを比較していくと、より両者のストーリー展開の理解が進むので面白いと思います。 では、1つずつ共通点を見ていきましょう。
+1. 背景 どちらの世界でも人類は瀕死の状態にあります。 マトリックスでは機械の脅威にさらされ、ナウシカでは腐海と戦争の脅威にさらされています。
+2. 救世主の存在と運命 どちらの世界においても救世主が現れてこの世界を救うという予言が流布しています。 マトリックスではネオが&amp;quot;the one&amp;quot;、ナウシカではナウシカが&amp;quot;青き衣の者&amp;quot;としてこれに該当します。</description>
     </item>
     
     <item>
@@ -84,7 +66,7 @@ Use Hive from Squirrel You have to follow three steps, bring jars, configuration
       <guid>http://example.org/blog/2017/01/09/add-twitter-login-with-omniauth-plus-devise-on-rails5/</guid>
       <description>This post follows previous post How to use Omniauth + Devise on Rails5 from scratch, which is about how to setup facebook login. This post shows how to additionally setup twitter login. You can get APP ID and APP SECRET from here.
 1. initial step add omniauth-twitter in Gemfile
-$ diff --git a/Gemfile b/Gemfile index de3f792..271a916 100644 --- a/Gemfile +++ b/Gemfile @@ -56,3 +56,4 @@ gem &#39;devise&#39; gem &#39;omniauth&#39; gem &#39;omniauth-facebook&#39; gem &#39;dotenv-rails&#39; +gem &#39;omniauth-twitter&#39; $ bundle install $ gem list | grep omniauth omniauth (1.</description>
+$ diff --git a/Gemfile b/Gemfile index de3f792..271a916 100644 --- a/Gemfile +++ b/Gemfile @@ -56,3 +56,4 @@ gem &amp;#39;devise&amp;#39; gem &amp;#39;omniauth&amp;#39; gem &amp;#39;omniauth-facebook&amp;#39; gem &amp;#39;dotenv-rails&amp;#39; +gem &amp;#39;omniauth-twitter&amp;#39; $ bundle install $ gem list | grep omniauth omniauth (1.</description>
     </item>
     
     <item>
@@ -147,10 +129,10 @@ $ heroku create Creating gentle-tor-1752... done, stack is cedar https://gentle-
     
     <item>
       <title>initial steps to use websocket-rails</title>
-      <link>http://example.org/blog/2014/08/03/first-post/</link>
+      <link>http://example.org/blog/2014/08/03/initial-steps-to-use-websocket-rails/</link>
       <pubDate>Sun, 03 Aug 2014 21:39:04 +0900</pubDate>
       
-      <guid>http://example.org/blog/2014/08/03/first-post/</guid>
+      <guid>http://example.org/blog/2014/08/03/initial-steps-to-use-websocket-rails/</guid>
       <description>This is the very initial steps to use websocket-rails. Basically, I follow the lessons from here. I also add some suplemental steps for smooth start and hopefully next steps to utilize this library.
 1. prepare $ ruby -v ruby 2.1.0p0 (2013-12-25 revision 44422) [x86_64-darwin11.0] $ rails -v [~/Dropbox/rails] Rails 4.1.4 $ gem -v 2.2.2 $ rails new websocket_rails_example &amp;amp;&amp;amp; cd websocket_rails_example ... ... $ gem install websocket-rails Welcome to WebsocketRails v0.</description>
     </item>

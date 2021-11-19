@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+
+  
+    
+    
+      <link href="/css/fonts.css" rel="stylesheet" type="text/css">
+    
+  
+
+  
+  <title>How to access MapR Streams from Python bindings</title>
+
+  
+  
+  <link rel="stylesheet" href="/css/hugo-octopress.css">
+
+  
+  
+    <link rel="stylesheet" href="http://example.org//css/custom.css">
+  
+
+  
+    <link rel="stylesheet" href="/css/fork-awesome.min.css">
+  
+
+  
+  <link href="http://example.org/favicon.png" rel="icon">
+
+  
+  
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="">
+  <meta name="author" content="">
+
+  
+  <meta name="generator" content="Hugo 0.89.4" />
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+
+</head>
+<body>
+
+
+<header role="banner">
+<hgroup>
+  
+  <h1><a href="http://example.org/">My New Hugo Site</a></h1>
+    <h2></h2>
+</hgroup></header>
+
+
+<nav role="navigation">
+<fieldset class="mobile-nav">
+  
+  <select onchange="location = this.value;">
+    <option value="">Navigate…</option>
+      
+  </select>
+</fieldset>
+
+
+<ul class="main-navigation">
+  
+  
+</ul>
+
+<ul class="subscription">
+  
+</ul>
+
+
+</nav>
+
+
+<div id="main">
+  <div id="content">
+    <div>
+      <article class="hentry" role="article">
+
+        
+        
+
+<header>
+  <p class="meta">Aug 22, 2017
+     - 2 minute read 
+    
+
+    
+  </p>
+  <h1 class="entry-title">
+     How to access MapR Streams from Python bindings 
+  </h1>
+</header>
+
+
+        <div class="entry-content">
+          
+          
+          
+          <p>From MEP 3.0, MapR offers Python binding for MapR Streams.
+This article show how to use it with sample code.</p>
+<h1 id="step-0">Step 0.</h1>
+<p>The environment is as follows.</p>
+<ul>
+<li>CentOS : 7.2</li>
+<li>MapR 5.2.2</li>
+<li>MEP 3.1</li>
+<li>python-2.7.5-48.el7.x86_64</li>
+<li>python-devel-2.7.5-48.el7.x86_64</li>
+</ul>
+<h1 id="step-1">Step 1.</h1>
+<p>Create stream and topic as follows.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ maprcli stream create -path  /streams/python-test-stream -produceperm p -consumeperm p -topicperm p
+$ maprcli stream topic create -path /streams/python-test-stream -topic test-topic
+</code></pre></div><h1 id="step-2">Step 2.</h1>
+<p>Install what you need.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># yum install python2-pip python-wheel -y</span>
+<span style="color:#75715e"># pip install --upgrade pip</span>
+<span style="color:#75715e"># yum install librdkafka mapr-librdkafka -y</span>
+<span style="color:#75715e"># yum groupinstall &#39;Development Tools&#39; -y</span>
+<span style="color:#75715e"># pip install --global-option=build_ext --global-option=&#34;--library-dirs=/opt/mapr/lib&#34; --global-option=&#34;--include-dirs=/opt/mapr/include/&#34; http://package.mapr.com/releases/MEP/MEP-3.0/mac/mapr-streams-python-0.9.2.tar.gz</span>
+</code></pre></div><h1 id="step-3">Step 3.</h1>
+<p>Prepare code.
+There is a sample code here 
+<a href="http://maprdocs.mapr.com/home/MapR_Streams/MapRStreamsPythonExample.html" target="_blank" rel="noopener">http://maprdocs.mapr.com/home/MapR_Streams/MapRStreamsPythonExample.html</a> .
+Modify the stream and topic for this sample.</p>
+<ul>
+<li>producer.py</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> mapr_streams_python <span style="color:#f92672">import</span> Producer
+p <span style="color:#f92672">=</span> Producer({<span style="color:#e6db74">&#39;streams.producer.default.stream&#39;</span>: <span style="color:#e6db74">&#39;/streams/python-test-stream&#39;</span>})
+some_data_source<span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;msg1&#34;</span>, <span style="color:#e6db74">&#34;msg2&#34;</span>, <span style="color:#e6db74">&#34;msg3&#34;</span>]
+<span style="color:#66d9ef">for</span> data <span style="color:#f92672">in</span> some_data_source:
+    p<span style="color:#f92672">.</span>produce(<span style="color:#e6db74">&#39;test-topic&#39;</span>, data<span style="color:#f92672">.</span>encode(<span style="color:#e6db74">&#39;utf-8&#39;</span>))
+p<span style="color:#f92672">.</span>flush()
+</code></pre></div><ul>
+<li>consumer.py</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> mapr_streams_python <span style="color:#f92672">import</span> Consumer, KafkaError
+c <span style="color:#f92672">=</span> Consumer({<span style="color:#e6db74">&#39;group.id&#39;</span>: <span style="color:#e6db74">&#39;mygroup&#39;</span>,
+              <span style="color:#e6db74">&#39;default.topic.config&#39;</span>: {<span style="color:#e6db74">&#39;auto.offset.reset&#39;</span>: <span style="color:#e6db74">&#39;earliest&#39;</span>}})
+c<span style="color:#f92672">.</span>subscribe([<span style="color:#e6db74">&#39;/streams/python-test-stream:test-topic&#39;</span>])
+running <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>
+<span style="color:#66d9ef">while</span> running:
+    msg <span style="color:#f92672">=</span> c<span style="color:#f92672">.</span>poll(timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">1.0</span>)
+    <span style="color:#66d9ef">if</span> msg <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>: <span style="color:#66d9ef">continue</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> msg<span style="color:#f92672">.</span>error():
+        print(<span style="color:#e6db74">&#39;Received message: </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#39;</span> <span style="color:#f92672">%</span> msg<span style="color:#f92672">.</span>value()<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#39;utf-8&#39;</span>))
+    <span style="color:#66d9ef">elif</span> msg<span style="color:#f92672">.</span>error()<span style="color:#f92672">.</span>code() <span style="color:#f92672">!=</span> KafkaError<span style="color:#f92672">.</span>_PARTITION_EOF:
+        print(msg<span style="color:#f92672">.</span>error())
+        running <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+c<span style="color:#f92672">.</span>close()
+</code></pre></div><h1 id="step-4">Step 4.</h1>
+<p>Set LD_LIBRARY_PATH to /opt/mapr/lib and the directory containing libjvm.
+Find the libjvm with find command as below.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># find / -name libjvm*</span>
+/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/amd64/server/libjvm.so
+</code></pre></div><p>Set the LD_LIBRARY_PATH with above.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ export LD_LIBRARY_PATH<span style="color:#f92672">=</span>/opt/mapr/lib/:/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/amd64/server
+</code></pre></div><h1 id="step-5">Step 5.</h1>
+<p>Run the programs!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ python producer.py
+$ python consumer.py
+Received message: msg1
+Received message: msg2
+Received message: msg3
+</code></pre></div>
+        </div>
+        
+
+<footer>
+  <p class="meta">
+    <span class="byline author vcard">Posted by <span class="fn"></span></span>
+    
+    <time>Aug 22, 2017</time>
+    
+      <span class="categories">
+        Tags:
+        
+          <a class="category" href="http://example.org/tags/mapr">mapr</a>  <a class="category" href="http://example.org/tags/mapr-streams">mapr streams</a>  <a class="category" href="http://example.org/tags/python">python</a>  
+    
+    </span>
+  </p>
+
+  
+
+  <p class="meta">
+    
+        <a class="basic-alignment left" href="http://example.org/blog/2017/05/24/how-to-setup-squirrel-sql-client-on-mac-for-hive-spark-and-drill-on-mapr-cluster/" title="How to setup Squirrel SQL Client on Mac for Hive, Drill, and Impala on MapR cluster">How to setup Squirrel SQL Client on Mac for Hive, Drill, and Impala on MapR cluster</a>
+    
+
+    
+      <a class="basic-alignment right" href="http://example.org/blog/2017/11/12/add-google-plus-and-instagram-login-with-omniauth-plus-devise-on-rails5/" title="Add Google Plus and Instagram Login with Omniauth &#43; Devise on Rails5">Add Google Plus and Instagram Login with Omniauth &#43; Devise on Rails5</a>
+    
+  </p>
+  
+</footer>
+
+      </article>
+    </div>
+    
+
+<aside class="sidebar thirds">
+  <section class="first odd">
+
+    
+
+    <p>
+      
+    </p>
+  </section>
+
+
+
+  
+  <ul class="sidebar-nav">
+    <li class="sidebar-nav-item">
+      
+      
+      
+      
+      
+         
+      
+      
+      
+      
+      
+      
+      
+
+    
+    
+    </li>
+  </ul>
+
+  
+
+  
+
+  
+  
+  
+</aside>
+
+  </div>
+</div>
+
+    <footer role="contentinfo">
+      <p>Copyright &copy; 2021  - <a href="http://example.org/license/">License</a> -
+        <span class="credit">Powered by <a target="_blank" href="https://gohugo.io" rel="noopener noreferrer">Hugo</a> and <a target="_blank" href="https://github.com/parsiya/hugo-octopress/" rel="noopener noreferrer">Hugo-Octopress</a> theme.
+      </p>
+    </footer>
+
+    
+    
+
+
+
+    
+    
+    
+
+    
+  </body>
+</html>
+
