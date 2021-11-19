@@ -1,9 +1,28 @@
-#!/bin/sh
+#!/bin/bash
+
+if [[ $(git status -s) ]]
+then
+    echo "The working directory is dirty. Please commit any pending changes."
+    exit 1;
+fi
+
+echo "************ Deleting old publication ************"
 rm -rf public
-hugo
 
-dir=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
-echo "dir: $dir"
+echo "************ Generating site ************"
+hugo  --theme=Hugo-Octopress
 
-ssh_host="g22"
-rsync --iconv=UTF-8-MAC,UTF-8 -avzc --delete --exclude-from=rsync-exclude ${dir}/public/ ${ssh_host}:/var/www/html
+#echo "************ Adding CNAME ************"
+#echo iriya-ufo.net >> public/CNAME
+
+echo "************ git add && git commit ************"
+git add public/
+git commit -m "release `date '+%Y-%m-%d %H:%M'`"
+
+echo "************ Updating master branch ************"
+git subtree push --prefix public/ origin master
+
+echo "************ Updating source branch ************"
+git push origin source
+
+echo "************ Success Deploy ************"
