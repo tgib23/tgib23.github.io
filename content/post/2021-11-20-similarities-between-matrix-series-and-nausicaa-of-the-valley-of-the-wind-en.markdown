@@ -227,7 +227,7 @@ At first glance, she seems to be an ally of Neo and the other humans, but in rea
 This is why the Oracle's prophecies and instructions are unclear as to which direction she's intended to, and that's why Neo asks her, "How can I believe you?
 
 
-![](/images/20211119/oracle.jpg)
+![](/images/20211120/oracle.jpg)
 
 
 In fact, in the conversation in the 2nd Matrix, she says, "Zion will be destroyed (if Neo doesn't make a decision to accept Trinity's death)," but it looks like she is pushing Neo to make a decision without details since the Matrix system's plan is to destroy Zion anyway.
