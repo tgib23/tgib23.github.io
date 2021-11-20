@@ -1,6 +1,7 @@
 baseURL = 'https://tgib23.github.io/'
 languageCode = 'en-us'
 title = 'some tech and other talks'
+googleAnalytics = "UA-8617707-5"
 
 [permalinks]
   post = "/blog/:year/:month/:day/:slug"
