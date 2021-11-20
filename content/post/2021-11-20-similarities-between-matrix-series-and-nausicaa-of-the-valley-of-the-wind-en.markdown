@@ -42,11 +42,13 @@ As an audience member who was moved by the way she sacrificed herself to save th
 However, after that, Nausicaä turns into a person who manipulates the God Warrior, Ohma, and faces the darkness of humanity in a bloody way.
 if you cannot follow this change, it gets harder to follow the story.
 
-<br />
+<br>
+<br>
 
 ![](/images/20211120/change.jpg)
 
-<br /><br />
+<br>
+<br>
 
 
 Similarly, the 1st Matrix movie was an easy to understand science fiction movie. In the movie, Neo is awakened by the friendship with his friends and the love of Trinity while being confused by the fate he has taken on. It's such a universal story of Neo's adventures and activities.
@@ -54,15 +56,16 @@ From the climax of the 1st one, many people might have expected a sequel where N
 However, the story took a sudden turn after Neo's contact with the Architect, which was supposed to save all of humanit. Although Neo saved Zion in 3rd one, he lost to his rival Agent Smith. The story ends without answering the question, "What happened to the people connected to the Matrix system?
 Therefore, I think many people felt unclear after watching it.
 
-<br /><br />
+<br>
+<br>
 
 I think the Matrix and Nausicaä have something in common, not only in the way they betray the audiences, but also in the structure of the story itself and the roles of the characters (the commonalities, or rather influences, in terms of the visual have already been discussed [here](https://www.reddit.com/r/MovieDetails/comments/6ki0ch/a_lot_of_visual_details_in_the_matrix_1999_drew/))
 I think it is interesting to compare these two, as it will help us better understand the storyline of both.
 Let's take a look at the similarities one by one. 
 
 
-<br />
-<br />
+<br>
+<br>
 
 ![](/images/20211120/characters2.jpg)
 
@@ -84,12 +87,12 @@ The highlight of the 2nd Matrix movie is the disclosure of this role and the sce
 In other words, Neo's escape from the Matrix in the 1st Matrix movie and his subsequent divine awakening were also planned by the Matrix system.
 
 
-<br />
+<br>
 
 ![](/images/20211120/lie.jpg)
 
-<br />
-<br />　
+<br>
+<br>
 
 On the other hand, with Nausicaä, we tend to interpret that the world is swallowed by Sea of Corruption due to the stupidity of mankind because of the development of Sea of Corruption spreading in the war, but [Daikaisho](https://nausicaa.fandom.com/wiki/Daikaisho) was a scheduled event by Crypt of Shuwa.
 Therefore, I think that Crypt of Shuwa had the emperor of Dorok do the things like using a Ohmu child to attract the swarm of Ohmu and scattering miasma of Sea of Corruption from the ship to lure the bugs(, even though there is no specific stories described about the actual plan between the two).
@@ -97,8 +100,9 @@ Therefore, I think that Crypt of Shuwa had the emperor of Dorok do the things li
 
 
 ![](/images/20211119/p7.jpg)
-<br />
-<br />
+
+<br>
+<br>
 
 ![](/images/20211119/p8.jpg)
 
@@ -113,16 +117,19 @@ Basically, as Nausicaä says, the plan is to annihilate the existing people.
 
 ![](/images/20211119/p9.jpg)
 
-<br /><br />
+<br>
+<br>
 
 In the end, the main role of the blue clad one to lead the people who hatched from the eggs in Crypt of Shuwa in the world which was purified up after Daikaisho, and in other words, to witness the destruction of humanity by Daikaisho.
 This is also very similar to the role that Neo was almost given.
 
 
+<br>
+<br>
 
-<br /><br />
 ![](/images/20211119/IMG_8957.jpg)
-<br />
+
+<br>
 
 The question is whether or not Nausicaä, like Neo, was chosen by some great power in accordance with the will of Crypt of Shuwa.
 Since there is a legend circulating that there was a blue clad one who led [Forrest People](https://nausicaa.fandom.com/wiki/Forest_People) before, and that "he should descend on the golden field wearing a blue clad," it is tempting to interpret the blue clad one as a charismatic figure chosen by some kind of power (not limited to Crypt of Shuwa).
@@ -154,7 +161,8 @@ At this point, he has not yet sorted out the means to save Zion, so it can be sa
 
 ![](/images/20211120/iwereyou.jpg)
 
-<br /><br />
+<br>
+<br>
 
 In the case of Nausicaä, on the other hand, it is Crypt of Shuwa that is trying to provide "the future".
 Here, the technologies for making Ohmu, slime motal, [Heedra](https://nausicaa.fandom.com/wiki/Heedra), immortality are reserved, as well as the human egg that will be resurrected after the world sinks into Sea of Corruption by Daikaisho.
@@ -164,11 +172,12 @@ This is where Nausicaä's famous line comes in, "Life is a flickering light in t
 According to the Master of Crypt of Shuwa, this action will mean the annihilation of all mankind, but Nausicaä does not hesitate to use the light of the God Warrior (Ohma) to put an end to the Master of Crypt of Shuwa.
 
 
-<br /><br />
+<br>
+<br>
 
 ![](/images/20211119/IMG_9071.jpg)
 
-<br />
+<br>
 
 As for why Nausicaä acted the way she did, I don't think the story gave as clear a reason as Neo did.
 Also, while Neo's action has a positive plan to survice Zion in best scenario, Nausicaä's only reason is "I don't like the Master of Crypt of Shuwa, so I'll seal it.
@@ -179,7 +188,7 @@ Meanwhile, Nausicaä herself also kills people in battle and stabs the Master of
 The story does not really dig into the deep side of the Nausicaä's character, but the fact that Nausicaä is the only child survived among her 11 siblings could influence her.
 
 
-<br/>
+<br>
 
 ## 6. Commonality of characters
 
@@ -226,7 +235,8 @@ On the other hand, as a result of the dialogue with the Oracle, Neo is acting di
 As for why she let Agent Smith copy him so easily, it could be said that she already knew Neo's final choice and was preparing for it.
 
 
-<br /><br />
+<br>
+<br>
 
 I think a similar position in Nausicaä would be the Ohmu.
 As you can see in the latter half of the story, the Ohmu themselves are creatures created by the Crypt of Shuwa, and they function as part of the system to efficiently cover the earth with Sea of Corruption.
@@ -246,14 +256,17 @@ I'm not sure if this action is a default event that occurs in every Matrix initi
 Either way, the end result was to give Neo room to negotiate with the machines and save Zion, which makes him a difficult character to judge whether he is a real enemy or an ally in the end.
 
 
-<br /><br />
+<br>
+<br>
 
 Although the looks is very different, I think that in Nausicaä, the God Warrior is a bit similar in role.
 Like Smith, the God Warrior is basically an enemy character who kills humans and destroys the world with his overwhelming power, but as a result, he destroys Crypt of Shuwa and plays a role in helping to maintain the world as it is.
 Also, like Smith, he has a very high level of intelligence (and has grown up), and he shows a very parental and kind side to Nausicaä, which makes it difficult to know whether he is an enemy or a friend of humanity.
 
 
-<br/><br/><br/>
+<br>
+<br>
+<br>
 
 How was the comparison?
 If you look at the similarities between the two stories with a little awareness, you may find something new.
