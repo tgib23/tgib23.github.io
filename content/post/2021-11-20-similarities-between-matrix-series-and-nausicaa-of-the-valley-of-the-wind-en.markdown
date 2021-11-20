@@ -8,16 +8,13 @@ tags: [matrix, Nausicaä of the valley of the wind, Nausicaa]
 
 The Matrix 4 is coming out! I love this series and I can't wait for it now.
 
-<br /><br />
 
 {{< youtube content_id="CgjjMKP4ipg" >}}
-<br />
 
 I personally like Matrix the 2nd and the 3rd ones as well, but I think they tend to have fewer fans because the story is more complicated and harder to understand compared to the 1st one.
 When I first saw them, I lost confidence in myself to follow the story in the middle of the 2nd, but after I realized that the structure of the story was similar to the manga version of Nausicaä of the Valley of the Wind that I had read, I was able to enjoy watching it very much (whether I understood it properly or not). Here, I'd like to talk about it in this post. I'm not going to explain the content of the story, so if you haven't seen it, please check them from the link below.
 
-<br />
-日本語版は<a href="https://tgib23.github.io/blog/2021/11/19/similarities-between-matrix-series-and-nausicaa-of-the-valley-of-the-wind/">こちら</a>
+日本語版は[こちら](https://tgib23.github.io/blog/2021/11/19/similarities-between-matrix-series-and-nausicaa-of-the-valley-of-the-wind/)
 
 <br /><br />
 
