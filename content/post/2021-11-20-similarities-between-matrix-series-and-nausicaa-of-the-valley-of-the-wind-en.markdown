@@ -16,14 +16,11 @@ When I first saw them, I lost confidence in myself to follow the story in the mi
 
 日本語版は[こちら](https://tgib23.github.io/blog/2021/11/19/similarities-between-matrix-series-and-nausicaa-of-the-valley-of-the-wind/)
 
-<br /><br />
-
 {{< amazon_com asin="B000GJPL1S" title="The Matrix [Amazon Prime]" >}}
 {{< amazon_com asin="1421550644" title="Nausicaä of the Valley of the Wind Box Set" >}}
 {{< amazon_com asin="B08127Y8QS" title="Nausicaä of the Valley of the Wind [Amazon Prime]" >}}
 
 
-<br/><br/>
 
 Please note that the following will be spoilers.
 Also, of course, the Matrix was made under the influence of many works including [Ghost In The Shell](https://amzn.to/3E5UoMg), and I believe Nausicaä is no different.
@@ -31,7 +28,6 @@ Therefore, comparing and discussing only these two works may itself lead to an u
 This is simply a post to say that the two works are similar.
 Finally, please note that what I say here is completely my own personal opinion, and is not based on interviews with the director or other people involved.
 
-<br />
 
 # Intro
 
