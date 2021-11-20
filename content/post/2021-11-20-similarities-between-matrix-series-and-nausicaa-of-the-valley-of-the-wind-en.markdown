@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Similarities between Matrix series and Nausicaä of the Valley of the Wind"
+title: "Similarities between Matrix series and Nausicaa of the Valley of the Wind"
 date: 2021-11-20T11:16:50+09:00
 comments: true
 tags: [matrix, Nausicaä of the valley of the wind, Nausicaa]
