@@ -7,5 +7,6 @@ title = 'some tech and other talks'
 
 [params]
     amazonJpAffiliate = "bigt23-22"
+    amazonUsAffiliate = "yamadasatoshi-20"
     customCSS = ["/css/custom.css"]
     subtitle = "ruby, rails, book reviews"

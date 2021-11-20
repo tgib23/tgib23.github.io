@@ -1,0 +1,19 @@
+{{- $tag := .Site.Params.amazonUsAffiliate }}
+{{- $asin := .Get "asin" -}}
+{{- $title := .Get "title" -}}
+<div class="amazon-widget">
+  <a href="https://www.amazon.com/gp/product/{{ $asin }}/?tag={{ $tag }}"></a>
+  <div class="amazon-widget-img">
+    <img src="//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=US&ASIN={{ $asin }}&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL350_&tag={{ $tag }}" />
+  </div>
+  <div class="amazon-widget-info">
+    <span class="amazon-widget-title">
+      {{ $title }}
+    </span>
+    <span class="amazon-widget-via">
+      <img src="https://www.amazon.com/favicon.ico" />
+      amazon.com
+    </span>
+  </div>
+</div>
+
