@@ -14,7 +14,7 @@ tags: [matrix, マトリックス, 風の谷のナウシカ, ナウシカ, nausi
 個人的にマトリックスの2と3も好きなのですが、1に比べると話が複雑になり、理解しづらくなるからかファンが少ない傾向にあると思います。
 私も最初見たときは2の途中からついていっている自信がなくなりましたが、その後読んだ風の谷のナウシカの漫画版と話の構造が似ていることに気づいてからは、（私がちゃんと理解できているかはともかく）非常に楽しく鑑賞出来るようになりましたので、そのことについて触れてみたいと思います。ちなみに話の内容については説明しないので、未見の方は以下のリンクより購入してフォローしてください。
 
-For English veriosn, please access [here](https://tgib23.github.io/blog/2021/11/20/similarities-between-matrix-series-and-nausicaa-of-the-valley-of-the-wind-en/)
+For English veriosn, please access [here](https://tgib23.github.io/blog/2021/11/20/similarities-between-matrix-series-and-nausica%C3%A4-of-the-valley-of-the-wind/)
 
 
 {{< amazon asin="B00L3OQXD0" title="マトリックス コンプリート・トリロジー [Blu-ray]" >}}
