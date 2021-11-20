@@ -9,7 +9,8 @@ tags: [matrix, Nausicaä of the valley of the wind, Nausicaa]
 The Matrix 4 is coming out! I love this series and I can't wait for it now.
 
 <br /><br />
-<iframe class="BLOG_video_class" allowfullscreen="" youtube-src-id="mBRWwAqJ--U" width="320" height="266" src="https://www.youtube.com/embed/CgjjMKP4ipg"></iframe>
+
+{{< youtube content_id="CgjjMKP4ipg" >}}
 <br />
 
 I personally like Matrix the 2nd and the 3rd ones as well, but I think they tend to have fewer fans because the story is more complicated and harder to understand compared to the 1st one.
