@@ -4,10 +4,19 @@ title = 'some tech and other talks'
 googleAnalytics = "UA-8617707-5"
 
 [permalinks]
-  post = "/blog/:year/:month/:day/:slug"
+    post = "/blog/:year/:month/:day/:slug"
 
 [params]
     amazonJpAffiliate = "bigt23-22"
     amazonUsAffiliate = "yamadasatoshi-20"
     customCSS = ["/css/custom.css"]
-    subtitle = "ruby, rails, book reviews"
+    subtitle = "ruby, rails, book reviews, etc"
+    author = "Satoshi Yamada"
+    rss = true
+    sidebarMenuEnabled = true
+    sidebarHeader = "About Me"
+    sidebarText = "Enjoy living in Tokyo. I blog something I found outside work here"
+    github = "https://github.com/tgib23/"
+    twitter = "https://twitter.com/bigt23"
+    sidebarRecentLimit = 4
+
